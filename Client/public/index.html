@@ -17,6 +17,60 @@
     }
   </style>
 </head>
+<body style="background-color: beige;">
+    <!--
+    <div class="container-fluid">
+        <div class="row gy-3 py-4 justify-content-between">
+            <div class="col-4 border">
+            </div>
+            <div class="col-4 border" style="align-items: end;">
+                <img src="../../assets/img/logo.webp" width="50%" height="auto"/>
+            </div>
+        </div>
+    </div>
+    -->
+
+
+    <h1 style="text-align: center;">Gallery</h1>
+
+    <div class="container-fluid text-center">
+        <div class="row gy-3 py-4" style="align-items: center;">
+          <div class="col-md-4">
+            <a href="../public/second.html"><img class="rounded" src="../../assets/img/plant.jpg" width="100%" height="auto" /></a>
+          </div>
+          <div class="col-md-4">
+            <a href="../public/second.html" ><img class="rounded" src="../../assets/img/green.jpg" width="100%" height="auto" /></a>
+          </div>
+          <div class="col-md-4 upload-column" onclick="uploadFile()">
+            <input type="file" id="fileInput" onchange="handleFileSelect(this)">
+            <img id="uploadedImage" class="rounded" src="../../assets/img/plus.png" width="50%" height="auto" />
+          </div>
+          <div class="col-md-4">
+            <a href="../public/second.html"><img src="" width="100%" height="auto" /></a>
+          </div>
+        </div>
+    </div>
+
+  <script>
+    function uploadFile() {
+      document.getElementById('fileInput').click();
+    }
+    function handleFileSelect(input) {
+      const file = input.files[0];
+      const uploadedImage = document.getElementById('uploadedImage');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          uploadedImage.src = e.target.result;
+          uploadedImage.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        console.error('No file selected');
+        uploadedImage.style.display = 'none';
+      }
+    }
+    </script>
 </body>
 </html>
 
