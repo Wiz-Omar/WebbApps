@@ -7,32 +7,25 @@
     }
 }
 
-
-.close-button {
-    width: 20px;
-    height: 20px;
-    position: relative;
+.svg-button {
+    background-color: transparent;
+    border: none;
     cursor: pointer;
-    animation: flash 2s infinite;
+    padding: 0;
+    transition: transform 0.3s ease, filter 0.3s ease;
   }
   
-  .close-button::before,
-  .close-button::after {
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 25px;
-    background-color: #333; /* Adjust color as needed */
-    top: 15px;
-    left: 15px;
+  .svg-button:hover {
+    transform: scale(1.1); /* Scale effect on hover */
   }
   
-  .close-button::before {
-    transform: rotate(45deg);
+  .svg-icon {
+    fill: black; /* Default color */
+    transition: fill 0.3s ease; /* Smooth transition effect */
   }
   
-  .close-button::after {
-    transform: rotate(-45deg);
+  .svg-button:hover .svg-icon {
+    fill: red; /* Color change on hover */
   }
 
 .file-label {
@@ -45,7 +38,11 @@
 
 }
 
-div[class^="col-"] {
-    padding-right: 50px; /* Adjust the value as needed */
-    padding-left: 50px;  /* Adjust the value as needed */
-}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 70vh; /* vh unit represents a percentage of the viewport height */
+    height: auto; /* maintain the aspect ratio */
+    display: block; /* remove any extra space below the image */
+    margin: 0 auto; /* optional: to center the image if it's smaller than the container */
+  }
