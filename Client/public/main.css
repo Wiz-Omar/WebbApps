@@ -38,6 +38,7 @@
 
 }
 
+
 .image-container img {
     max-width: 100%;
     max-height: 70vh; /* vh unit represents a percentage of the viewport height */
@@ -45,3 +46,4 @@
     display: block; /* remove any extra space below the image */
     margin: 0 auto; /* optional: to center the image if it's smaller than the container */
   }
+  
