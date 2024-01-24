@@ -44,3 +44,8 @@
     font-weight: 400;
 
 }
+
+div[class^="col-"] {
+    padding-right: 50px; /* Adjust the value as needed */
+    padding-left: 50px;  /* Adjust the value as needed */
+}
