@@ -1,7 +1,6 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Call resetHeight only after the document and images are fully loaded
+window.onload = function(){
     resetHeight();
-});
+}
 function uploadFile() {
     document.getElementById('fileInput').click();
 }
