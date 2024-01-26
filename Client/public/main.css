@@ -46,4 +46,15 @@
     display: block; /* remove any extra space below the image */
     margin: 0 auto; /* optional: to center the image if it's smaller than the container */
   }
-  
+h1{
+  text-align: center;
+}
+.upload-column {
+  cursor: pointer;
+}
+#fileInput{
+  display: none;
+}
+.row{
+  display: flex;
+}
