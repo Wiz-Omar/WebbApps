@@ -41,11 +41,26 @@
     </div>
     <div class="row mt-5">
       <div class="col-12 image-container"> 
-        <img src="../../assets/img/landscape.png" alt="fun" class="img-fluid"/>
+        <img src="" alt="Selected Image" class="img-fluid" style="display: none;"/>
       </div>
     </div>
   </div>
   
-
+  <script>
+    window.onload = function() {
+      // Extract query parameters
+      const queryParams = new URLSearchParams(window.location.search);
+      const imageUrl = queryParams.get('image');
+  
+      // Get the image element
+      const imageElement = document.querySelector('.image-container img');
+  
+      // Set the image source if available
+      if (imageUrl) {
+        imageElement.src = imageUrl;
+        imageElement.style.display = 'block'; // Show the image
+      }
+    };
+  </script>
 </body>
 </html>

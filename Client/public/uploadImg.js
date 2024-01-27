@@ -15,7 +15,8 @@ function handleFileSelect(input) {
         const reader = new FileReader();
         const newImage = document.createElement('img');
         const ref = document.createElement('a');
-        ref.href = '../public/second.html';
+        // ref.href = '../public/second.html';
+        ref.href = `../public/second.html?image=${encodeURIComponent(e.target.result)}`;
         reader.onload = function (e) {
             newImage.src = e.target.result;
             newImage.classList.add("rounded");
