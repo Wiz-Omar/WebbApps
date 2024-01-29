@@ -4,7 +4,8 @@
   "description": "a web app for handling your files",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --pretty --transpile-only src/index.ts"
+    "dev": "ts-node-dev --respawn --pretty --transpile-only src/index.ts",
+    "test": "jest"
   },
   "author": "group 12",
   "license": "ISC",
