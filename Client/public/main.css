@@ -35,9 +35,9 @@
 .file-name {
     color: #4a4a4a;
     font-weight: 400;
+    min-width: 100px;
 
 }
-
 
 .image-container img {
     max-width: 100%;

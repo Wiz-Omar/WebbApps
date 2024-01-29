@@ -10,7 +10,7 @@
   <div class="container">
     <div class="row pt-5">
       <div class="col-9">
-        <h1><span class="file-label">File:</span> <span class="file-name">fun.img</span></h1>
+        <h1><span class="file-label">File:</span> <span class="file-name"></span></h1>
       </div>
       <div class="col-1">
         <button class="svg-button" aria-label="download">
@@ -52,13 +52,25 @@
       const queryParams = new URLSearchParams(window.location.search);
       const imageUrl = queryParams.get('image');
   
-      // Get the image element
+      // Get the image element and file name span
       const imageElement = document.querySelector('.image-container img');
+      const fileNameSpan = document.querySelector('.file-name');
   
       // Set the image source if available
       if (imageUrl) {
         imageElement.src = imageUrl;
         imageElement.style.display = 'block'; // Show the image
+  
+        // Extracting the filename from the imageUrl
+        // Extracting the filename from the imageUrl
+        const splitPath = imageUrl.split('/');
+        const filename = splitPath[splitPath.length - 1];
+
+      // Update the filename in the HTML
+      fileNameSpan.innerText = filename; // Set filename
+  
+        // Update the filename in the HTML
+        fileNameSpan.innerText = filename || 'Unknown'; // Set filename or 'Unknown' if filename is not available
       }
     };
   </script>
