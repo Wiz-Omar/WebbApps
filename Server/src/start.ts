@@ -4,4 +4,4 @@ import { imageRouter } from "./router/imageRouter"; // Assuming you have an imag
 export const app = express();
 
 app.use(express.json()); // Middleware for parsing JSON bodies
-app.use("/image", imageRouter); // Use imageRouter for all requests to '/image'
+app.use("/", imageRouter); // Use imageRouter for all requests to '/image'

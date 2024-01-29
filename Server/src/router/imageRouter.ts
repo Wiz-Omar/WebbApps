@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { ImageService } from "../service/imageService";
+import { Image } from "../model/image";
 
 const imageService = new ImageService();
 
