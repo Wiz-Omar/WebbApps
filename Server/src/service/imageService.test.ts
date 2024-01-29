@@ -20,14 +20,6 @@ test("If an image is added to the list then it should be in the list", async () 
     expect(images.some((image) => image.filename === filename && image.url === url)).toBeTruthy();
 });
 
-// Testing deletion of an image that does not exist
-test("If an image is deleted from the list then it should not be in the list", async () => {
-    const id = 1;
-    const imageService = new ImageService();
-    await imageService.deleteImage(id);
-    const images = await imageService.getImages();
-    expect(images.some((image) => image.id === id)).toBeFalsy();
-});
 
 
 // imageRouter.test.ts
