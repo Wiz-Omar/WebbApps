@@ -55,6 +55,24 @@ h1{
 #fileInput{
   display: none;
 }
-.row{
-  display: flex;
+.column-img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+  border-radius: 2%; /*needed ??*/
 }
+/* Additional styling for the sticky header */
+.sticky-top {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: #ffffff; /* Set your desired background color */
+  z-index: 1000;
+}
+
+/* Custom styling for the logo in the header */
+.logo-img {
+  max-height: 60px; /* Set your desired max height for the logo */
+  width: auto;
+}
+

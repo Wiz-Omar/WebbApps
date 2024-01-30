@@ -1,6 +1,6 @@
-window.onload = function(){
-    resetHeight();
-}
+// window.onload = function(){
+//     resetHeight();
+// }
 function uploadFile() {
     document.getElementById('fileInput').click();
 }
@@ -56,5 +56,17 @@ function resetHeight(){
         console.log(elements[i].height+'px');
     }
 }
-
-
+function populate(){
+    var images = File
+}
+//ideas for updating the content:
+    //Have a function for populating images from the database, need to have an <a> element as a parent for each img. populate():
+        //get all images from the database
+        //get all three column divs
+        //give each image the class .column-img
+        //create an <a> element and place the image inside it and adjus the "href" attribute accordingly
+        //the image with index i should be placed under column i%3 with its <a> element (given that the columns are numbered 0-2) (simple but can be better)
+    //Call the populate() function mentioned above on load
+    //Obserber for when the (database/ user-specific) database is updated
+    //Refresh when an update is detected (which should call populate() since it is called on load)
+    //adding an image just means adding it to the database. The program should detect the update and refresh and repopulate
