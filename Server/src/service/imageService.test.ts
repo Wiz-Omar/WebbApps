@@ -31,20 +31,20 @@ const request = SuperTest.default(app);
 
 test("End-to-end test", async () => {
     // upload an image
-    const res0 = await request.post("/").send({ filename: "test.png", url: "http://example.com/test.jpg" });
+    const res0 = await request.post("/image").send({ filename: "test.png", url: "http://example.com/test.jpg" });
     expect(res0.statusCode).toEqual(201);
     // get all images (only one image)
-    const res1 = await request.get("/");
+    const res1 = await request.get("/image");
     // should be 200 OK
     expect(res1.statusCode).toEqual(200);
     // get the ID of the image
     const id = res1.body[0].id;
     // delete the image
-    const res2 = await request.delete(`/${id}`);
+    const res2 = await request.delete(`/image/${id}`);
     // should be 200 OK
     expect(res2.statusCode).toEqual(200);
     // get all images (no images)
-    const res3 = await request.get("/");
+    const res3 = await request.get("/image");
     // should be 200 OK
     expect(res3.statusCode).toEqual(200);
     // should not contain the deleted image
