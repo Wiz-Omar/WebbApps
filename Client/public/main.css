@@ -72,7 +72,7 @@ h1{
 
 /* Custom styling for the logo in the header */
 .logo-img {
-  max-height: 100px; /* Set your desired max height for the logo */
+  max-height: 70px; /* Set your desired max height for the logo */
   width: auto;
 }
 
@@ -85,6 +85,6 @@ h1{
 
 .logo-text {
   font-family: 'Quite Magical', sans-serif;
-  font-size: 2rem;
+  font-size: 3rem;
 }
 
