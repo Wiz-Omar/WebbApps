@@ -1,7 +1,9 @@
 import express from "express";
-import { imageRouter } from "./router/imageRouter"; // Assuming you have an imageRouter
+import { imageRouter } from "./router/imageRouter";
+import cors from "cors";
 
 export const app = express();
 
-app.use(express.json()); // Middleware for parsing JSON bodies
-app.use("/image", imageRouter); // Use imageRouter for all requests to '/image'
+app.use(express.json());
+app.use("/image", imageRouter);
+app.use(cors());
