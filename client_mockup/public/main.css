@@ -61,7 +61,7 @@ h1{
   margin-bottom: 15px;
   border-radius: 2%; /*needed ??*/
 }
-/* Additional styling for the sticky header */
+
 .sticky-top {
   position: -webkit-sticky;
   position: sticky;
