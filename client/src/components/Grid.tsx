@@ -1,13 +1,14 @@
 import React from "react";
 import GridImg from "./GridImg";
+import { Image } from "../App";
 
 interface GridProps {
-    images: string[];
+    images: Image[];
   }
   
   function Grid({ images }: GridProps) {
     // Initialize arrays for each column
-    const columns: string[][] = [[], [], []];
+    const columns: Image[][] = [[], [], []];
   
     // Distribute images into columns
     images.forEach((image, index) => {
@@ -24,7 +25,7 @@ interface GridProps {
             console.log(colIndex),
             <div key={colIndex} className="col-md-4">
               {columnImages.map((image, imageIndex) => (
-                <GridImg key={imageIndex} image={image}></GridImg>
+                <GridImg key={imageIndex} image={image.filename}></GridImg>
               ))}
             </div>
           ))}
