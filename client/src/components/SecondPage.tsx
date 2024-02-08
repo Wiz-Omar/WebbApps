@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "./SecondPage.css";
@@ -7,6 +7,7 @@ import CloseIcon from "./CloseIcon";
 import DeleteIcon from "./DeleteIcon";
 import { Image } from "../App";
 import IconButton from "./IconButton";
+import FullSizeImage from "./FullSizeImg";
 
 // SecondPage props
 interface SecondPageProps {
@@ -17,6 +18,8 @@ const SecondPage = ( {callback} : SecondPageProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { image, id } = location.state as { image: Image; id: number };
+
+  const [showFullImage, setShowFullImage] = useState(false);
 
   // Handler to navigate back to the HomePage
   const handleClose = () => {
@@ -74,7 +77,16 @@ const SecondPage = ( {callback} : SecondPageProps) => {
       </div>
       <div className="row mt-5">
         <div className="col-12 image-container">
-          {image && <img src={image.url} alt="Selected" />}
+        <img
+            src={image.url}
+            alt="Selected"
+            onClick={() => setShowFullImage(true)}
+          />
+          {showFullImage && (
+            <FullSizeImage
+              imageUrl={image.url}
+              onClose={() => setShowFullImage(false)}
+            />)}
         </div>
       </div>
     </div>
