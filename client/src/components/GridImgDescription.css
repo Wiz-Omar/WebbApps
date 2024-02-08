@@ -1,0 +1,7 @@
+.grid-img-description {
+    background-color: white;
+    padding: 10px 20px; /* More padding on the horizontal axis */
+    border-radius: 20px; /* Rounded border */
+    margin-bottom: 15px;
+    margin-left: 5px;
+}

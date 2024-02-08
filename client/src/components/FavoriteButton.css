@@ -1,0 +1,7 @@
+.favorite-button {
+    background-color: white;
+    padding: 10px 20px; /* More padding on the horizontal axis */
+    border-radius: 20px; /* Rounded border */
+    margin-top: 5px;
+    margin-right: 5px;
+}
