@@ -25,7 +25,7 @@ function Grid({ images }: GridProps) {
           <div key={colIndex} className="col-md-4">
             {columnImages.map((image, imageIndex) => (
               // TODO: change to image.filename?
-              <GridImg key={imageIndex} image={image.url}></GridImg>
+              <GridImg key={imageIndex} image={image}></GridImg>
             ))}
           </div>
         ))}

@@ -55,7 +55,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<HomePage images={images} />} />
-          <Route path="/second" element={<SecondPage />} />
+          <Route path="/second" element={<SecondPage callback={getImages}/>} />
         </Routes>
       </div>
     </Router>

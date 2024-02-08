@@ -2,9 +2,10 @@ import React from "react";
 
 import "./GridImg.css";
 import { useNavigate } from "react-router-dom";
+import { Image } from "../App";
 
 interface GridImgProps {
-  image: string;
+  image: Image;
 }
 
 function GridImg({ image }: GridImgProps) {
@@ -17,7 +18,7 @@ function GridImg({ image }: GridImgProps) {
 
   return (
     <img
-      src={image}
+      src={image.url}
       alt="Image"
       className="grid-img"
       loading="lazy"

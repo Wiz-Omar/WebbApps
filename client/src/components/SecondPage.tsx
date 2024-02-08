@@ -1,9 +1,57 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const SecondPage = () => {
+import "./SecondPage.css";
+import DownloadIcon from "./DownloadIcon";
+import CloseIcon from "./CloseIcon";
+import DeleteIcon from "./DeleteIcon";
+import { Image } from "../App";
+import IconButton from "./IconButton";
+
+// SecondPage props
+interface SecondPageProps {
+  callback: () => void;
+}
+
+const SecondPage = ( {callback} : SecondPageProps) => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const { image, id } = location.state as { image: string; id: number };
+  const { image, id } = location.state as { image: Image; id: number };
+
+  // Handler to navigate back to the HomePage
+  const handleClose = () => {
+    navigate("/"); // Use '/' to navigate to the home page route
+  };
+
+  // Start a download to the users local machine
+  // TODO: does not seem to work correctly
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = image.url;
+    link.download = image.filename;
+    link.click();
+  };
+
+  // TODO: Make sure await success before calling callback and navigating back!
+  const handleDelete = async (image: Image, callback: () => void) => {
+    try {
+      const response = await fetch(`http://localhost:8080/image/${image.id}`, {
+        method: 'DELETE',
+      });
+      const result = await response.json();
+      if (response.ok) {
+        callback(); // Call the callback function to refetch the list of images
+        navigate("/");
+        console.log('Image deleted:', result);
+        // You might want to do something here to update the UI accordingly
+        // For example, removing the image from the state if you're keeping a list of images
+      } else {
+        console.error('Failed to delete image:', result.message);
+      }
+    } catch (error) {
+      console.error('An error occurred while deleting the image:', error);
+    }
+  };
 
   return (
     <div className="container">
@@ -11,80 +59,22 @@ const SecondPage = () => {
         <div className="col-9">
           <h1>
             <span className="file-label">File:</span>{" "}
-            <span className="file-name"></span>
+            <span className="file-name">{image.filename}</span>
           </h1>
         </div>
         <div className="col-1">
-          <button className="svg-button" aria-label="download">
-            <svg
-              className="svg-icon"
-              width="50"
-              height="50"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5.5 5.5C5.77614 5.5 6 5.72386 6 6V12C6 12.2761 5.77614 12.5 5.5 12.5C5.22386 12.5 5 12.2761 5 12V6C5 5.72386 5.22386 5.5 5.5 5.5Z"
-                fill="black"
-              />
-              <path
-                d="M8 5.5C8.27614 5.5 8.5 5.72386 8.5 6V12C8.5 12.2761 8.27614 12.5 8 12.5C7.72386 12.5 7.5 12.2761 7.5 12V6C7.5 5.72386 7.72386 5.5 8 5.5Z"
-                fill="black"
-              />
-              <path
-                d="M11 6C11 5.72386 10.7761 5.5 10.5 5.5C10.2239 5.5 10 5.72386 10 6V12C10 12.2761 10.2239 12.5 10.5 12.5C10.7761 12.5 11 12.2761 11 12V6Z"
-                fill="black"
-              />
-              <path
-                d="M14.5 3C14.5 3.55228 14.0523 4 13.5 4H13V13C13 14.1046 12.1046 15 11 15H5C3.89543 15 3 14.1046 3 13V4H2.5C1.94772 4 1.5 3.55228 1.5 3V2C1.5 1.44772 1.94772 1 2.5 1H6C6 0.447715 6.44772 0 7 0H9C9.55229 0 10 0.447715 10 1H13.5C14.0523 1 14.5 1.44772 14.5 2V3ZM4.11803 4L4 4.05902V13C4 13.5523 4.44772 14 5 14H11C11.5523 14 12 13.5523 12 13V4.05902L11.882 4H4.11803ZM2.5 3H13.5V2H2.5V3Z"
-                fill="black"
-              />
-            </svg>
-          </button>
+          <IconButton Icon={DeleteIcon} ariaLabel="delete" onClick={() => handleDelete(image, callback)} />
         </div>
         <div className="col-1">
-          <button className="svg-button" aria-label="delete">
-            <svg
-              className="svg-icon"
-              width="50"
-              height="50"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2.14645 2.85355C1.95118 2.65829 1.95118 2.34171 2.14645 2.14645C2.34171 1.95118 2.65829 1.95118 2.85355 2.14645L8 7.29289L13.1464 2.14645C13.3417 1.95118 13.6583 1.95118 13.8536 2.14645C14.0488 2.34171 14.0488 2.65829 13.8536 2.85355L8.70711 8L13.8536 13.1464C14.0488 13.3417 14.0488 13.6583 13.8536 13.8536C13.6583 14.0488 13.3417 14.0488 13.1464 13.8536L8 8.70711L2.85355 13.8536C2.65829 14.0488 2.34171 14.0488 2.14645 13.8536C1.95119 13.6583 1.95119 13.3417 2.14645 13.1464L7.29289 8L2.14645 2.85355Z"
-                fill="black"
-              />
-            </svg>
-          </button>
+          <IconButton Icon={DownloadIcon} ariaLabel="download" onClick={handleDownload} />
         </div>
         <div className="col-1">
-          <a href="../public/index.html">
-            <button className="svg-button" aria-label="delete">
-            <svg
-              className="svg-icon"
-              width="50"
-              height="50"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M1 8C1 11.866 4.13401 15 8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8ZM16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM8.5 4.5C8.5 4.22386 8.27614 4 8 4C7.72386 4 7.5 4.22386 7.5 4.5V10.2929L5.35355 8.14645C5.15829 7.95118 4.84171 7.95118 4.64645 8.14645C4.45118 8.34171 4.45118 8.65829 4.64645 8.85355L7.64645 11.8536C7.84171 12.0488 8.15829 12.0488 8.35355 11.8536L11.3536 8.85355C11.5488 8.65829 11.5488 8.34171 11.3536 8.14645C11.1583 7.95118 10.8417 7.95118 10.6464 8.14645L8.5 10.2929V4.5Z"
-                fill="black"
-              />
-            </svg>
-            </button>
-          </a>
+          <IconButton Icon={CloseIcon} ariaLabel="close" onClick={handleClose} />
         </div>
       </div>
       <div className="row mt-5">
         <div className="col-12 image-container">
-          {image && <img src={image} alt="Selected" />}
+          {image && <img src={image.url} alt="Selected" />}
         </div>
       </div>
     </div>

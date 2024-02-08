@@ -1,6 +1,13 @@
 .grid-img {
-    width: 100%;
-    height: auto;
-    margin-bottom: 15px;
-    border-radius: 2%; /*needed ??*/
-  }
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+  border-radius: 2%; /* If you desire rounded corners for aesthetics */
+  transition: transform 0.3s ease, filter 0.3s ease; /* Smooth transition for transform and filter */
+  cursor: pointer; /* Changes cursor on hover */
+}
+
+.grid-img:hover {
+  filter: grayscale(50%); /* Greyscale effect on hover */
+  transform: scale(1.01); /* Slightly enlarges the image */
+}
