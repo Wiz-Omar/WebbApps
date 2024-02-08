@@ -1,7 +1,16 @@
 import { Image } from "../model/image";
 
 export class ImageService {
-    private images: Image[] = [];
+    //private images: Image[] = [];
+    // create a temporary array with one image to test the app
+    private images: Image[] = [
+        {
+            id: Date.now(),
+            filename: "placeholder",
+            url: "https://via.placeholder.com/150",
+            uploadDate: new Date()
+        }
+    ];
 
     async addImage(filename: string, url: string): Promise<Image> {
         const image: Image = {

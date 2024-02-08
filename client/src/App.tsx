@@ -5,10 +5,15 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Grid from "./components/Grid";
 import axios from "axios";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SecondPage from "./components/SecondPage";
+import HomePage from "./HomePage";
 
 export interface Image {
   id: number;
   filename: string;
+  url: string;
+  uploadDate: Date;
 }
 
 function App() {
@@ -18,7 +23,7 @@ function App() {
     setTimeout(async () => {
       try {
         const response = await axios.get<Image[]>(
-          "http://localhost:8080/images"
+          "http://localhost:8080/image/"
         );
         const images = response.data;
         setImages(images);
@@ -42,13 +47,18 @@ function App() {
 
   useEffect(() => {
     getImages();
+    console.log(images.length);
   }, []);
 
   return (
-    <div className="App">
-      <Navbar></Navbar>
-      <Grid images={images} />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<HomePage images={images} />} />
+          <Route path="/second" element={<SecondPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
