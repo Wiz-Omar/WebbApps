@@ -19,43 +19,32 @@ export interface Image {
 function App() {
   const [images, setImages] = useState<Image[]>([]);
 
-  async function getImages() {
-    setTimeout(async () => {
-      try {
-        const response = await axios.get<Image[]>(
-          "http://localhost:8080/image/"
-        );
-        const images = response.data;
-        setImages(images);
-      } catch (error: any) {
-        console.error(error);
-      }
-    }, 1000);
+  async function getImages(sortField = "filename", sortOrder = "asc") {
+    try {
+      console.log("Getting images");
+      const response = await axios.get<Image[]>(
+        `http://localhost:8080/image?sortField=${sortField}&sortOrder=${sortOrder}`
+      );
+      const images = response.data;
+      setImages(images);
+    } catch (error) {
+      console.error(error);
+    }
   }
-
-  const imgs: string[] = [
-    "https://via.placeholder.com/10",
-    "https://via.placeholder.com/20",
-    "https://via.placeholder.com/30",
-    "https://via.placeholder.com/40",
-    "https://via.placeholder.com/50",
-    "https://via.placeholder.com/60",
-    "https://via.placeholder.com/70",
-    "https://via.placeholder.com/80",
-    "https://via.placeholder.com/90",
-  ];
 
   useEffect(() => {
     getImages();
-    console.log(images.length);
   }, []);
 
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<HomePage images={images} />} />
-          <Route path="/second" element={<SecondPage callback={getImages}/>} />
+          <Route
+            path="/"
+            element={<HomePage images={images} callback={getImages} />}
+          />
+          <Route path="/second" element={<SecondPage callback={getImages} />} />
         </Routes>
       </div>
     </Router>

@@ -4,8 +4,13 @@ import logo from '../assets/img/squid.png'
 
 import './Navbar.css'
 import UploadButton from './UploadButton'
+import SortDropdown from './SortDropdown';
 
-function Navbar() {
+interface NavbarProps {
+  callback: (sortField?: string, sortOrder?: string) => void;
+}
+
+function Navbar({ callback }: NavbarProps) {
   return (
     <nav className="navbar navbar-expand-lg navbar-light sticky-top rounded bg-light">
         <div className="container">
@@ -13,7 +18,7 @@ function Navbar() {
             <img src={logo} alt="Logo" className="logo-img"></img>
             <span className="logo-text">PicPics</span>
           </a>
-
+          <SortDropdown callback={callback} />
           <div className="d-flex">
             <UploadButton />
           </div>
