@@ -2,7 +2,7 @@ import { Image } from "../model/image";
 
 export class ImageService {
     //private images: Image[] = [];
-    // create a temporary array with one image to test the app
+    // create a temporary array with image(s) to test the app
     private images: Image[] = [
         {
             id: Date.now(),
@@ -40,7 +40,6 @@ export class ImageService {
             url: "https://images.unsplash.com/photo-1707305318447-a40cc038dd7b?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             uploadDate: new Date()
         }
-
         
     ];
 

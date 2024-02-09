@@ -30,20 +30,28 @@ import { Image } from "../model/image";
 const request = SuperTest.default(app);
 
 test("End-to-end test", async () => {
+    
     // upload an image
     const res0 = await request.post("/image").send({ filename: "test.png", url: "http://example.com/test.jpg" });
     expect(res0.statusCode).toEqual(201);
-    // get all images (only one image)
+
+    // get all images
     const res1 = await request.get("/image");
     // should be 200 OK
     expect(res1.statusCode).toEqual(200);
-    // get the ID of the image
-    const id = res1.body[0].id;
+
+    // should contain the uploaded image
+    const images = res1.body;
+    expect(images.map((image : Image) => image.filename)).toContain("test.png");
+    
+    // get the ID of the last image (that was added in the previous step)
+    const id = images[images.length - 1].id;
     // delete the image
     const res2 = await request.delete(`/image/${id}`);
     // should be 200 OK
     expect(res2.statusCode).toEqual(200);
-    // get all images (no images)
+
+    // get all images
     const res3 = await request.get("/image");
     // should be 200 OK
     expect(res3.statusCode).toEqual(200);
