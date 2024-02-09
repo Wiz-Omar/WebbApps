@@ -31,6 +31,19 @@ likeRouter.delete('/:imageId', async (req, res) => {
     }
 });
 
+// Endpont for getting the liked status of an image
+likeRouter.get('/:imageId', async (req, res) => {
+    try {
+        const { imageId } = req.params;
+        // Implement logic to get the liked status of the image
+        const liked = await imageService.isImageLiked(imageId);
+        res.status(200).send({ liked });
+    } catch (error) {
+        console.error('Error getting liked status:', error);
+        res.status(500).send('Internal server error');
+    }
+});
+
 // Endpoint for getting all liked imageIDs
 //TODO: is this necessary?
 likeRouter.get('/', async (req, res) => {

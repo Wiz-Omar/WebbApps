@@ -35,11 +35,11 @@ function GridImg({ image }: GridImgProps) {
 
   async function getLike(imageId: string) {
     try {
-      const response = await axios.get(`http://localhost:8080/like`);
-      const likedImages = response.data;
+      const response = await axios.get(`http://localhost:8080/like/${imageId}`);
+      const isLiked = response.data.liked;
       // check if image.id is in likedImages
       //TODO: write functionality for checking for just one image instead
-      setIsLiked(likedImages.includes(imageId));
+      setIsLiked((isLiked));
     } catch (error) {
       console.error(error);
     }

@@ -7,6 +7,10 @@ export class LikeService {
         this.likes = new Set<string>();
     }
 
+    async isImageLiked(imageId: string): Promise<boolean> {
+        return this.likes.has(imageId);
+    }
+
     async likeImage(imageId: string): Promise<void> {
         this.likes.add(imageId);
     }
