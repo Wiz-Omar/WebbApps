@@ -1,7 +1,7 @@
 import React from "react";
 
 import "./FullSizeImg.css";
-import IconButton from "./IconButton";
+import IconButton from "../common/IconButton";
 import MinimizeIcon from "./MinimizeIcon";
 
 interface FullSizeImageProps {

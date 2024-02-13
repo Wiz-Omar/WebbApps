@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Image } from "../App";
+import { Image } from "../../App";
 
 import "./GridImg.css";
-import DownloadIcon from "./DownloadIcon";
-import IconButton from "./IconButton";
-import FilledHeartIcon from "./FilledHeartIcon";
+import DownloadIcon from "../second_page/DownloadIcon";
+import IconButton from "../common/IconButton";
+import FilledHeartIcon from "../common/FilledHeartIcon";
 import FavoriteButton from "./FavoriteButton";
 import GridImgDescription from "./GridImgDescription";
 import axios from "axios";

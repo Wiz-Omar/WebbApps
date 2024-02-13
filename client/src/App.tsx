@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import Navbar from "./components/Navbar";
-import Grid from "./components/Grid";
+import Navbar from "./components/home_page/Navbar";
+import Grid from "./components/home_page/Grid";
 import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SecondPage from "./components/SecondPage";
-import HomePage from "./HomePage";
+import SecondPage from "./components/second_page/SecondPage";
+import HomePage from "./components/home_page/HomePage";
 
 export interface Image {
   id: number;

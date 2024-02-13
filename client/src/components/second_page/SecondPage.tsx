@@ -5,8 +5,8 @@ import "./SecondPage.css";
 import DownloadIcon from "./DownloadIcon";
 import CloseIcon from "./CloseIcon";
 import DeleteIcon from "./DeleteIcon";
-import { Image } from "../App";
-import IconButton from "./IconButton";
+import { Image } from "../../App";
+import IconButton from "../common/IconButton";
 import FullSizeImage from "./FullSizeImg";
 
 // SecondPage props

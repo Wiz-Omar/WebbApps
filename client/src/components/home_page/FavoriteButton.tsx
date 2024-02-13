@@ -1,8 +1,8 @@
 import React from "react";
-import FilledHeartIcon from "./FilledHeartIcon";
+import FilledHeartIcon from "../common/FilledHeartIcon";
 
 import "./FavoriteButton.css";
-import UnfilledHeartIcon from "./UnfilledHeartIcon";
+import UnfilledHeartIcon from "../common/UnfilledHeartIcon";
 
 interface FavoriteButtonProps {
   isLiked: boolean;

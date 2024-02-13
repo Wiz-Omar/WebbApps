@@ -1,8 +1,8 @@
 import React from 'react'
 
-import Grid, { GridProps } from './components/Grid'
-import Navbar from './components/Navbar'
-import { Image } from './App'
+import Grid, { GridProps } from './Grid'
+import Navbar from './Navbar'
+import { Image } from '../../App'
 
 interface HomePageProps {
   images: Image[];
