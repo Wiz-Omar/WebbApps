@@ -1,6 +1,6 @@
 import React from 'react'
 
-import logo from '../assets/img/squid.png'
+import logo from '../../assets/img/squid.png'
 
 import './Navbar.css'
 import UploadButton from './UploadButton'
