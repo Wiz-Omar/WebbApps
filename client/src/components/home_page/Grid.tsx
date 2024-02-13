@@ -18,6 +18,15 @@ function Grid({ images }: GridProps) {
 
   console.log(columns);
 
+  // Check if there are no images
+  if (images.length === 0) {
+    return (
+      <div className="container mt-4 text-center">
+        <p data-testid="no-images-message">No images to display.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-4">
       <div className="row">
