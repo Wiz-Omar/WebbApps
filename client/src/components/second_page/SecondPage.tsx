@@ -28,11 +28,17 @@ const SecondPage = ( {callback} : SecondPageProps) => {
 
   // Start a download to the users local machine
   // TODO: does not seem to work correctly
-  const handleDownload = () => {
-    const link = document.createElement("a");
-    link.href = image.url;
-    link.download = image.filename;
-    link.click();
+  const handleDownload = async () => {
+    try {
+      const link = document.createElement("a");
+      const imageObj: Response = await fetch(image.url);
+      const imageBlob: Blob = await imageObj.blob();
+      link.href = URL.createObjectURL(imageBlob);
+      link.download = image.filename;
+      link.click();
+    } catch (error: any){
+      console.error('Could not fetch image', error);
+    }
   };
 
   // TODO: Make sure await success before calling callback and navigating back!

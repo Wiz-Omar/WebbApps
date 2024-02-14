@@ -7,6 +7,7 @@
 //   const linkElement = screen.getByText(/learn react/i);
 //   expect(linkElement).toBeInTheDocument();
 // });
+export{};
 
 test('placeholder test', () => {
   expect(1).toBe(1);
