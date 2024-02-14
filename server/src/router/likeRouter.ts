@@ -1,8 +1,7 @@
 import express, { Request, Response } from "express";
 import { LikeService } from "../service/likeService";
 
-const imageService = new LikeService();
-
+export const likeService = new LikeService();
 export const likeRouter = express.Router();
 
 // Endpoint for liking an image
@@ -10,7 +9,7 @@ likeRouter.post('/:imageId', async (req, res) => {
     try {
         const { imageId } = req.params;
         // Implement logic to like the image
-        await imageService.likeImage(imageId);
+        await likeService.likeImage(imageId);
         res.status(200).send('Image liked successfully');
     } catch (error) {
         console.error('Error liking image:', error);
@@ -23,7 +22,7 @@ likeRouter.delete('/:imageId', async (req, res) => {
     try {
         const { imageId } = req.params;
         // Implement logic to unlike the image
-        await imageService.unlikeImage(imageId);
+        await likeService.unlikeImage(imageId);
         res.status(200).send('Image unliked successfully');
     } catch (error) {
         console.error('Error unliking image:', error);
@@ -36,7 +35,7 @@ likeRouter.get('/:imageId', async (req, res) => {
     try {
         const { imageId } = req.params;
         // Implement logic to get the liked status of the image
-        const liked = await imageService.isImageLiked(imageId);
+        const liked = await likeService.isImageLiked(imageId);
         res.status(200).send({ liked });
     } catch (error) {
         console.error('Error getting liked status:', error);
@@ -48,7 +47,7 @@ likeRouter.get('/:imageId', async (req, res) => {
 //TODO: is this necessary?
 likeRouter.get('/', async (req, res) => {
     try {
-        const likedImages = await imageService.getLikedImages();
+        const likedImages = await likeService.getLikedImages();
         res.status(200).send(likedImages);
     } catch (error) {
         console.error('Error getting liked images:', error);

@@ -1,7 +1,13 @@
 import { Image } from "../model/image";
 import { validSortFields, validSortOrders } from "../model/sorting";
+import { LikeService } from "./likeService";
 
 export class ImageService {
+    ls ?: LikeService;
+    constructor (ls ?: LikeService) {
+        this.ls = ls;
+    }
+
     //private images: Image[] = [];
     // create a temporary array with image(s) to test the app
     private images: Image[] = [
@@ -93,6 +99,10 @@ export class ImageService {
         if (index === -1) {
             return false; // Image not found
         }
+
+        // If image is liked, it is also removed from that list
+        this.ls?.unlikeImage(id.toString());
+
         this.images.splice(index, 1);
         return true; // Deletion successful
     }    

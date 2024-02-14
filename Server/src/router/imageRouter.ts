@@ -2,8 +2,9 @@ import express, { Request, Response } from "express";
 import { ImageService } from "../service/imageService";
 import { Image } from "../model/image";
 import { validSortOrders, validSortFields } from "../model/sorting";
+import { likeService } from "./likeRouter";
 
-const imageService = new ImageService();
+const imageService = new ImageService(likeService);
 
 export const imageRouter = express.Router();
 

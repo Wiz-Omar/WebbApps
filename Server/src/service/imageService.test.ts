@@ -1,5 +1,6 @@
 // imageService.test.ts
 import { ImageService } from "./imageService";
+import { LikeService } from "./likeService";
 
 // Testing deletion of an image
 test("If an image is deleted from the list then it should not be in the list", async () => {
@@ -9,6 +10,33 @@ test("If an image is deleted from the list then it should not be in the list", a
   const images = await imageService.getImages();
   expect(images.some((image) => image.id === id)).toBeFalsy();
 });
+
+test("If a liked image is removed, it should be removed from the liked images array aswell", async() => {
+  const likeService = new LikeService();
+  const imageService = new ImageService(likeService);
+
+  const filename = "test.png";
+  const url = "http://example.com/test.jpg";
+
+  // Create image
+  const image = await imageService.addImage(filename, url);
+  const imageId = image.id;
+  expect(await likeService.isImageLiked(imageId.toString())).toBe(false);
+
+  // Like image
+  await likeService.likeImage(imageId.toString());
+  expect(await likeService.isImageLiked(imageId.toString())).toBe(true);
+
+  // Delete image
+  await imageService.deleteImage(imageId);
+  const images = await imageService.getImages();
+
+  // Image should not be in images list
+  expect(images.some((image) => image.id === imageId)).toBeFalsy();
+
+  //Image should not be in liked images list
+  expect(await likeService.isImageLiked(imageId.toString())).toBe(false);
+})
 
 // Testing addition of an image
 test("If an image is added to the list then it should be in the list", async () => {
