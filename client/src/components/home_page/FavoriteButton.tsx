@@ -1,7 +1,7 @@
 import React from "react";
 import FilledHeartIcon from "../common/FilledHeartIcon";
 
-import "./FavoriteButton.css";
+import "./Button.css";
 import UnfilledHeartIcon from "../common/UnfilledHeartIcon";
 
 interface FavoriteButtonProps {
@@ -11,7 +11,7 @@ interface FavoriteButtonProps {
 
 const FavoriteButton = ({ isLiked, callback }: FavoriteButtonProps) => {
   return (
-    <div className="favorite-button" onClick={ callback }>
+    <div className="button" onClick={ callback }>
       {isLiked ? <FilledHeartIcon /> : <UnfilledHeartIcon />}
     </div>
   );

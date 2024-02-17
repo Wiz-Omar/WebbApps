@@ -4,9 +4,10 @@ import { Image } from "../../App";
 
 export interface GridProps {
   images: Image[];
+  callback: () => void;
 }
 
-function Grid({ images }: GridProps) {
+function Grid({ images, callback }: GridProps) {
   // Initialize arrays for each column
   const columns: Image[][] = [[], [], []];
 
@@ -34,7 +35,7 @@ function Grid({ images }: GridProps) {
           <div key={colIndex} className="col-md-4">
             {columnImages.map((image, imageIndex) => (
               // TODO: change to image.filename?
-              <GridImg key={imageIndex} image={image}></GridImg>
+              <GridImg key={imageIndex} image={image} callback={callback} />
             ))}
           </div>
         ))}

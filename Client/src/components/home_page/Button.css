@@ -1,7 +1,12 @@
-.favorite-button {
+.button {
     background-color: white;
     padding: 10px 20px; /* More padding on the horizontal axis */
     border-radius: 20px; /* Rounded border */
     margin-top: 5px;
     margin-right: 5px;
 }
+
+.button:hover {
+    transition: transform 0.3s ease, filter 0.3s ease;
+    transform: scale(1.1); /* Scale effect on hover */
+  }

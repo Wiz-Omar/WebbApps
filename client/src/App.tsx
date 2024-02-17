@@ -44,7 +44,10 @@ function App() {
             path="/"
             element={<HomePage images={images} callback={getImages} />}
           />
-          <Route path="/second" element={<SecondPage callback={getImages} />} />
+          <Route 
+            path="/second" 
+            element={<SecondPage callback={getImages} />} 
+          />
         </Routes>
       </div>
     </Router>

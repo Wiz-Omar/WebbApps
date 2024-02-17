@@ -12,7 +12,7 @@ jest.mock("./GridImg", () => {
 describe("Grid component", () => {
   it("renders correctly with no images", () => {
     const images: Image[] = [];
-    render(<Grid images={images} />);
+    render(<Grid images={images} callback={() => {}}/>);
     const noImagesMessage = screen.getByTestId("no-images-message");
     expect(noImagesMessage).toBeInTheDocument();
   });
@@ -25,7 +25,7 @@ describe("Grid component", () => {
       url: `https://example.com/${i + 1}.png`,
       uploadDate: new Date(),
     }));
-    const { container } = render(<Grid images={images} />);
+    const { container } = render(<Grid images={images} callback={() => {}}/>);
     const columns = container.querySelectorAll(".col-md-4"); // Assuming you're using Bootstrap or similar for columns
     expect(columns.length).toBe(3);
   });
@@ -39,7 +39,7 @@ describe("Grid component", () => {
         uploadDate: new Date(),
       }));
 
-      render(<Grid images={images} />);
+      render(<Grid images={images} callback={() => {}}/>);
       images.forEach((image) => {
         const renderedImage = screen.getByTestId(`grid-img-${image.id}`);
         expect(renderedImage).toHaveTextContent(image.url);

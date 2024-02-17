@@ -9,12 +9,14 @@ import FilledHeartIcon from "../common/FilledHeartIcon";
 import FavoriteButton from "./FavoriteButton";
 import GridImgDescription from "./GridImgDescription";
 import axios from "axios";
+import DeleteButton from "./DeleteButton";
 
 interface GridImgProps {
   image: Image;
+  callback: () => void;
 }
 
-function GridImg({ image }: GridImgProps) {
+function GridImg({ image, callback }: GridImgProps) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -88,6 +90,20 @@ function GridImg({ image }: GridImgProps) {
     // The setIsLiked state update is now moved inside the setLike and setUnlike functions
   };
 
+  const handleDelete = async ( ) => {
+    const imageId = image.id.toString();
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/image/${imageId}`
+      );
+      if (response.status === 200) {
+        // TODO: fix delete
+        callback();
+        console.log("image deleted");
+      }
+    } catch (error) {}
+  };
+
   return (
     <div
       onMouseEnter={handleMouseEnter}
@@ -102,23 +118,26 @@ function GridImg({ image }: GridImgProps) {
         onClick={handleClick}
       />
       {isHovered && (
-        <div>
-          <div
-            className="download-icon-container"
-            style={{ position: "absolute", top: 5, right: 5 }}
-          >
+        <div
+          className="button-column"
+          style={{ position: "absolute", top: 5, right: 5, display: "flex", flexDirection: "column", alignItems: "flex-end" }}
+        >
+          <div className="button-container" style={{display: 'flex'}}>
+            <DeleteButton callback={handleDelete} />
             <FavoriteButton isLiked={isLiked} callback={handleCallback} />
-          </div>
-          <div
-            className="download-icon-container"
-            style={{ position: "absolute", left: 5, bottom: 5 }}
-          >
-            <GridImgDescription child={image.filename} />
           </div>
         </div>
       )}
+      <div
+        className="download-icon-container"
+        style={{ position: "absolute", left: 5, bottom: 5 }}
+      >
+        <GridImgDescription child={image.filename} />
+      </div>
     </div>
   );
+  
+  
 }
 
 export default GridImg;
