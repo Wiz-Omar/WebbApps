@@ -1,8 +1,10 @@
 import { Image } from "../model/image";
 import { validSortFields, validSortOrders } from "../model/sorting";
 import { LikeService } from "./likeService";
+import { IImageService } from "./IImageService";
+import {imageModel} from "../../db/image.db";
 
-export class ImageService {
+export class ImageService implements IImageService {
     ls ?: LikeService;
     constructor (ls ?: LikeService) {
         this.ls = ls;
@@ -51,18 +53,25 @@ export class ImageService {
     ];
 
     async addImage(filename: string, url: string): Promise<Image> {
-        const image: Image = {
+        return await imageModel.create({
+            id: Date.now(), 
+            filename: filename, 
+            url: url,
+            uploadDate: new Date()
+        });
+        /* const image: Image = {
             id: Date.now(), // Simple ID generation
             filename: filename,
             url: url,
             uploadDate: new Date()
         };
         this.images.push(image);
-        return { ...image };
+        return { ...image }; */
     }
 
     async getImages(sortField: string = 'filename', sortOrder: string = 'asc'): Promise<Image[]> {
-
+        return await imageModel.find();
+        /*
         // Validate sortField and sortOrder
         if (!validSortFields.includes(sortField)) {
             throw new Error(`Invalid sort field. Valid options are ${validSortFields.join(', ')}.`);
@@ -91,10 +100,23 @@ export class ImageService {
 
         // Deep copy to avoid mutating the original array
         return JSON.parse(JSON.stringify(this.images));
+        */
     }
     
 
     async deleteImage(id: number): Promise<boolean> {
+        await imageModel.deleteOne({id: id});
+        const result: boolean | null = await imageModel.findById({id: id});
+        if (!result){
+            if (result === null){
+                alert("Image could not be deleted");
+                return false;
+            }
+            alert("Image not found");
+            return false;
+        };
+        return true;
+        /*
         const index = this.images.findIndex(image => image.id === id);
         if (index === -1) {
             return false; // Image not found
@@ -105,5 +127,6 @@ export class ImageService {
 
         this.images.splice(index, 1);
         return true; // Deletion successful
+        */
     }    
 }
