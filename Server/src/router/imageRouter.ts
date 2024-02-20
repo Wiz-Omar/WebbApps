@@ -3,8 +3,9 @@ import { ImageService } from "../service/imageService";
 import { Image } from "../model/image";
 import { validSortOrders, validSortFields } from "../model/sorting";
 import { likeService } from "./likeRouter";
+import { IImageService } from "../service/IImageService";
 
-const imageService = new ImageService(likeService);
+const imageService: IImageService = new ImageService(likeService);
 
 export const imageRouter = express.Router();
 
