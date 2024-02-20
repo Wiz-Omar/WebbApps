@@ -19,7 +19,7 @@ describe('FavoriteButton component', () => {
   test('calls callback function when clicked', () => {
     const mockCallback = jest.fn();
     const { container } = render(<FavoriteButton isLiked={false} callback={mockCallback} />);
-    const favoriteButton = container.querySelector('.favorite-button') as HTMLElement;
+    const favoriteButton = container.querySelector('.button') as HTMLElement;
     fireEvent.click(favoriteButton);
     expect(mockCallback).toHaveBeenCalledTimes(1);
   });
