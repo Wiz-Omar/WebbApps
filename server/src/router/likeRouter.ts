@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
 import { LikeService } from "../service/likeService";
+import { ILikeService } from "../service/ILikeService";
 
-export const likeService = new LikeService();
+export const likeService : ILikeService = new LikeService();
 export const likeRouter = express.Router();
 
 // Endpoint for liking an image

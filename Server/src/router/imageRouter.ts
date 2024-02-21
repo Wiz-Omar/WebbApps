@@ -28,6 +28,7 @@ imageRouter.get("/", async (req: Request, res: Response) => {
     }
 
     const images = await imageService.getImages(
+      //We put undefind in the interface 
       sortField,
       sortOrder
     );
@@ -40,16 +41,16 @@ imageRouter.get("/", async (req: Request, res: Response) => {
 imageRouter.post(
   "/",
   async (
-    req: Request<{}, {}, { filename: string; url: string }>,
+    req: Request<{}, {}, { filename: string; url: string; userId: string | undefined}>,
     res: Response
   ) => {
     try {
-      const { filename, url } = req.body;
-      if (typeof filename !== "string" || typeof url !== "string") {
+      const { filename, url, userId} = req.body;
+      if (typeof filename !== "string" || typeof url !== "string" || typeof userId !== ("string" || "undefind")) {
         res.status(400).send("Invalid input data for filename or url");
         return;
       }
-      const newImage = await imageService.addImage(filename, url);
+      const newImage = await imageService.addImage(filename, url, userId);
       res.status(201).send(newImage);
     } catch (e: any) {
       res.status(500).send(e.message);

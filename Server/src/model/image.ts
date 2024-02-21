@@ -1,5 +1,6 @@
 export interface Image {
-    id: number;
+    imageId: number;
+    userId: string;
     filename: string;
     url: string;
     uploadDate: Date;
