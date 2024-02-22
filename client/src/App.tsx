@@ -12,23 +12,28 @@ import HomePage from "./components/home_page/HomePage";
 export interface Image {
   id: number;
   filename: string;
-  url: string;
+  // stored as base64 string
+  data: string;
   uploadDate: Date;
 }
 
 function App() {
   const [images, setImages] = useState<Image[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function getImages(sortField = "filename", sortOrder = "asc") {
+  async function getImages(sortField = "uploadDate", sortOrder = "desc") {
     try {
-      console.log("Getting images");
+      setIsLoading(true);
       const response = await axios.get<Image[]>(
         `http://localhost:8080/image?sortField=${sortField}&sortOrder=${sortOrder}`
       );
       const images = response.data;
+
       setImages(images);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -42,7 +47,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<HomePage images={images} callback={getImages} />}
+            element={<HomePage images={images} callback={getImages} isLoading={isLoading}/>}
           />
           <Route 
             path="/second" 

@@ -5,37 +5,27 @@ import { conn } from "./conn";
 const Images : Schema = new Schema({
 
  id : {
-
- type : Number,
-
- required : true,
-
- unique: true
-
+   type : Number,
+   required : true,
+   unique: true
  },
 
  filename : {
-
- type : String,
-
- required : true
-
+   type : String,
+   required : true
  },
 
- url : {
-
- type : String,
-
- required : true,
- uniques : true
-
+ data : {
+   type : String,
+   required : true,
  },
+
  uploadDate : {
-
     type : Date,
     required : true,
     unique : true
- }
+ },
+
 });
 
 export const imageModel = conn.model<Image>("Images Collection", Images);

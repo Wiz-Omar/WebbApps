@@ -17,8 +17,6 @@ function Grid({ images, callback }: GridProps) {
     columns[columnIndex].push(image);
   });
 
-  console.log(columns);
-
   // Check if there are no images
   if (images.length === 0) {
     return (

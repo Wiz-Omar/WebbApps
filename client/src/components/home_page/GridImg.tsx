@@ -17,6 +17,7 @@ interface GridImgProps {
 }
 
 function GridImg({ image, callback }: GridImgProps) {
+
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -80,6 +81,7 @@ function GridImg({ image, callback }: GridImgProps) {
     getLike(image.id.toString());
   }, [image.id]);
 
+  
   const handleCallback = async () => {
     const imageId = image.id.toString(); // Assuming image.id is the identifier used in your backend
     if (isLiked) {
@@ -105,13 +107,14 @@ function GridImg({ image, callback }: GridImgProps) {
   };
 
   return (
+
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ position: "relative" }} // Ensure the container has a position to position the icon
     >
       <img
-        src={image.url}
+        src={`data:image/jpeg;base64,${image.data}`}
         alt="Image"
         className="grid-img"
         loading="lazy"

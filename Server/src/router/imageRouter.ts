@@ -4,10 +4,13 @@ import { Image } from "../model/image";
 import { validSortOrders, validSortFields } from "../model/sorting";
 import { likeService } from "./likeRouter";
 import { IImageService } from "../service/IImageService";
+import multer from "multer";
 
 const imageService: IImageService = new ImageService(likeService);
 
 export const imageRouter = express.Router();
+
+const upload = multer();
 
 imageRouter.get("/", async (req: Request, res: Response) => {
   try {
@@ -31,31 +34,29 @@ imageRouter.get("/", async (req: Request, res: Response) => {
       sortField,
       sortOrder
     );
+    
     res.status(200).send(images);
   } catch (e: any) {
     res.status(500).send(e.message);
   }
 });
 
-imageRouter.post(
-  "/",
-  async (
-    req: Request<{}, {}, { filename: string; url: string }>,
-    res: Response
-  ) => {
-    try {
-      const { filename, url } = req.body;
-      if (typeof filename !== "string" || typeof url !== "string") {
-        res.status(400).send("Invalid input data for filename or url");
-        return;
+imageRouter.post("/", upload.single('file'), async (req, res) => {
+  try {
+      if (!req.file) {
+          return res.status(400).send("No file uploaded.");
       }
-      const newImage = await imageService.addImage(filename, url);
-      res.status(201).send(newImage);
-    } catch (e: any) {
-      res.status(500).send(e.message);
-    }
+      // Convert the uploaded file to Base64
+      const base64Data = req.file.buffer.toString('base64');
+      const filename = req.file.originalname;
+
+      const result = await imageService.addImage(filename, base64Data);
+      // Respond with appropriate message
+      res.status(201).json({ message: "Image uploaded successfully", result });
+  } catch (error) {
+      res.status(500).send();
   }
-);
+});
 
 imageRouter.delete(
   "/:id",

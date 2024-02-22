@@ -3,9 +3,10 @@ import { render, screen } from "@testing-library/react";
 import Grid from "./Grid";
 import { Image } from "../../App";
 
+//TODO: change this later!
 jest.mock("./GridImg", () => {
   return ({ image }: { image: Image }) => (
-    <div data-testid={`grid-img-${image.id}`}>{image.url}</div>
+    <div data-testid={`grid-img-${image.id}`}>{image.data}</div>
   );
 });
 
@@ -22,7 +23,7 @@ describe("Grid component", () => {
     const images: Image[] = Array.from({ length: 3 }, (_, i) => ({
       id: i + 1,
       filename: `${i + 1}.png`,
-      url: `https://example.com/${i + 1}.png`,
+      data: `https://example.com/${i + 1}.png`,
       uploadDate: new Date(),
     }));
     const { container } = render(<Grid images={images} callback={() => {}}/>);
@@ -35,14 +36,14 @@ describe("Grid component", () => {
       const images: Image[] = Array.from({ length: count }, (_, i) => ({
         id: i + 1,
         filename: `${i + 1}.png`,
-        url: `https://example.com/${i + 1}.png`,
+        data: `https://example.com/${i + 1}.png`,
         uploadDate: new Date(),
       }));
 
       render(<Grid images={images} callback={() => {}}/>);
       images.forEach((image) => {
         const renderedImage = screen.getByTestId(`grid-img-${image.id}`);
-        expect(renderedImage).toHaveTextContent(image.url);
+        expect(renderedImage).toHaveTextContent(image.data);
       });
     });
   });

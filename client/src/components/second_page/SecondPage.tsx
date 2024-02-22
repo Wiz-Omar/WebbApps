@@ -31,7 +31,7 @@ const SecondPage = ( {callback} : SecondPageProps) => {
   const handleDownload = async () => {
     try {
       const link = document.createElement("a");
-      const imageObj: Response = await fetch(image.url);
+      const imageObj: Response = await fetch(image.data);
       const imageBlob: Blob = await imageObj.blob();
       link.href = URL.createObjectURL(imageBlob);
       link.download = image.filename;
@@ -84,13 +84,13 @@ const SecondPage = ( {callback} : SecondPageProps) => {
       <div className="row mt-5">
         <div className="col-12 image-container">
         <img
-            src={image.url}
+            src={image.data}
             alt="Selected"
             onClick={() => setShowFullImage(true)}
           />
           {showFullImage && (
             <FullSizeImage
-              imageUrl={image.url}
+              imageUrl={image.data}
               onClose={() => setShowFullImage(false)}
             />)}
         </div>
