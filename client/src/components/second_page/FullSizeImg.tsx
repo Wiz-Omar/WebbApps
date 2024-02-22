@@ -3,20 +3,21 @@ import React from "react";
 import "./FullSizeImg.css";
 import IconButton from "../common/IconButton";
 import MinimizeIcon from "./MinimizeIcon";
+import { Image } from "../../App";
 
 interface FullSizeImageProps {
-  imageUrl: string;
+  image: Image;
   onClose: () => void;
 }
 
-const FullSizeImage = ({ imageUrl, onClose }: FullSizeImageProps) => {
+const FullSizeImage = ({ image, onClose }: FullSizeImageProps) => {
   const handleClick = () => {
     onClose(); // Call the onClose callback to close the full-size image
   };
 
   return (
     <div className="full-size-image-container" onClick={handleClick}>
-      <img src={imageUrl} alt="Full Size" />
+      <img src={`data:image/jpeg;base64,${image.data}`} alt="Full Size" />
       <div style={{ position: "absolute", right: 5, top: 5}}>
       </div>
     </div>

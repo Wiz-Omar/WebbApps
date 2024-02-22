@@ -26,20 +26,32 @@ const SecondPage = ( {callback} : SecondPageProps) => {
     navigate("/"); // Use '/' to navigate to the home page route
   };
 
-  // Start a download to the users local machine
-  // TODO: does not seem to work correctly
-  const handleDownload = async () => {
-    try {
-      const link = document.createElement("a");
-      const imageObj: Response = await fetch(image.data);
-      const imageBlob: Blob = await imageObj.blob();
-      link.href = URL.createObjectURL(imageBlob);
-      link.download = image.filename;
-      link.click();
-    } catch (error: any){
-      console.error('Could not fetch image', error);
-    }
+  const handleDownload = () => {
+    // Ensure the base64 string is properly formatted as a data URI
+    //TODO: is this correct?
+    const dataUri = image.data.startsWith('data:image') ? image.data : `data:image/jpeg;base64,${image.data}`;
+  
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = dataUri;
+    link.download = image.filename || 'downloaded-image'; // Provide a default filename if necessary
+  
+    // Append to the document to ensure compatibility
+    document.body.appendChild(link);
+  
+    // Create and dispatch a mouse event to simulate a click
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    });
+    link.dispatchEvent(event);
+  
+    // Clean up by removing the link
+    document.body.removeChild(link);
   };
+  
+  
 
   // TODO: Make sure await success before calling callback and navigating back!
   const handleDelete = async (image: Image, callback: () => void) => {
@@ -84,13 +96,13 @@ const SecondPage = ( {callback} : SecondPageProps) => {
       <div className="row mt-5">
         <div className="col-12 image-container">
         <img
-            src={image.data}
+            src={`data:image/jpeg;base64,${image.data}`}
             alt="Selected"
             onClick={() => setShowFullImage(true)}
           />
           {showFullImage && (
             <FullSizeImage
-              imageUrl={image.data}
+              image={image}
               onClose={() => setShowFullImage(false)}
             />)}
         </div>
