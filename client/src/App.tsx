@@ -29,6 +29,7 @@ function App() {
       );
       const images = response.data;
 
+      console.log(images.length);
       setImages(images);
     } catch (error) {
       console.error(error);

@@ -78,6 +78,7 @@ function GridImg({ image, callback }: GridImgProps) {
 
   useEffect(() => {
     //TODO: fix later, will id be a string or a number?
+    console.log(!image.id);
     getLike(image.id.toString());
   }, [image.id]);
 

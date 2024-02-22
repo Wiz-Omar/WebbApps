@@ -18,7 +18,7 @@ const HomePage: React.FC<HomePageProps> = ({ images, callback, isLoading }) => {
       <Navbar callback={callback} />
       {isLoading ? (
         <div className="loading-container">
-          <div className="spinner"></div> {/* Display the spinner when isLoading is true */}
+          <div className="spinner"></div>
         </div>
       ) : (
         <Grid images={images} callback={callback} />
