@@ -3,21 +3,27 @@ import { validSortFields, validSortOrders } from "../model/sorting";
 import { LikeService } from "./likeService";
 import { IImageService } from "./imageService.interface";
 import {imageModel} from "../db/image.db";
-import { DeleteResult } from "mongodb";
+import { DeleteResult, ObjectId } from "mongodb";
 import mongoose, { Model } from "mongoose";
+import { userModel } from "../db/users.db";
+import { User } from "../model/user";
+import { mapDatabaseImageToImage, mappingService } from "./mappingService";
 
 export class ImageService implements IImageService {
+    mappingService: mappingService = new mappingService();
 
-    async addImage(filename: string, url: string, userId: string): Promise<Image> {
+    async addImage(filename: string, url: string, username: string): Promise<Image> {
         const im: Model<Image> = await imageModel;
 
         try{
-            return await im.create({
-                userId: userId,  
+            const user: User = await this.mappingService.getUser(username);
+            return mapDatabaseImageToImage(await im.create({
+                userId: user.id,
                 filename: filename, 
                 url: url,
+                path: "path", //TODO: figure out how to store the image in the server
                 uploadDate: new Date(),
-            });
+            }));
         }catch(e: any){
             if (e.code === 11000 || e.code === 11001) { //codes represent a duplicate key error from mongodb => image exists
                 throw new ImageExistsError(filename); //in case the image already exists for the user
@@ -27,12 +33,14 @@ export class ImageService implements IImageService {
         }
     }
 
-    async getImages(sortField: string = 'filename', sortOrder: string = 'asc', userId: string): Promise<Image[]> {
+    async getImages(sortField: string = 'filename', sortOrder: string = 'asc', username: string): Promise<Image[]> {
         const im: Model<Image> = await imageModel;
+        const user: User = await this.mappingService.getUser(username);
 
         //TODO: figure out sorting in mongodb
         //TODO: error check for user existing and logged in
-        return await im.find({userId: userId});
+        const databaseImages = await im.find({userId: user.id});
+        return databaseImages.map(mapDatabaseImageToImage); //?? does it work?
     }
 
     async deleteImage(imageId: string, userId: string): Promise<boolean> {

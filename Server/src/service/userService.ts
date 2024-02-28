@@ -2,6 +2,7 @@ import { IUserService } from "./userService.interface";
 import {userModel} from "../db/users.db";
 import { Model } from "mongoose";
 import { User } from "../model/user";
+import { ObjectId } from "mongodb";
 
 
 export class UserService implements IUserService{

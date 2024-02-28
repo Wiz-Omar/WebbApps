@@ -4,7 +4,7 @@ import { conn } from "./conn";
 import { ObjectId } from "mongodb";
 
 export const Images : Schema = new Schema({
- userId : {
+ userId: {
     type : String,
     required : true,
     ref : "Users Collection"
@@ -14,7 +14,10 @@ export const Images : Schema = new Schema({
     type : String,
     required : true
  },
-
+  path : {
+   type : String,
+   required : true
+  },
  url : {
     type : String,
     required : true,

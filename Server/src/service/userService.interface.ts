@@ -1,3 +1,5 @@
+import { User } from "../model/user";
+
 export interface IUserService {
     find(userId: string, password: string): Promise<boolean>;
     addUser(userId: string, password: string): Promise<void>;
