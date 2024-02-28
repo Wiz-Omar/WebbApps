@@ -13,7 +13,7 @@ export const Users : Schema = new Schema({
         required : true
     },
 
-}, {_id: false});
+});
 
 async function makeModel(): Promise<Model<User>>{
     return (await conn).model<User>("Users Collection", Users);

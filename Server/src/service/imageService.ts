@@ -13,7 +13,6 @@ export class ImageService implements IImageService {
 
         try{
             return await im.create({
-                _id: new mongoose.Types.ObjectId,
                 userId: userId,  
                 filename: filename, 
                 url: url,

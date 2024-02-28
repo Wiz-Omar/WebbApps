@@ -23,7 +23,7 @@ test.only("If an image is deleted from the list then it should not be in the lis
   console.log(typeof image.id);
   const imagesNew: Image[] = await imageService.getImages(undefined, undefined, 'testUser');
   console.log(imagesNew);
-  expect(images.some((randomImage) => randomImage.id === image.id)).toBeFalsy();
+  expect(imagesNew.some((randomImage) => randomImage.id === image.id)).toBeFalsy();
 });
 /*
 test("If a liked image is removed, it should be removed from the liked images array aswell", async() => {
