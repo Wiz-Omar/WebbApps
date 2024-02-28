@@ -7,6 +7,9 @@ export interface IImageService {
     getImages(sortField: string | undefined, sortOrder: string | undefined) : Promise<Image[]>
    
     deleteImage(id : number): Promise<boolean>
+
+    //TODO: should be overloaded method instead?
+    getImageBySearch(search: string): Promise<Image[]>
    
 }
    

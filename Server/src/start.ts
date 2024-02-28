@@ -9,4 +9,3 @@ app.use(express.json());
 app.use(cors());
 app.use("/image", imageRouter);
 app.use("/like", likeRouter);
-

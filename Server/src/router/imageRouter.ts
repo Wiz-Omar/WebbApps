@@ -13,8 +13,8 @@ export const imageRouter = express.Router();
 const upload = multer();
 
 imageRouter.get("/", async (req: Request, res: Response) => {
+  console.log("getting images");
   try {
-
     let sortField = req.query.sortField as string | undefined;
     let sortOrder = req.query.sortOrder as string | undefined;
 
@@ -78,3 +78,20 @@ imageRouter.delete(
     }
   }
 );
+
+//TODO: is it a code smell to have two get methods
+imageRouter.get("/search", async (req: Request, res: Response) => {
+  console.log("searching");
+  try {
+    const search = req.query.search as string;
+    if (!search) {
+      res.status(400).send("No search query provided");
+      return;
+    }
+    const images = await imageService.getImageBySearch(search);
+    res.status(200).send(images);
+  } catch (e: any) {
+    res.status(500).send(e.message);
+  }
+});
+
