@@ -44,7 +44,7 @@ function SearchBar() {
   };
 
   return (
-    <div className="search-section">
+    <div className="search-container">
       <form onSubmit={handleSearchSubmit} className="search-form">
         <input
           type="text"
