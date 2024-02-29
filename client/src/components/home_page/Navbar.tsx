@@ -5,7 +5,7 @@ import logo from '../../assets/img/squid.png'
 import './Navbar.css'
 import UploadButton from './UploadButton'
 import SortDropdown from './SortDropdown';
-import SearchBar from './SearchBar';
+import SearchBar from './SearchBar/SearchBar';
 import { Image} from '../../App';
 import axios from 'axios';
 
