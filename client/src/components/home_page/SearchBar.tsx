@@ -1,20 +1,35 @@
-// SearchBar.tsx
-
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import './SearchBar.css'; // Import a CSS file for styling
+import './SearchBar.css';
 import SearchResultsDropdown from './SearchResultsDropdown';
 import { Image } from '../../App'; // Adjust the import path as necessary
-
+import SearchIcon from './SearchIcon';
+import Icon from '../common/Icon';
 
 function SearchBar() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Image[]>([]);
+  const [isFocused, setIsFocused] = useState(false); // State to manage focus
+  const searchContainerRef = useRef<HTMLDivElement>(null); // Ref for the search container
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setIsFocused(false); // Update focus state to false when clicked outside
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+    setIsFocused(true); // Set focus to true when typing
     if (event.target.value.trim() === '') {
-      setSearchResults([]); // Clear results if the search query is cleared
+      setSearchResults([]);
     } else {
       performSearch(event.target.value.trim());
     }
@@ -24,38 +39,33 @@ function SearchBar() {
     try {
       const response = await axios.get<Image[]>(`http://localhost:8080/image/search?search=${query}`);
       setSearchResults(response.data);
+      setIsFocused(true); // Ensure results are shown when search is performed
     } catch (error) {
       console.error('Error performing search:', error);
-      setSearchResults([]); // Consider clearing results or handling errors differently
+      setSearchResults([]);
     }
   };
 
-  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    performSearch(searchQuery);
-  };
-
-  const handleSelectImage = (image: Image) => {
-    console.log('Selected image:', image);
-    // Handle the image selection, e.g., navigate to the image detail page
-    // Don't forget to clear the search results and query
-    setSearchQuery('');
-    setSearchResults([]);
+  const handleFocus = () => {
+    setIsFocused(true);
+    if (searchQuery) performSearch(searchQuery); // Optionally re-fetch results on focus
   };
 
   return (
-    <div className="search-container">
-      <form onSubmit={handleSearchSubmit} className="search-form">
+    <div className="search-container" ref={searchContainerRef}>
+      <SearchIcon />
+      <form onSubmit={(event) => event.preventDefault()} className="search-form">
         <input
           type="text"
           value={searchQuery}
           onChange={handleSearchChange}
+          onFocus={handleFocus}
           className="search-input"
           placeholder="Search in Storage"
         />
       </form>
-      {searchResults.length > 0 && (
-        <SearchResultsDropdown results={searchResults} onSelect={handleSelectImage} />
+      {isFocused && searchResults.length > 0 && (
+        <SearchResultsDropdown results={searchResults} onSelect={() => {}} />
       )}
     </div>
   );
