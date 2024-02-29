@@ -9,15 +9,15 @@ const userService: IUserService = new UserService();
 export const userRouter = express.Router();
 
 export interface sessionData{
-    userId: string
+  username: string
 }
 interface registerRequest extends Request{
-    body: {userId: string, password: string}
+    body: {username: string, password: string}
 }
 interface loginRequest extends Request{
     params: {},
     session: Session & Partial<sessionData>,
-    body: {userId: string, password: string}
+    body: {username: string, password: string}
 }
 
 userRouter.post(
@@ -27,14 +27,14 @@ userRouter.post(
     res: Response
   ) => {
     try {
-      const {userId, password} = req.body;
-      if (typeof userId !== "string" || typeof password !== "string" 
-            || userId === "" || password === "" || password.length < 8) {
+      const {username: username, password} = req.body;
+      if (typeof username !== "string" || typeof password !== "string" 
+            || username === "" || password === "" || password.length < 8) {
 
-        res.status(400).send("Invalid input data for userId or password");
+        res.status(400).send("Invalid input data for username or password");
         return;
       }
-      await userService.addUser(userId, password);
+      await userService.addUser(username, password);
       res.status(201).send({ message: "User successfully created" });
     } catch (e: any) {
         if (e.name === "UserExistsError") {
@@ -53,18 +53,18 @@ userRouter.post(
       res: Response
     ) => {
       try {
-        const {userId, password} = req.body;
-        if (typeof userId !== "string" || typeof password !== "string" 
-            || userId === "" || password === "" || password.length < 8) {
+        const {username: username, password} = req.body;
+        if (typeof username !== "string" || typeof password !== "string" 
+            || username === "" || password === "" || password.length < 8) {
 
-          res.status(400).send("Invalid input data for userId or password");
+          res.status(400).send("Invalid input data for username or password");
           return;
         }
-        if (! (await userService.find(userId, password))){
+        if (! (await userService.find(username, password))){
             res.status(401).send("Invalid username or password");
             return;
         }
-        if (req.session.userId && req.session.userId === userId){
+        if (req.session.username && req.session.username === username){
             req.session.destroy((err: any) => { //asynchronous
                 if (err){
                     res.status(500).send("Error logging out");
@@ -75,13 +75,13 @@ userRouter.post(
                         res.status(500).send("Error creating a new session");
                         return;
                     }
-                    req.session.userId = userId;
+                    req.session.username = username;
                     res.status(200).send({ message:"User successfully logged in"});
                     return;
                 });
             });
         }
-        req.session.userId = userId;
+        req.session.username = username;
         res.status(200).send({ message:"User successfully logged in"});
         //TODO: do we need to save the session here?
         return;

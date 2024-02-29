@@ -9,51 +9,51 @@ export class UserService implements IUserService{
 
     constructor() {
     }
-    async addUser(userId: string, password: string): Promise<void> {
+    async addUser(username: string, password: string): Promise<void> {
         const um: Model<User> = await userModel;
 
-        if (!(await um.findOne({username: userId}))) {
+        if (!(await um.findOne({username: username}))) {
             um.create({
-                username: userId, 
+                username: username, 
                 password: password
             });
         } else {
-            throw new UserExistsError(userId);
+            throw new UserExistsError(username);
         }
     }
-    async removeUser(userId: string): Promise<void> {
+    async removeUser(username: string): Promise<void> {
         const um: Model<User> = await userModel;
 
-        if (await um.findOne({username: userId})) {
+        if (await um.findOne({username: username})) {
             um.deleteOne({
-                username: userId, 
+                username: username, 
             });
         } else {
-            throw new UserNotFoundError(userId);
+            throw new UserNotFoundError(username);
         }
     }
-    async find(userId: string, password: string): Promise<boolean> {
+    async find(username: string, password: string): Promise<boolean> {
         const um: Model<User> = await userModel;
 
-        return await um.findOne({username: userId, password: password}) ? true : false;
+        return await um.findOne({username: username, password: password}) ? true : false;
     }
-    async validateUser(userId: string, password: string): Promise<boolean> {
+    async validateUser(username: string, password: string): Promise<boolean> {
         const um: Model<User> = await userModel;
 
-        return await um.findOne({username: userId, password: password}) ? true : false;
+        return await um.findOne({username: username, password: password}) ? true : false;
     }
 }
 
 class UserNotFoundError extends Error {
-    constructor(userId: string) {
-      super(`User with id ${userId} not found`);
+    constructor(username: string) {
+      super(`User with id ${username} not found`);
       this.name = "UserNotFoundError";
     }
 }
 
 class UserExistsError extends Error {
-    constructor(userId: string) {
-      super(`User with id ${userId} already exists`);
+    constructor(username: string) {
+      super(`User with id ${username} already exists`);
       this.name = "UserExistsError";
     }
 }

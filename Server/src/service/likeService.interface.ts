@@ -1,12 +1,12 @@
 import { Image } from "../model/image";
 export interface ILikeService {
    
-    isImageLiked(imageId : string, userId: string) : Promise<Boolean>
+    isImageLiked(imageId : string, username: string) : Promise<Boolean>
    
-    likeImage(imageId: string, userId: string) : Promise<void>
+    likeImage(imageId: string, username: string) : Promise<void>
    
-    unlikeImage(imageId: string, userId: string): Promise<void>
+    unlikeImage(imageId: string, username: string): Promise<void>
 
-    getLikedImages(userId: string): Promise<Image[]>
+    getLikedImages(username: string): Promise<Image[]>
    
 }

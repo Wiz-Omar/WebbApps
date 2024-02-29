@@ -44,7 +44,7 @@ imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
         res.status(400).send("Invalid sort order. Valid options are 'asc' or 'desc'.");
         return;
     }
-    if (!req.session.userId) {
+    if (!req.session.username) {
         res.status(401).send("Unauthorized action. User not logged in");
         return;
     }
@@ -53,7 +53,7 @@ imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
       //We put undefind in the interface 
       sortField,
       sortOrder,
-      req.session.userId
+      req.session.username
     );
     res.status(200).send(images);
   } catch (e: any) {
@@ -79,11 +79,11 @@ imageRouter.post(
         res.status(400).send("Invalid input data for filename or url");
         return;
       }
-      if (req.session.userId === undefined) {
+      if (req.session.username === undefined) {
         res.status(401).send("Unauthorized action. User not logged in");
         return;
       }
-      const newImage = await imageService.addImage(filename, url, req.session.userId);
+      const newImage = await imageService.addImage(filename, url, req.session.username);
       res.status(201).send(newImage);
     } catch (e: any) {
       console.error("Error adding image" + e);
@@ -102,11 +102,11 @@ imageRouter.delete(
         res.status(400).send("Invalid image ID");
         return;
       }       
-      if (req.session.userId === undefined) {
+      if (req.session.username === undefined) {
         res.status(401).send("Unauthorized action. User not logged in");
         return;
       }
-      await imageService.deleteImage(imageId, req.session.userId);
+      await imageService.deleteImage(imageId, req.session.username);
       res.status(200).send({ message: "Image successfully deleted" });
     } catch (e: any) {
       console.error("Error deleting image" + e);

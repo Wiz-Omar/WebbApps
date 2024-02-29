@@ -6,11 +6,10 @@ import { User } from "../model/user";
 import { IUserService } from "./userService.interface";
 import { Image } from "../model/image";
 
-export class mappingService{
+export class MappingService{
     async getUser(username: string): Promise<User> {
         const um: Model<User> = await userModel;
         const databaseUser = await um.findOne({username: username});
-        console.log(databaseUser);
         if (databaseUser === null) {
             throw new Error("User not found");
         }

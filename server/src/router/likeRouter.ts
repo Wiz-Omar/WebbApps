@@ -19,7 +19,7 @@ interface ImageLikeRequest extends Request{
     session: Session & Partial<sessionData>,
     params: {
         imageId: string,
-        userId: string
+        username: string
     }
 }
 interface AllLikedImagesRequest extends Request{
@@ -45,11 +45,11 @@ likeRouter.post('/',
             res.status(400).send("Invalid image ID");
             return;
         }
-        if (req.session.userId === undefined) {
+        if (req.session.username === undefined) {
             res.status(401).send("Unauthorized action. User not logged in");
             return;
         }
-        likeService.likeImage(imageId, req.session.userId);
+        likeService.likeImage(imageId, req.session.username);
         res.status(200).send('Image liked successfully');
         return;
     } catch (error: any) {
@@ -76,11 +76,11 @@ likeRouter.delete('/:imageId/', async (req: ImageLikeRequest, res: Response) => 
             res.status(400).send("Invalid image ID");
             return;
           }
-        if (req.session.userId === undefined) {
+        if (req.session.username === undefined) {
             res.status(401).send("Unauthorized action. User not logged in");
             return;
         }
-        await likeService.unlikeImage(imageId, req.session.userId);
+        await likeService.unlikeImage(imageId, req.session.username);
         res.status(200).send('Image unliked successfully');
         return;
     } catch (error: any) {
@@ -101,13 +101,13 @@ likeRouter.get('/:imageId', async (req: ImageLikeRequest, res: Response) => {
             res.status(400).send("Invalid image ID");
             return;
           }
-        if (req.session.userId === undefined) {
+        if (req.session.username === undefined) {
             res.status(401).send("Unauthorized action. User not logged in");
             return;
         }
-        const liked: Boolean = await likeService.isImageLiked(imageId, req.session.userId);
+        const liked: Boolean = await likeService.isImageLiked(imageId, req.session.username);
         // Implement logic to get the liked status of the image
-        //const liked = await likeService.isImageLiked(imageId, userId);
+        //const liked = await likeService.isImageLiked(imageId, username);
         res.status(200).send({ liked });
     } catch (error: any) {
         console.error('Error getting liked status for image:', error);
@@ -127,11 +127,11 @@ likeRouter.get('/',
         res: Response
     ) => {
         try {
-            if (req.session.userId === undefined) {
+            if (req.session.username === undefined) {
                 res.status(401).send("Unauthorized action. User not logged in");
                 return;
             }
-            const likedImages = await likeService.getLikedImages(req.session.userId);
+            const likedImages = await likeService.getLikedImages(req.session.username);
             res.status(200).send(likedImages);
             
         } catch (error) {

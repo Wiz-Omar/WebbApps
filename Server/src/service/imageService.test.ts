@@ -7,25 +7,20 @@ import { UserService } from "./userService";
 import { IUserService } from "./userService.interface";
 import {Image} from '../model/image';
 import { User } from "../model/user";
-import { mappingService } from "./mappingService";
+import { MappingService } from "./mappingService";
 
 jest.mock("../db/conn")
-// Testing deletion of an image
+// Testing deletion of an image. Sometimes fails for no reason
 test.only("If an image is deleted from the list then it should not be in the list", async () => {
   const id = new mongoose.Types.ObjectId();
   const imageService: IImageService = new ImageService();
   const userService: IUserService = new UserService();
-  const mapping: mappingService = new mappingService();
 
   await userService.addUser("testUser", "12345678");
   const image: Image = await imageService.addImage('testImage', 'http://test.com', 'testUser'); // Add a mock image for the user 'testUser'.
   const images: Image[] = (await imageService.getImages(undefined, undefined, 'testUser'));
-  console.log(image);
-  console.log(images);
-  await imageService.deleteImage(image.id, 'testUser'); //image.id does not return a number, but a string with the id.
-  console.log(typeof image.id);
+  await imageService.deleteImage(image.id, 'testUser');
   const imagesNew: Image[] = await imageService.getImages(undefined, undefined, 'testUser');
-  console.log(imagesNew);
   expect(imagesNew.some((randomImage) => randomImage.id === image.id)).toBeFalsy();
 });
 /*

@@ -7,10 +7,10 @@ import { DeleteResult, ObjectId } from "mongodb";
 import mongoose, { Model } from "mongoose";
 import { userModel } from "../db/users.db";
 import { User } from "../model/user";
-import { mapDatabaseImageToImage, mappingService } from "./mappingService";
+import { mapDatabaseImageToImage, MappingService } from "./mappingService";
 
 export class ImageService implements IImageService {
-    mappingService: mappingService = new mappingService();
+    mappingService: MappingService = new MappingService();
 
     async addImage(filename: string, url: string, username: string): Promise<Image> {
         const im: Model<Image> = await imageModel;
@@ -40,12 +40,12 @@ export class ImageService implements IImageService {
         //TODO: figure out sorting in mongodb
         //TODO: error check for user existing and logged in
         const databaseImages = await im.find({userId: user.id});
-        return databaseImages.map(mapDatabaseImageToImage); //?? does it work?
+        return databaseImages.map(databaseImage => mapDatabaseImageToImage(databaseImage)); //?? does it work?
     }
 
-    async deleteImage(imageId: string, userId: string): Promise<boolean> {
+    async deleteImage(imageId: string, username: string): Promise<boolean> {
         const im: Model<Image> = await imageModel;
-        //TODO: integrate userId into the query.
+
         const result: DeleteResult = await im.deleteOne({_id: imageId});
         if (result.acknowledged){
             if (result.deletedCount === 1) {
@@ -56,6 +56,7 @@ export class ImageService implements IImageService {
         }else { //means that result.aknowledged is false so something went wrong when querying the db
             throw new Error("Error deleting image");
         }
+        
     }    
 }
 

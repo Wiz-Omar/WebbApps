@@ -14,32 +14,32 @@ export class LikeService implements ILikeService{
         //this.likes = new Set<string>();
     }
 
-    async isImageLiked(imageId : string, userId: string): Promise<boolean> {
+    async isImageLiked(imageId : string, username: string): Promise<boolean> {
         //return 
         const lm: Model<LikedImage> = await likeImage;
         const im: Model<Image> = await imageModel;
 
         const img = await im.findOne({ 
             _id : imageId, //?? How is this working even though _id is ObjectId and imageId is number??
-            userId : userId
+            username : username
         })
         if (img === null) { //check if image even exists
             throw new ImageNotFoundError(imageId);
         }
         const like = await lm.findOne({
             imageId: img._id, 
-            userId: userId,  
+            username: username,  
         });
         return (like !== null);
     }
 
-    async likeImage(imageId : string, userId: string): Promise<void> {
+    async likeImage(imageId : string, username: string): Promise<void> {
         const lm: Model<LikedImage> = await likeImage;
 
         try{
             await lm.create({
                 imageId: imageId, 
-                userId: userId,  
+                username: username,  
             });
         }catch(e: any){
             if (e.code === 11000 || e.code === 11001) { //codes represent a duplicate key error from mongodb => like exists
@@ -51,13 +51,13 @@ export class LikeService implements ILikeService{
         //this.likes.add(imageId);
     }
 
-    async unlikeImage(imageId : string, userId: string): Promise<void> {
+    async unlikeImage(imageId : string, username: string): Promise<void> {
         const lm: Model<LikedImage> = await likeImage;
 
-        if(await lm.findOne({imageId: imageId, userId: userId})){
-            const result: DeleteResult = await lm.deleteOne({ //we can use deleteOne because the combination of imageId and userId is unique
+        if(await lm.findOne({imageId: imageId, username: username})){
+            const result: DeleteResult = await lm.deleteOne({ //we can use deleteOne because the combination of imageId and username is unique
                 imageId: imageId, 
-                userId: userId,  
+                username: username,  
             });
             if (!result.acknowledged) {
                 throw new Error("Error deleting like");
@@ -69,11 +69,11 @@ export class LikeService implements ILikeService{
     }
 
     //TODO: is this necessary?
-    async getLikedImages(userId: string): Promise<Image[]> {
+    async getLikedImages(username: string): Promise<Image[]> {
         const lm: Model<LikedImage> = await likeImage;
         //const im: Model<Image> = await imageModel;
 
-        const likedImages = await lm.find<Image>({userId: userId}); //Will this return a list of documents referencing documents in "image collection" or a list of imageIds?
+        const likedImages = await lm.find<Image>({username: username}); //Will this return a list of documents referencing documents in "image collection" or a list of imageIds?
         //const likedImagesList = likedImages.map(async (img) => {await im.findOne({_id: img.imageId})}); //In case the line above returns Ids.
         if (likedImages === null) {
             return [];
