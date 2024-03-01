@@ -131,3 +131,6 @@ dist
 
 # ignore the key file 
 /Server/src/db/key.ts
+
+# ignore the secret file
+/Server/src/secret.ts
