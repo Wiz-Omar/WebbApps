@@ -42,6 +42,8 @@ export class ImageService implements IImageService {
             const user: User = await this.mappingService.getUser(username);
             // Use the sortField and sortDirection in the sort() method
             const images = await im.find({userId: user.id}).sort({ [sortField]: sortDirection }).limit(6)
+
+            console.log(images + " are the images from the db");
                                            
             // convert the images to an array of Image objects
             return images.map((image) => mapDatabaseImageToImage(image));

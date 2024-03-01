@@ -9,6 +9,8 @@ import SearchBar from './SearchBar/SearchBar';
 import { Image} from '../../components/home_page/HomePage';
 import axios from 'axios';
 
+
+
 interface NavbarProps {
   callback: (sortField?: string, sortOrder?: string) => void;
 }

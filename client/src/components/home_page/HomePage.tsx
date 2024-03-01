@@ -8,6 +8,8 @@ import Navbar from "./HomeNavbar";
 import "../../App.css";
 import axios from "axios";
 
+axios.defaults.withCredentials = true
+
 export interface Image {
   id: number;
   filename: string;

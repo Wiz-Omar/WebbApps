@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { AppDisplay } from "../App";
 
+axios.defaults.withCredentials = true
+
 interface RegisterPageProps {
   setDisplay: (display: AppDisplay) => void;
 }

@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
-import axios from "axios"; // Assuming you might want to send the Base64 to a server.
+import axios from "axios"; 
+axios.defaults.withCredentials = true
 
 const UploadButton: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);

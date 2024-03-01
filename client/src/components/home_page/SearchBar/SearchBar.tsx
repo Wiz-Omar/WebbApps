@@ -6,6 +6,7 @@ import { Image } from '../../home_page/HomePage'; // Adjust the import path as n
 import SearchIcon from '../SearchIcon';
 import Icon from '../../common/Icon';
 
+axios.defaults.withCredentials = true
 
 function SearchBar() {
   const [searchQuery, setSearchQuery] = useState<string>('');

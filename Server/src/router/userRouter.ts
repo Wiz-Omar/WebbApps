@@ -82,6 +82,8 @@ userRouter.post(
             });
         }
         req.session.username = username;
+        console.log(session);
+        console.log(req.session);
         console.log("Session created with username: " + req.session.username);
         res.status(200).send({ message:"User successfully logged in"});
         //TODO: do we need to save the session here?
