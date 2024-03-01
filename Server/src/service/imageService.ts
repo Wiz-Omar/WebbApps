@@ -10,17 +10,17 @@ import { User } from "../model/user";
 import { mapDatabaseImageToImage, MappingService } from "./mappingService";
 
 export class ImageService implements IImageService {
+    private mappingService: MappingService = new MappingService();
 
     async addImage(filename: string, path: string, username: string): Promise<Image> {
-        const im: Model<Image> = await imageModel;
-
         try{
+            const im: Model<Image> = await imageModel;
             const user: User = await this.mappingService.getUser(username);
             return mapDatabaseImageToImage(await im.create({
                 userId: user.id,
                 filename: filename,
-                path: path, //TODO: figure out how to store the image in the server
-                uploadDate: new Date(),
+                path: path,
+                uploadDate: new Date()
             }));
         }catch(e: any){
             if (e.code === 11000 || e.code === 11001) { //codes represent a duplicate key error from mongodb => image exists
@@ -31,26 +31,20 @@ export class ImageService implements IImageService {
         }
     }
 
-    async getImages(sortField: string = 'uploadDate', sortOrder: string = 'desc'): Promise<Image[]> {
+    async getImages(sortField: string = 'uploadDate', sortOrder: string = 'desc', username: string): Promise<Image[]> {
         // Convert sortOrder to a number for MongoDB sorting
         const sortDirection = sortOrder === 'asc' ? 1 : -1;
         
         //TODO: look into .limit(). Seems to crash with more than 6 images right now. 
         try {
+            const im: Model<Image> = await imageModel;
+            // Get the user
+            const user: User = await this.mappingService.getUser(username);
             // Use the sortField and sortDirection in the sort() method
-            const images = await imageModel.find()
-                                           .sort({ [sortField]: sortDirection })
-                                           .limit(6)
+            const images = await im.find({userId: user.id}).sort({ [sortField]: sortDirection }).limit(6)
                                            
             // convert the images to an array of Image objects
-            return images.map((image) => {
-                return {
-                    id: image.id,
-                    filename: image.filename,
-                    data: image.data,
-                    uploadDate: image.uploadDate
-                };
-            });
+            return images.map((image) => mapDatabaseImageToImage(image));
         } catch (error) {
             console.error("Error fetching images:", error);
             throw error; // Re-throw the error to be handled by the caller
@@ -73,17 +67,13 @@ export class ImageService implements IImageService {
         }
         
     }
-    async getImageBySearch(search: string): Promise<Image[]> {
+    async getImageBySearch(search: string, username: string): Promise<Image[]> {
         try {
-            const images = await imageModel.find({ filename: { $regex: search, $options: 'i' } });
-            return images.map((image) => {
-                return {
-                    id: image.id,
-                    filename: image.filename,
-                    data: image.data,
-                    uploadDate: image.uploadDate
-                };
-            });
+            const im: Model<Image> = await imageModel;
+            const user: User = await this.mappingService.getUser(username);
+
+            const images = await im.find({ filename: { $regex: search, $options: 'i' }, userId: user.id });
+            return images.map(image => mapDatabaseImageToImage(image));
         } catch (error) {
             console.error("Error fetching images:", error);
             throw error; // Re-throw the error to be handled by the caller

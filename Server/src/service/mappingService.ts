@@ -45,7 +45,6 @@ export function mapDatabaseImageToImage(databaseImage: DatabaseImage): Image {
     return {
         id: databaseImage._id.toString(),
         filename: databaseImage.filename,
-        url: databaseImage.url,
         path: databaseImage.path,
         uploadDate: databaseImage.uploadDate
     }
@@ -54,7 +53,6 @@ export function mapDatabaseImageToImage(databaseImage: DatabaseImage): Image {
 interface DatabaseImage{
     _id: ObjectId,
     filename: string,
-    url: string,
     path: string,
     uploadDate: Date
 }

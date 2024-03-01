@@ -18,10 +18,6 @@ export const Images : Schema = new Schema({
    type : String,
    required : true
   },
- url : {
-    type : String,
-    required : true,
- },
 
  uploadDate : {
     type : Date,

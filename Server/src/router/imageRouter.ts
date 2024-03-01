@@ -5,6 +5,7 @@ import { validSortOrders, validSortFields } from "../model/sorting";
 import { IImageService } from "../service/imageService.interface";
 import { Session } from "express-session";
 import { sessionData } from "./userRouter";
+import multer from "multer";
 
 interface GetImagesRequest extends Request{
   params: {};
@@ -23,7 +24,14 @@ interface DeleteImageRequest extends Request{
   params: {imageId: string},
   session: Session & Partial<sessionData>,
   body: {}
-}import multer from "multer";
+}
+interface SearchImageRequest extends Request{
+  params: {},
+  session: Session & Partial<sessionData>,
+  query: {
+    search: string;
+  };
+}
 
 const imageService: IImageService = new ImageService();
 
@@ -70,7 +78,7 @@ imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
   }
 });
 
-imageRouter.post("/", upload.single('file'), async (req: Request, res: Response) => {
+imageRouter.post("/", upload.single('file'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).send("No file uploaded.");
@@ -79,8 +87,7 @@ imageRouter.post("/", upload.single('file'), async (req: Request, res: Response)
       // Convert the uploaded file to Base64
       const base64Data = req.file.buffer.toString('base64');
       const filename = req.file.originalname;
-      const { filename, url } = req.body;
-      if (typeof filename !== "string" || typeof url !== "string") {
+      if (typeof filename !== "string") {
         res.status(400).send("Invalid input data for filename or url");
         return;
       }
@@ -88,7 +95,7 @@ imageRouter.post("/", upload.single('file'), async (req: Request, res: Response)
         res.status(401).send("Unauthorized action. User not logged in");
         return;
       }
-      const newImage = await imageService.addImage(filename, base64Data, req.session.username);
+      const result = await imageService.addImage(filename, base64Data, req.session.username);
       res.status(201).json({ message: "Image uploaded successfully", result });
     } catch (e: any) {
       console.error("Error adding image" + e);
@@ -108,7 +115,7 @@ imageRouter.delete(
         return;
       }       
       if (req.session.username === undefined) {
-        res.status(401).send("Unauthorized action. User not logged in");
+        res.status(401).send("Cannot delete. User not logged in");
         return;
       }
       await imageService.deleteImage(imageId, req.session.username);
@@ -121,15 +128,19 @@ imageRouter.delete(
 );
 
 //TODO: is it a code smell to have two get methods
-imageRouter.get("/search", async (req: Request, res: Response) => {
+imageRouter.get("/search", async (req: SearchImageRequest, res: Response) => {
   console.log("searching");
   try {
     const search = req.query.search as string;
+    if (req.session.username === undefined) {
+      res.status(401).send("Cannot search. User not logged in");
+      return;
+    }
     if (!search) {
       res.status(400).send("No search query provided");
       return;
     }
-    const images = await imageService.getImageBySearch(search);
+    const images = await imageService.getImageBySearch(search, req.session.username);
     res.status(200).send(images);
   } catch (e: any) {
     res.status(500).send(e.message);
