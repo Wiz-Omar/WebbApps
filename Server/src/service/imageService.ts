@@ -61,4 +61,21 @@ export class ImageService implements IImageService {
         return true;
         
     }    
+
+    async getImageBySearch(search: string): Promise<Image[]> {
+        try {
+            const images = await imageModel.find({ filename: { $regex: search, $options: 'i' } });
+            return images.map((image) => {
+                return {
+                    id: image.id,
+                    filename: image.filename,
+                    data: image.data,
+                    uploadDate: image.uploadDate
+                };
+            });
+        } catch (error) {
+            console.error("Error fetching images:", error);
+            throw error; // Re-throw the error to be handled by the caller
+        }
+    }
 }

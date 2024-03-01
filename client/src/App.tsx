@@ -21,6 +21,7 @@ function App() {
   const [images, setImages] = useState<Image[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  //TODO: should not setImages? should return the images instead?
   async function getImages(sortField = "uploadDate", sortOrder = "desc") {
     try {
       setIsLoading(true);

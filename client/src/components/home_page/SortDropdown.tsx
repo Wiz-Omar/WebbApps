@@ -26,7 +26,6 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ callback }) => {
           <Dropdown.Item href="#/action-1" onClick={() => handleSort('uploadDate', 'asc')}>Sort by upload date (oldest first)</Dropdown.Item>
           <Dropdown.Item href="#/action-1" onClick={() => handleSort('filename', 'asc')}>Sort by file name (A-Z)</Dropdown.Item>
           <Dropdown.Item href="#/action-1" onClick={() => handleSort('filename', 'desc')}>Sort by file name (Z-A)</Dropdown.Item>
-
         </div>
       )}
     </DropdownButton>
