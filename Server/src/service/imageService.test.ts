@@ -8,21 +8,50 @@ import { IUserService } from "./userService.interface";
 import {Image} from '../model/image';
 import { User } from "../model/user";
 import { MappingService } from "./mappingService";
+import { conn, resetDb } from "../db/__mocks__/conn";
 
 jest.mock("../db/conn")
+
+afterEach(async () => {
+  await resetDb();
+  console.log("Finished teardown")
+})
+
 // Testing deletion of an image. Sometimes fails for no reason
-test.only("If an image is deleted from the list then it should not be in the list", async () => {
+test("If an image is added and deleted from the list then it should not be in the list", async () => {
   const id = new mongoose.Types.ObjectId();
   const imageService: IImageService = new ImageService();
   const userService: IUserService = new UserService();
 
   await userService.addUser("testUser", "12345678");
   const image: Image = await imageService.addImage('testImage', 'http://test.com', 'testUser'); // Add a mock image for the user 'testUser'.
-  const images: Image[] = (await imageService.getImages(undefined, undefined, 'testUser'));
+  let images: Image[] = (await imageService.getImages(undefined, undefined, 'testUser'));
+  expect(images.length === 1).toBe(true);
   await imageService.deleteImage(image.id, 'testUser');
-  const imagesNew: Image[] = await imageService.getImages(undefined, undefined, 'testUser');
-  expect(imagesNew.some((randomImage) => randomImage.id === image.id)).toBeFalsy();
+  images = await imageService.getImages(undefined, undefined, 'testUser');
+  expect(images.some((randomImage) => randomImage.id === image.id)).toBeFalsy();
+  expect(images.length === 0).toBe(true);
 });
+
+test("If two images is added and one is deleted from the list then the correct one should be in the list", async () => {
+  console.log("Starting test 2")
+  console.log(await (await conn).db.collections())
+  const imageService: IImageService = new ImageService();
+  const userService: IUserService = new UserService();
+
+  await userService.addUser("testUser", "12345678");
+  const image1: Image = await imageService.addImage('testImage1', 'http://test1.com', 'testUser'); // Add a mock image for the user 'testUser'.
+  const image2: Image = await imageService.addImage('testImage2', 'http://test2.com', 'testUser'); // Add a mock image for the user 'testUser'.
+  let images: Image[] = (await imageService.getImages(undefined, undefined, 'testUser'));
+  expect(images.length === 2).toBe(true);
+  await imageService.deleteImage(image1.id, 'testUser');
+  images = await imageService.getImages(undefined, undefined, 'testUser');
+  expect(images.some((randomImage) => randomImage.id === image1.id)).toBeFalsy();
+  expect(images.some((randomImage) => randomImage.id === image2.id)).toBeTruthy();
+  expect(images.length === 1).toBe(true);
+});
+
+
 /*
 test("If a liked image is removed, it should be removed from the liked images array aswell", async() => {
   const likeService = new LikeService();

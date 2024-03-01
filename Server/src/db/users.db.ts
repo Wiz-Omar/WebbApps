@@ -16,7 +16,9 @@ export const Users : Schema = new Schema({
 });
 
 async function makeModel(): Promise<Model<User>>{
-    return (await conn).model<User>("Users Collection", Users);
+    const um = await (await conn).model<User>("Users Collection", Users);
+    console.log(await (await conn).db.collections())
+    return um
 }
 
 export const userModel: Promise<Model<User>> = makeModel();
