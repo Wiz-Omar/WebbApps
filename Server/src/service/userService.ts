@@ -25,7 +25,7 @@ export class UserService implements IUserService{
         const um: Model<User> = await userModel;
 
         if (await um.findOne({username: username})) {
-            um.deleteOne({
+            await um.deleteOne({
                 username: username, 
             });
         } else {

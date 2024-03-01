@@ -8,18 +8,21 @@ import { IUserService } from "./userService.interface";
 import {Image} from '../model/image';
 import { User } from "../model/user";
 import { MappingService } from "./mappingService";
-import { conn, resetDb } from "../db/__mocks__/conn";
+import { conn } from "../db/__mocks__/conn";
 
 jest.mock("../db/conn")
 
 afterEach(async () => {
-  await resetDb();
-  console.log("Finished teardown")
+  const c = await conn;
+  await c.collection('Users Collection').deleteMany({});
+  await c.collection('Images Collection').deleteMany({});
+  await c.collection('Like Images Collection').deleteMany({});
+  console.log("Finished teardown");
+  console.log(await c.db.collection('Users Collection').find({}).toArray());
 })
 
 // Testing deletion of an image. Sometimes fails for no reason
 test("If an image is added and deleted from the list then it should not be in the list", async () => {
-  const id = new mongoose.Types.ObjectId();
   const imageService: IImageService = new ImageService();
   const userService: IUserService = new UserService();
 
@@ -31,11 +34,14 @@ test("If an image is added and deleted from the list then it should not be in th
   images = await imageService.getImages(undefined, undefined, 'testUser');
   expect(images.some((randomImage) => randomImage.id === image.id)).toBeFalsy();
   expect(images.length === 0).toBe(true);
+  console.log(await userService.find('testUser','12345678'));
+
+  //reset database values
+  await userService.removeUser('testUser');
 });
 
 test("If two images is added and one is deleted from the list then the correct one should be in the list", async () => {
-  console.log("Starting test 2")
-  console.log(await (await conn).db.collections())
+  console.log("Starting test 2");
   const imageService: IImageService = new ImageService();
   const userService: IUserService = new UserService();
 
