@@ -1,6 +1,6 @@
 import React from "react";
 import GridImg from "./GridImg";
-import { Image } from "../../App";
+import { Image } from "../../components/home_page/HomePage";
 
 export interface GridProps {
   images: Image[];

@@ -5,7 +5,7 @@ import "./SecondPage.css";
 import DownloadIcon from "./DownloadIcon";
 import CloseIcon from "./CloseIcon";
 import DeleteIcon from "./DeleteIcon";
-import { Image } from "../../App";
+import { Image } from "../../components/home_page/HomePage";
 import IconButton from "../common/IconButton";
 import FullSizeImage from "./FullSizeImg";
 import Navbar from "./Navbar/SecondNavbar";
@@ -15,7 +15,7 @@ interface SecondPageProps {
   callback: () => void;
 }
 
-const SecondPage = ( {callback} : SecondPageProps) => {
+function SecondPage(){
   const location = useLocation();
   const { image, id } = location.state as { image: Image; id: number };
 
@@ -24,7 +24,7 @@ const SecondPage = ( {callback} : SecondPageProps) => {
 
   return (
     <div>
-      <Navbar callback={ callback} />
+      <Navbar />
       <div className="row mt-5">
         <div className="col-12 image-container">
         <img

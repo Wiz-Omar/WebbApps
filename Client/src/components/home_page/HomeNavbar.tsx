@@ -6,7 +6,7 @@ import './Navbar.css'
 import UploadButton from './UploadButton'
 import SortDropdown from './SortDropdown';
 import SearchBar from './SearchBar/SearchBar';
-import { Image} from '../../App';
+import { Image} from '../../components/home_page/HomePage';
 import axios from 'axios';
 
 interface NavbarProps {

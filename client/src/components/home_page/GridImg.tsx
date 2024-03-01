@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Image } from "../../App";
+import { Image } from "../../components/home_page/HomePage";
 
 import "./GridImg.css";
 import DownloadIcon from "../second_page/DownloadIcon";

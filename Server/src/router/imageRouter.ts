@@ -7,27 +7,27 @@ import { Session } from "express-session";
 import { sessionData } from "./userRouter";
 import multer from "multer";
 
-interface GetImagesRequest extends Request{
+interface GetImagesRequest extends Request {
   params: {};
-  session: Session & Partial<sessionData>,
+  session: Session & Partial<sessionData>;
   query: {
     sortField?: string;
     sortOrder?: string;
   };
 }
-interface PostImageRequest extends Request{
-  params: {},
-  session: Session & Partial<sessionData>,
-  body: {filename: string, url: string}
+interface PostImageRequest extends Request {
+  params: {};
+  session: Session & Partial<sessionData>;
+  body: { filename: string; url: string };
 }
-interface DeleteImageRequest extends Request{
-  params: {imageId: string},
-  session: Session & Partial<sessionData>,
-  body: {}
+interface DeleteImageRequest extends Request {
+  params: { imageId: string };
+  session: Session & Partial<sessionData>;
+  body: {};
 }
-interface SearchImageRequest extends Request{
-  params: {},
-  session: Session & Partial<sessionData>,
+interface SearchImageRequest extends Request {
+  params: {};
+  session: Session & Partial<sessionData>;
   query: {
     search: string;
   };
@@ -41,85 +41,95 @@ const upload = multer();
 
 imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
   console.log("getting images");
+  console.log("req.session.username", req.session.username);
   try {
     let sortField = req.query.sortField as string | undefined;
     let sortOrder = req.query.sortOrder as string | undefined;
 
     // Validate sortField
     if (sortField && !validSortFields.includes(sortField)) {
-        res.status(400).send("Invalid sort field. Valid options are 'filename' or 'uploadDate'.");
-        return;
+      res
+        .status(400)
+        .send(
+          "Invalid sort field. Valid options are 'filename' or 'uploadDate'."
+        );
+      return;
     }
     // Validate sortOrder
     if (sortOrder && !validSortOrders.includes(sortOrder)) {
-        res.status(400).send("Invalid sort order. Valid options are 'asc' or 'desc'.");
-        return;
+      res
+        .status(400)
+        .send("Invalid sort order. Valid options are 'asc' or 'desc'.");
+      return;
     }
     if (!req.session.username) {
-        console.log("User not logged in");
-        res.status(401).send("Unauthorized action. User not logged in");
-        return;
+      res.status(401).send("Unauthorized action. User not logged in");
+      return;
     }
 
     const images = await imageService.getImages(
-      //We put undefind in the interface 
+      //We put undefind in the interface
       sortField,
       sortOrder,
       req.session.username
     );
 
     console.log("images", images);
-    
+
     res.status(200).send(images);
   } catch (e: any) {
     console.error("Error getting images" + e);
-    if(e.name === "ImageNotFoundError"){
+    if (e.name === "ImageNotFoundError") {
       res.status(404).send(e.message);
-    }else{
+    } else {
       res.status(500).send(e.message);
     }
   }
 });
 
-imageRouter.post("/", upload.single('file'), async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).send("No file uploaded.");
-      }
-    
-      // Convert the uploaded file to Base64
-      const base64Data = req.file.buffer.toString('base64');
-      const filename = req.file.originalname;
-      if (typeof filename !== "string") {
-        res.status(400).send("Invalid input data for filename or url");
-        return;
-      }
-      if (req.session.username === undefined) {
-        console.log("User not logged in");
-        res.status(401).send("Unauthorized action. User not logged in");
-        return;
-      }
-      const result = await imageService.addImage(filename, base64Data, req.session.username);
-      res.status(201).json({ message: "Image uploaded successfully", result });
-    } catch (e: any) {
-      console.error("Error adding image" + e);
-      res.status(500).send(e.message);
+imageRouter.post("/", upload.single("file"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send("No file uploaded.");
     }
+
+    // Convert the uploaded file to Base64
+    const base64Data = req.file.buffer.toString("base64");
+    const filename = req.file.originalname;
+    if (typeof filename !== "string") {
+      res.status(400).send("Invalid input data for filename or url");
+      return;
+    }
+    if (req.session.username === undefined) {
+      res.status(401).send("Unauthorized action. User not logged in");
+      return;
+    }
+    const result = await imageService.addImage(
+      filename,
+      base64Data,
+      req.session.username
+    );
+    res.status(201).json({ message: "Image uploaded successfully", result });
+  } catch (e: any) {
+    console.error("Error adding image" + e);
+    res.status(500).send(e.message);
   }
-);
+});
 
 imageRouter.delete(
   "/:id",
   //TODO: should we allow deletion of defaultUser images?
-  async (req: DeleteImageRequest, res: Response) => { 
+  async (req: DeleteImageRequest, res: Response) => {
     try {
       const imageId = req.params.imageId;
-      if (typeof imageId !== "string" || imageId === "" /*|| imageId.length !== 24 ??*/) {
+      if (
+        typeof imageId !== "string" ||
+        imageId === "" /*|| imageId.length !== 24 ??*/
+      ) {
         res.status(400).send("Invalid image ID");
         return;
-      }       
+      }
       if (req.session.username === undefined) {
-        console.log("User not logged in");
         res.status(401).send("Cannot delete. User not logged in");
         return;
       }
@@ -145,10 +155,12 @@ imageRouter.get("/search", async (req: SearchImageRequest, res: Response) => {
       res.status(400).send("No search query provided");
       return;
     }
-    const images = await imageService.getImageBySearch(search, req.session.username);
+    const images = await imageService.getImageBySearch(
+      search,
+      req.session.username
+    );
     res.status(200).send(images);
   } catch (e: any) {
     res.status(500).send(e.message);
   }
 });
-

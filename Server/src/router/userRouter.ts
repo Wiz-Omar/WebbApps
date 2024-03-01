@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { IUserService } from "../service/userService.interface";
 import { UserService } from "../service/userService";
 import { User } from "../model/user";
-import { Session } from "express-session";
+import session, { Session } from "express-session";
 
 const userService: IUserService = new UserService();
 
@@ -82,6 +82,7 @@ userRouter.post(
             });
         }
         req.session.username = username;
+        console.log("Session created with username: " + req.session.username);
         res.status(200).send({ message:"User successfully logged in"});
         //TODO: do we need to save the session here?
         return;

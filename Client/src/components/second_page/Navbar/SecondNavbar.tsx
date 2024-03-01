@@ -5,16 +5,12 @@ import logo from '../../../assets/img/squid.png';
 
 import './Navbar.css'
 import IconButton from '../../common/IconButton';
-import { Image } from "../../../App";
+import { Image } from "../../home_page/HomePage";
 import DeleteIcon from '../DeleteIcon';
 import DownloadIcon from '../DownloadIcon';
 import CloseIcon from '../CloseIcon';
 
-interface NavbarProps {
-    callback: () => void;
-}
-
-const Navbar = ( { callback }: NavbarProps ) => {
+function Navbar() {
   const location = useLocation();
   const { image, id } = location.state as { image: Image; id: number };
   const navigate = useNavigate();
@@ -51,14 +47,13 @@ const Navbar = ( { callback }: NavbarProps ) => {
   };
 
   // TODO: Make sure await success before calling callback and navigating back!
-  const handleDelete = async (image: Image, callback: () => void) => {
+  const handleDelete = async (image: Image) => {
     try {
       const response = await fetch(`http://localhost:8080/image/${image.id}`, {
         method: 'DELETE',
       });
       const result = await response.json();
       if (response.ok) {
-        callback(); // Call the callback function to refetch the list of images
         navigate("/");
         console.log('Image deleted:', result);
         // You might want to do something here to update the UI accordingly
@@ -90,7 +85,7 @@ const Navbar = ( { callback }: NavbarProps ) => {
         </div>
         <div className="icon-buttons-container d-flex align-items-center">
           <div className="mr-3">
-            <IconButton Icon={DeleteIcon} ariaLabel="delete" onClick={() => handleDelete(image, callback)} />
+            <IconButton Icon={DeleteIcon} ariaLabel="delete" onClick={() => handleDelete(image)} />
           </div>
           <div className="mr-3">
             <IconButton Icon={DownloadIcon} ariaLabel="download" onClick={handleDownload} />

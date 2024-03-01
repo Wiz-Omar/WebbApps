@@ -1,7 +1,7 @@
 // SearchResultsDropdown.tsx
 
 import React from 'react';
-import { Image } from '../../../App'; // Adjust the import path as necessary
+import { Image } from '../../home_page/HomePage'; // Adjust the import path as necessary
 import './SearchResultsDropdown.css'; // Import the corresponding CSS file
 
 import { useNavigate } from "react-router-dom";

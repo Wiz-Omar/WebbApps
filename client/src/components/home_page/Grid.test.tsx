@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import Grid from "./Grid";
-import { Image } from "../../App";
+import { Image } from "../../components/home_page/HomePage";
 
 //TODO: change this later!
 jest.mock("./GridImg", () => {

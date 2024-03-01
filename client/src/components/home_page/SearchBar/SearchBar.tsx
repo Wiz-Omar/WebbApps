@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import './SearchBar.css';
 import SearchResultsDropdown from '../SearchResultsDropdown/SearchResultsDropdown';
-import { Image } from '../../../App'; // Adjust the import path as necessary
+import { Image } from '../../home_page/HomePage'; // Adjust the import path as necessary
 import SearchIcon from '../SearchIcon';
 import Icon from '../../common/Icon';
 

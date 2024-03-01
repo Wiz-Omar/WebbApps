@@ -23,7 +23,6 @@ app.use(express.json());
 app.use("/image", imageRouter);
 app.use("/like", likeRouter);
 app.use("/user", userRouter);
-console.log(path.join(__dirname, 'public'));
 
 //app.use(express.static('public'))
 app.use('/', express.static(path.join(__dirname, '../public')))

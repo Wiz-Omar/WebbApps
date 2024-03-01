@@ -1,64 +1,65 @@
 import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
-import Navbar from "./components/home_page/HomeNavbar";
-import Grid from "./components/home_page/Grid";
-import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SecondPage from "./components/second_page/SecondPage";
 import HomePage from "./components/home_page/HomePage";
+import StartPage from "./components/StartPage";
+import RegisterPage from "./components/RegisterPage";
+import LoginPage from "./components/LoginPage";
 
-export interface Image {
-  id: number;
-  filename: string;
-  // stored as base64 string
-  data: string;
-  uploadDate: Date;
+export enum AppDisplay {
+  START_PAGE,
+  REGISTER_PAGE,
+  LOGIN_PAGE,
+  HOME_PAGE,
+  ERROR_SCREEN,
 }
 
 function App() {
-  const [images, setImages] = useState<Image[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  //TODO: should not setImages? should return the images instead?
-  async function getImages(sortField = "uploadDate", sortOrder = "desc") {
-    try {
-      setIsLoading(true);
-      const response = await axios.get<Image[]>(
-        `http://localhost:8080/image?sortField=${sortField}&sortOrder=${sortOrder}`
-      );
-      const images = response.data;
-
-      console.log(images.length);
-      setImages(images);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+  const [appDisplay, setAppDisplay] = useState<AppDisplay>(
+    AppDisplay.START_PAGE
+  );
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  function displayError(msg: string) {
+    setErrorMsg(msg);
+    setAppDisplay(AppDisplay.ERROR_SCREEN);
   }
 
-  useEffect(() => {
-    getImages();
-  }, []);
+  function setDisplay(display: AppDisplay) {
+    setAppDisplay(display);
+  }  
 
-  return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route
-            path="/"
-            element={<HomePage images={images} callback={getImages} isLoading={isLoading}/>}
-          />
-          <Route 
-            path="/second" 
-            element={<SecondPage callback={getImages} />} 
-          />
-        </Routes>
-      </div>
-    </Router>
-  );
+  switch (appDisplay) {
+    case AppDisplay.START_PAGE:
+      return <StartPage setDisplay={setDisplay} />;
+    case AppDisplay.REGISTER_PAGE:
+      return <RegisterPage setDisplay={setDisplay}/>;
+    case AppDisplay.LOGIN_PAGE:
+      return <LoginPage setDisplay={setDisplay}/>;
+    case AppDisplay.HOME_PAGE:
+      return (
+        <div>
+          <Router>
+            <div className="App">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/second" element={<SecondPage />} />
+              </Routes>
+            </div>
+          </Router>
+        </div>
+      );
+    case AppDisplay.ERROR_SCREEN:
+      return (
+        <div>
+          <h1>Error</h1>
+          <p>{errorMsg}</p>
+        </div>
+      );
+  }
 }
 
 export default App;
+
+

@@ -3,7 +3,7 @@ import React from "react";
 import "./FullSizeImg.css";
 import IconButton from "../common/IconButton";
 import MinimizeIcon from "./MinimizeIcon";
-import { Image } from "../../App";
+import { Image } from "../home_page/HomePage";
 
 interface FullSizeImageProps {
   image: Image;
