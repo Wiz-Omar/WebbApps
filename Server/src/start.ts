@@ -6,12 +6,13 @@ import path from "path";
 import { userRouter } from "./router/userRouter";
 import session from "express-session";
 
+import { secret } from "./secret";
 
 export const app = express();
 //export const globablUserId = "defaultUser"; //Is it better to use this globally instead of writing the string "defaultUser" everywhere?
 
 app.use(session({
-    secret : "Your secret key", // TODO Move to separate file. DO NOT UPLOAD TO GITHUB!!!!
+    secret : secret, // TODO Move to separate file. DO NOT UPLOAD TO GITHUB!!!!
     resave : false,
     saveUninitialized : false
 }));
