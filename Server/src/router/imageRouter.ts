@@ -56,6 +56,7 @@ imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
         return;
     }
     if (!req.session.username) {
+        console.log("User not logged in");
         res.status(401).send("Unauthorized action. User not logged in");
         return;
     }
@@ -66,6 +67,8 @@ imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
       sortOrder,
       req.session.username
     );
+
+    console.log("images", images);
     
     res.status(200).send(images);
   } catch (e: any) {
@@ -92,6 +95,7 @@ imageRouter.post("/", upload.single('file'), async (req, res) => {
         return;
       }
       if (req.session.username === undefined) {
+        console.log("User not logged in");
         res.status(401).send("Unauthorized action. User not logged in");
         return;
       }
@@ -115,6 +119,7 @@ imageRouter.delete(
         return;
       }       
       if (req.session.username === undefined) {
+        console.log("User not logged in");
         res.status(401).send("Cannot delete. User not logged in");
         return;
       }
