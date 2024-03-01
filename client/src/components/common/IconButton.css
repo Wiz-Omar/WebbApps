@@ -1,20 +1,24 @@
+/* IconButton.css */
+
 .svg-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    transition: transform 0.3s ease, filter 0.3s ease;
-  }
-  
-  .svg-button:hover {
-    transform: scale(1.1); /* Scale effect on hover */
-  }
-  
-  .svg-icon {
-    fill: black; /* Default color */
-    transition: fill 0.3s ease; /* Smooth transition effect */
-  }
-  
-  .svg-button:hover .svg-icon {
-    fill: red; /* Color change on hover */
-  }
+  background-color: transparent;
+  border: none;
+  margin-right: 8px; /* Adjust as needed */
+  margin-left: 8px; /* Adjust as needed */
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.svg-button:hover {
+  transform: scale(1.1); /* Scale effect on hover */
+}
+
+.svg-icon {
+  fill: black; /* Default color */
+  transition: fill 0.3s ease; /* Smooth transition effect */
+}
+
+.svg-button:hover .svg-icon {
+  fill: red; /* Color change on hover */
+}

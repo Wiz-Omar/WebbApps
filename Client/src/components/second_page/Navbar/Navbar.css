@@ -1,0 +1,27 @@
+
+.sticky-top {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: #ffffff; /* Set your desired background color */
+    z-index: 1000;
+  }
+  
+  /* Custom styling for the logo in the header */
+  .logo-img {
+    max-height: 70px; /* Set your desired max height for the logo */
+    width: auto;
+  }
+
+  @font-face {
+    font-family: 'Quite Magical';
+    src: url('../../../assets/fonts/QuiteMagicalRegular-8VA2.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  .logo-text {
+    font-family: 'Quite Magical', sans-serif;
+    font-size: 3rem;
+  }
+  

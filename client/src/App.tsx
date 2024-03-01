@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import Navbar from "./components/home_page/Navbar";
+import Navbar from "./components/home_page/HomeNavbar";
 import Grid from "./components/home_page/Grid";
 import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";

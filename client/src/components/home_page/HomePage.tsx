@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Grid, { GridProps } from './Grid'
-import Navbar from './Navbar'
+import Navbar from './HomeNavbar'
 import { Image } from '../../App'
 
 import '../../App.css'
