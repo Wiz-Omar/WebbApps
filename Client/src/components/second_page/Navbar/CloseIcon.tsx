@@ -3,7 +3,7 @@ import React from "react";
 const CloseIcon = () => {
   return (
     <svg
-      className="svg-icon"
+      className="svg-button"
       viewBox="0 0 16 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

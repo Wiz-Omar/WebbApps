@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Image } from "../../App";
 
 import "./GridImg.css";
-import DownloadIcon from "../second_page/DownloadIcon";
+import DownloadIcon from "../second_page/Navbar/DownloadIcon";
 import IconButton from "../common/IconButton";
 import FilledHeartIcon from "../common/FilledHeartIcon";
 import FavoriteButton from "./FavoriteButton";

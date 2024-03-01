@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import DeleteIcon from "./DeleteIcon";
-import "./Button.css";
 import CheckIcon from "../common/CheckIcon";
-import IconButton from "../common/IconButton";
 import CrossIcon from "../common/CrossIcon";
 import Icon from "../common/Icon";
+import "./Button.css";
 
 interface DeleteButtonProps {
   callback: () => void;
@@ -27,9 +26,9 @@ const DeleteButton = ({ callback }: DeleteButtonProps) => {
   };
 
   return (
-    <div className="button">
+    <div className="button" onClick={() => setConfirmationNeeded(true)} >
       {!confirmationNeeded ? (
-        <Icon onClick={() => setConfirmationNeeded(true)} Icon={DeleteIcon} />
+        <Icon Icon={DeleteIcon} />
       ) : (
         <div>
           <Icon onClick={handleConfirmDelete} Icon={CheckIcon} />

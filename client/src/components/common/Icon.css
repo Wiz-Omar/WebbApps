@@ -1,0 +1,9 @@
+.svg-icon {
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    padding: 0;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  

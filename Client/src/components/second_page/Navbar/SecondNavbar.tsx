@@ -6,9 +6,9 @@ import logo from '../../../assets/img/squid.png';
 import './Navbar.css'
 import IconButton from '../../common/IconButton';
 import { Image } from "../../../App";
-import DeleteIcon from '../DeleteIcon';
-import DownloadIcon from '../DownloadIcon';
-import CloseIcon from '../CloseIcon';
+import DeleteIcon from './DeleteIcon';
+import DownloadIcon from './DownloadIcon';
+import CloseIcon from './CloseIcon';
 
 interface NavbarProps {
     callback: () => void;
