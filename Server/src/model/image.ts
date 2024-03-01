@@ -1,7 +1,6 @@
 export interface Image {
-    id: number;
+    id: string;
     filename: string;
-    // stored as base64 string
-    data: string;
+    path: string;
     uploadDate: Date;
 }

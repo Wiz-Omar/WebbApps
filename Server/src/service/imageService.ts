@@ -1,24 +1,34 @@
 import { Image } from "../model/image";
 import { validSortFields, validSortOrders } from "../model/sorting";
 import { LikeService } from "./likeService";
-import { IImageService } from "./IImageService";
-import {imageModel} from "../../db/image.db";
+import { IImageService } from "./imageService.interface";
+import {imageModel} from "../db/image.db";
+import { DeleteResult, ObjectId } from "mongodb";
+import mongoose, { Model } from "mongoose";
+import { userModel } from "../db/users.db";
+import { User } from "../model/user";
+import { mapDatabaseImageToImage, MappingService } from "./mappingService";
 
 export class ImageService implements IImageService {
-    ls ?: LikeService;
-    constructor (ls ?: LikeService) {
-        this.ls = ls;
-    }
 
-    private images: Image[] = [];
+    async addImage(filename: string, path: string, username: string): Promise<Image> {
+        const im: Model<Image> = await imageModel;
 
-    async addImage(filename: string, data: string): Promise<Image> {
-        return await imageModel.create({
-            id: Date.now(), 
-            filename: filename, 
-            data: data,
-            uploadDate: new Date()
-        });
+        try{
+            const user: User = await this.mappingService.getUser(username);
+            return mapDatabaseImageToImage(await im.create({
+                userId: user.id,
+                filename: filename,
+                path: path, //TODO: figure out how to store the image in the server
+                uploadDate: new Date(),
+            }));
+        }catch(e: any){
+            if (e.code === 11000 || e.code === 11001) { //codes represent a duplicate key error from mongodb => image exists
+                throw new ImageExistsError(filename); //in case the image already exists for the user
+              } else {
+                throw new Error(e);
+              }
+        }
     }
 
     async getImages(sortField: string = 'uploadDate', sortOrder: string = 'desc'): Promise<Image[]> {
@@ -46,22 +56,23 @@ export class ImageService implements IImageService {
             throw error; // Re-throw the error to be handled by the caller
         }
     }
+    
 
-    async deleteImage(id: number): Promise<boolean> {
-        await imageModel.deleteOne({id: id});
-        const result: boolean | null = await imageModel.findById({id: id});
-        if (!result){
-            if (result === null){
-                alert("Image could not be deleted");
-                return false;
+    async deleteImage(imageId: string, username: string): Promise<boolean> {
+        const im: Model<Image> = await imageModel;
+
+        const result: DeleteResult = await im.deleteOne({_id: imageId});
+        if (result.acknowledged){
+            if (result.deletedCount === 1) {
+                return true;
+            }else{
+                throw new ImageNotFoundError(imageId);
             }
-            alert("Image not found");
-            return false;
-        };
-        return true;
+        }else { //means that result.aknowledged is false so something went wrong when querying the db
+            throw new Error("Error deleting image");
+        }
         
-    }    
-
+    }
     async getImageBySearch(search: string): Promise<Image[]> {
         try {
             const images = await imageModel.find({ filename: { $regex: search, $options: 'i' } });
@@ -77,5 +88,18 @@ export class ImageService implements IImageService {
             console.error("Error fetching images:", error);
             throw error; // Re-throw the error to be handled by the caller
         }
+    }
+}
+
+export class ImageNotFoundError extends Error {
+    constructor(imageId: string) {
+      super(`Image with id ${imageId} not found`);
+      this.name = "ImageNotFoundError";
+    }
+}
+class ImageExistsError extends Error {
+    constructor(filename: string) {
+      super(`Image with id ${filename} already exists`);
+      this.name = "ImageExistsError";
     }
 }
