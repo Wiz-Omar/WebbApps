@@ -134,3 +134,6 @@ dist
 
 # ignore the secret file
 /Server/src/secret.ts
+
+# ignore the localy stored images
+server/public/images/*
