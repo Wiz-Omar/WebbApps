@@ -24,7 +24,7 @@ function Navbar() {
   const handleDownload = () => {
     // Ensure the base64 string is properly formatted as a data URI
     //TODO: is this correct?
-    const dataUri = image.data.startsWith('data:image') ? image.data : `data:image/jpeg;base64,${image.data}`;
+    const dataUri = image.path.startsWith('data:image') ? image.path : `data:image/jpeg;base64,${image.path}`;
   
     // Create a link element
     const link = document.createElement('a');

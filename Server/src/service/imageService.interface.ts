@@ -2,7 +2,7 @@ import { Image } from "../model/image";
 
 export interface IImageService {
    
-    addImage(filename: string, path: string, username: string) : Promise<Image>
+    addImage(filename: string, data: string, username: string) : Promise<Image>
    
     getImages(sortField: string | undefined, sortOrder: string | undefined, username: string) : Promise<Image[]>
    

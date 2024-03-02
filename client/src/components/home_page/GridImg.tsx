@@ -108,14 +108,13 @@ function GridImg({ image, callback }: GridImgProps) {
   };
 
   return (
-
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ position: "relative" }} // Ensure the container has a position to position the icon
     >
       <img
-        src={`data:image/jpeg;base64,${image.data}`}
+        src={image.path}
         alt="Image"
         className="grid-img"
         loading="lazy"

@@ -13,8 +13,7 @@ axios.defaults.withCredentials = true
 export interface Image {
   id: number;
   filename: string;
-  // stored as base64 string
-  data: string;
+  path: string;
   uploadDate: Date;
 }
 
@@ -39,6 +38,7 @@ function HomePage() {
       const response = await axios.get<Image[]>(
         `http://localhost:8080/image?sortField=${sortField}&sortOrder=${sortOrder}`
       );
+      console.log(response.data);
       return response.data; // Return fetched images
     } catch (error) {
       console.error(error);

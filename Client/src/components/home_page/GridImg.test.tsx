@@ -14,7 +14,7 @@ jest.mock('react-router-dom', () => ({
   describe('GridImg Component Integration Test', () => {
     const mockImage = {
       id: 1,
-      data: 'http://example.com/image.jpg',
+      path: 'http://example.com/image.jpg',
       filename: 'image.jpg',
       uploadDate: new Date('2024-02-17'),
     };

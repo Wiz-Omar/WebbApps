@@ -27,7 +27,7 @@ interface SearchResultsDropdownProps {
             return (
               <li key={image.id} onClick={handleClick} className="search-result-item">
                 {/* Example: If you want to show thumbnails */}
-                <img src={`data:image/jpeg;base64,${image.data}`} alt={image.filename} className="result-thumbnail" />
+                <img src={`data:image/jpeg;base64,${image.path}`} alt={image.filename} className="result-thumbnail" />
                 <span className="result-title">{image.filename}</span>
                 {/* Add more details as needed */}
               </li>

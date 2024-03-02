@@ -28,7 +28,7 @@ function SecondPage(){
       <div className="row mt-5">
         <div className="col-12 image-container">
         <img
-            src={`data:image/jpeg;base64,${image.data}`}
+            src={image.path}
             alt="Selected"
             onClick={() => setShowFullImage(true)}
           />
