@@ -20,6 +20,14 @@ interface loginRequest extends Request{
     body: {username: string, password: string}
 }
 
+userRouter.get("/checkSession", (req, res) => {
+  if (req.session.username) {
+    res.status(200).json({ isAuthenticated: true, username: req.session.username });
+  } else {
+    res.status(200).json({ isAuthenticated: false });
+  }
+});
+
 userRouter.post(
   "/",
   async (
