@@ -1,0 +1,8 @@
+
+
+#logo-img {
+    height: 100px; /* Set a specific height */
+    width: auto; /* Maintain aspect ratio */
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+  }

@@ -6,10 +6,10 @@ import SecondPage from "./components/second_page/SecondPage";
 import HomePage from "./components/home_page/HomePage";
 import StartPage from "./components/StartPage";
 import RegisterPage from "./components/RegisterPage";
+//import LoginPage from "./components/LoginPage";
 import LoginPage from "./components/LoginPage";
 
 export enum AppDisplay {
-  START_PAGE,
   REGISTER_PAGE,
   LOGIN_PAGE,
   HOME_PAGE,
@@ -18,7 +18,7 @@ export enum AppDisplay {
 
 function App() {
   const [appDisplay, setAppDisplay] = useState<AppDisplay>(
-    AppDisplay.START_PAGE
+    AppDisplay.LOGIN_PAGE
   );
   const [errorMsg, setErrorMsg] = useState<string>("");
   function displayError(msg: string) {
@@ -31,12 +31,10 @@ function App() {
   }  
 
   switch (appDisplay) {
-    case AppDisplay.START_PAGE:
-      return <StartPage setDisplay={setDisplay} />;
+    case AppDisplay.LOGIN_PAGE:
+      return <LoginPage setDisplay={setDisplay} />;
     case AppDisplay.REGISTER_PAGE:
       return <RegisterPage setDisplay={setDisplay}/>;
-    case AppDisplay.LOGIN_PAGE:
-      return <LoginPage setDisplay={setDisplay}/>;
     case AppDisplay.HOME_PAGE:
       return (
         <div>
