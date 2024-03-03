@@ -10,6 +10,7 @@ import FavoriteButton from "./FavoriteButton";
 import GridImgDescription from "./GridImgDescription";
 import axios from "axios";
 import DeleteButton from "./DeleteButton";
+import { handleDelete } from "../../utils/handleDelete";
 
 interface GridImgProps {
   image: Image;
@@ -93,12 +94,9 @@ function GridImg({ image, callback }: GridImgProps) {
     // The setIsLiked state update is now moved inside the setLike and setUnlike functions
   };
 
-  const handleDelete = async ( ) => {
-    const imageId = image.id.toString();
+  const onDelete = async ( ) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8080/image/${imageId}`
-      );
+      const response = await handleDelete(image.id);
       if (response.status === 200) {
         // TODO: fix delete
         callback();
@@ -126,7 +124,7 @@ function GridImg({ image, callback }: GridImgProps) {
           style={{ position: "absolute", top: 5, right: 5, display: "flex", flexDirection: "column", alignItems: "flex-end" }}
         >
           <div className="button-container" style={{display: 'flex'}}>
-            <DeleteButton callback={handleDelete} />
+            <DeleteButton callback={onDelete} />
             <FavoriteButton isLiked={isLiked} callback={handleCallback} />
           </div>
         </div>

@@ -101,8 +101,10 @@ imageRouter.post("/", upload.single("file"), async (req, res) => {
   }
 
   // Check if the file type is JPEG, JPG or PNG
-  if (!['image/jpeg', 'image/png', 'image/jpg'].includes(req.file.mimetype)) {
-    return res.status(415).send("Invalid file type, only JPEG and PNG are allowed!");
+  if (!["image/jpeg", "image/png", "image/jpg"].includes(req.file.mimetype)) {
+    return res
+      .status(415)
+      .send("Invalid file type, only JPEG and PNG are allowed!");
   }
 
   try {
@@ -128,11 +130,12 @@ imageRouter.post("/", upload.single("file"), async (req, res) => {
 });
 
 imageRouter.delete(
-  "/:id",
+  "/:imageId",
   //TODO: should we allow deletion of defaultUser images?
   async (req: DeleteImageRequest, res: Response) => {
     try {
       const imageId = req.params.imageId;
+      console.log("imageId", imageId);
       if (
         typeof imageId !== "string" ||
         imageId === "" /*|| imageId.length !== 24 ??*/
@@ -144,6 +147,7 @@ imageRouter.delete(
         res.status(401).send("Cannot delete. User not logged in");
         return;
       }
+
       await imageService.deleteImage(imageId, req.session.username);
       res.status(200).send({ message: "Image successfully deleted" });
     } catch (e: any) {

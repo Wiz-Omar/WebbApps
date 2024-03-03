@@ -54,8 +54,9 @@ export class LocalPathService implements IPathService {
     }
   }
 
-  async deleteFile(userId: string, imageId: string): Promise<void> {
-    const filePath = path.join(this.basePath, userId, imageId);
+  async deleteFile(userId: string, filename: string): Promise<void> {
+    console.log("Deleting file", userId, filename);
+    const filePath = path.join(this.basePath, userId, filename);
     try {
       await fs.unlink(filePath);
     } catch {

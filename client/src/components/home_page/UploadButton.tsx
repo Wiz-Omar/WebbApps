@@ -57,8 +57,6 @@ function UploadButton({ callback }: UploadButtonProps) {
           responseType: "json",
         }
       );
-      console.log(response); // Handle response
-      console.log("RUNNING CALLBACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
       callback();
     } catch (error) {
       console.error("Error uploading file:", error); // Handle error

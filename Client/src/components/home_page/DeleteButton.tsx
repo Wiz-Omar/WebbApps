@@ -13,9 +13,9 @@ interface DeleteButtonProps {
 const DeleteButton = ({ callback }: DeleteButtonProps) => {
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
 
-  const handleDeleteClick = () => {
+  /* const handleDeleteClick = () => {
     setConfirmationNeeded(true);
-  };
+  }; */
 
   const handleConfirmDelete = () => {
     callback();

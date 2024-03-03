@@ -11,6 +11,8 @@ import { mapDatabaseImageToImage, MappingService } from "./mappingService";
 import { IPathService } from "./IPathService";
 import { LocalPathService } from "./LocalPathService";
 
+//TODO: does every method really need to await the userId from the username every time?
+// is it better to store it as a field in the class?
 export class ImageService implements IImageService {
   private mappingService: MappingService = new MappingService();
   private pathService: IPathService = new LocalPathService();
@@ -28,21 +30,19 @@ export class ImageService implements IImageService {
 
       const filePath = await this.pathService.saveFile(user.id, filename, data);
 
-      const dataBaseImage = 
-        await im.create({
-          userId: user.id,
-          filename: filename,
-          path: filePath,
-          uploadDate: new Date(),
-        })
+      const dataBaseImage = await im.create({
+        userId: user.id,
+        filename: filename,
+        path: filePath,
+        uploadDate: new Date(),
+      });
 
       return mapDatabaseImageToImage(dataBaseImage);
-
     } catch (e: any) {
       if (e.code === 11000 || e.code === 11001) {
         //codes represent a duplicate key error from mongodb => image exists
         //TODO: delete the file from the file system that was uploaded.
-        throw new ImageExistsError(filename); //in case the image already exists for the user. 
+        throw new ImageExistsError(filename); //in case the image already exists for the user.
       } else {
         throw new Error(e);
       }
@@ -78,17 +78,25 @@ export class ImageService implements IImageService {
 
   async deleteImage(imageId: string, username: string): Promise<boolean> {
     const im: Model<Image> = await imageModel;
+    const user: User = await this.mappingService.getUser(username);
 
+    // First, find the image document to get the filename
+    const imageDocument = await im.findById(imageId);
+
+    if (!imageDocument) {
+      throw new ImageNotFoundError(`Image with ID ${imageId} not found.`);
+    }
+
+    // does not need be awaited?
+    await this.pathService.deleteFile(user.id, imageDocument.filename);
+
+    // Proceed with deleting the document from the database
     const result: DeleteResult = await im.deleteOne({ _id: imageId });
-    if (result.acknowledged) {
-      if (result.deletedCount === 1) {
-        return true;
-      } else {
-        throw new ImageNotFoundError(imageId);
-      }
+    if (result.acknowledged && result.deletedCount === 1) {
+      return true;
     } else {
-      //means that result.aknowledged is false so something went wrong when querying the db
-      throw new Error("Error deleting image");
+      // This means that the deletion was not successful
+      throw new Error(`Error deleting image with ID ${imageId}`);
     }
   }
 
