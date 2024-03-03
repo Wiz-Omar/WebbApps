@@ -8,14 +8,17 @@ import mongoose, { Model } from "mongoose";
 import { userModel } from "../db/users.db";
 import { User } from "../model/user";
 import { mapDatabaseImageToImage, MappingService } from "./mappingService";
-import { IPathService } from "./IPathService";
-import { LocalPathService } from "./LocalPathService";
+import { IPathService } from "./pathService.interface";
+import { PathService } from "./pathService";
+import { ILikeService } from "./likeService.interface";
 
 //TODO: does every method really need to await the userId from the username every time?
 // is it better to store it as a field in the class?
 export class ImageService implements IImageService {
   private mappingService: MappingService = new MappingService();
-  private pathService: IPathService = new LocalPathService();
+  private pathService: IPathService = new PathService();
+
+  private likeService: ILikeService = new LikeService();
 
   //TODO: change name, path should be data?
   //TODO: does not need to return the image, just a boolean if it was added or not?
@@ -93,6 +96,7 @@ export class ImageService implements IImageService {
     // Proceed with deleting the document from the database
     const result: DeleteResult = await im.deleteOne({ _id: imageId });
     if (result.acknowledged && result.deletedCount === 1) {
+      this.likeService.unlikeImage(imageId, username);
       return true;
     } else {
       // This means that the deletion was not successful

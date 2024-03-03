@@ -1,6 +1,6 @@
 // LocalPathService.test.ts
 import * as fs from 'fs/promises';
-import { LocalPathService } from './LocalPathService'; // Adjust the import path as necessary
+import { PathService } from './pathService'; // Adjust the import path as necessary
 import path from 'path';
 
 // TypeScript requires manual typing for module mocks
@@ -14,7 +14,7 @@ jest.mock('fs/promises', () => ({
 
 describe('LocalPathService', () => {
   const basePath = '/fake/base/path';
-  const service = new LocalPathService('/fake/base/path');
+  const service = new PathService('/fake/base/path');
 
   describe('saveFile', () => {
     it('should save a file and return the path', async () => {

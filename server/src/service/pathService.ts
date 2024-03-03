@@ -1,10 +1,10 @@
 import fs from "fs/promises";
 import path from "path";
 import multer from "multer";
-import { IPathService } from "./IPathService";
+import { IPathService } from "./pathService.interface";
 
 //TODO: define own error types!
-export class LocalPathService implements IPathService {
+export class PathService implements IPathService {
   private basePath: string;
   public uploadMiddleware: multer.Multer;
 

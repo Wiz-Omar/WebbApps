@@ -19,7 +19,6 @@ interface ImageLikeRequest extends Request{
     session: Session & Partial<sessionData>,
     params: {
         imageId: string,
-        username: string
     }
 }
 interface AllLikedImagesRequest extends Request{
@@ -30,16 +29,17 @@ interface AllLikedImagesRequest extends Request{
 
 // Endpoint for liking an image
 //TODO: should we allow liking of images for deafultUser images?
-likeRouter.post('/',
+likeRouter.post('/:imageId',
     async (
-        req: ImageFetchRequest, 
+        req: ImageLikeRequest, 
         res: Response
     ) => {
     try {
         //const { imageId } = req.params;
         // Implement logic to like the image
         //await likeService.likeImage(imageId);
-        const imageId = req.body.imageId;
+        const imageId = req.params.imageId;
+        console.log("imageId: ", imageId);
 
         if (typeof imageId !== "string" || imageId === "" /*|| imageId.length !== 24 ??*/) {
             res.status(400).send("Invalid image ID");
@@ -65,11 +65,8 @@ likeRouter.post('/',
 });
 
 // Endpoint for unliking an image
-likeRouter.delete('/:imageId/', async (req: ImageLikeRequest, res: Response) => {
+likeRouter.delete('/:imageId', async (req: ImageLikeRequest, res: Response) => {
     try {
-        //const { imageId } = req.params;
-        // Implement logic to unlike the image
-        //await likeService.unlikeImage(imageId);
         const imageId = req.params.imageId;
 
         if (typeof imageId !== "string" || imageId === "" /*|| imageId.length !== 24 ??*/) {
@@ -113,7 +110,7 @@ likeRouter.get('/:imageId', async (req: ImageLikeRequest, res: Response) => {
         console.error('Error getting liked status for image:', error);
         if (error.name === "ImageNotFoundError") {
             res.status(404).send(error.message);
-        }else{
+        } else {
             res.status(500).send(error.message);
         }
     }
