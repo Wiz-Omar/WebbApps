@@ -60,7 +60,7 @@ function UploadButton({ callback }: UploadButtonProps) {
       callback();
     } catch (error) {
       console.error("Error uploading file:", error); // Handle error
-      alert("Something went wrong. Error uploading file");
+      alert("Something went wrong.");
     }
   };
 

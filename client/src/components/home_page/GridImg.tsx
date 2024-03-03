@@ -18,7 +18,6 @@ interface GridImgProps {
 }
 
 function GridImg({ image, callback }: GridImgProps) {
-
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -43,7 +42,7 @@ function GridImg({ image, callback }: GridImgProps) {
       const isLiked = response.data.liked;
       // check if image.id is in likedImages
       //TODO: write functionality for checking for just one image instead
-      setIsLiked((isLiked));
+      setIsLiked(isLiked);
     } catch (error) {
       console.error(error);
     }
@@ -83,7 +82,6 @@ function GridImg({ image, callback }: GridImgProps) {
     getLike(image.id.toString());
   }, [image.id]);
 
-  
   const handleCallback = async () => {
     const imageId = image.id.toString(); // Assuming image.id is the identifier used in your backend
     if (isLiked) {
@@ -94,7 +92,7 @@ function GridImg({ image, callback }: GridImgProps) {
     // The setIsLiked state update is now moved inside the setLike and setUnlike functions
   };
 
-  const onDelete = async ( ) => {
+  const onDelete = async () => {
     try {
       const response = await handleDelete(image.id);
       if (response.status === 200) {
@@ -109,7 +107,7 @@ function GridImg({ image, callback }: GridImgProps) {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ position: "relative" }} // Ensure the container has a position to position the icon
+      style={{ position: "relative" }}
     >
       <img
         src={image.path}
@@ -119,26 +117,33 @@ function GridImg({ image, callback }: GridImgProps) {
         onClick={handleClick}
       />
       {isHovered && (
-        <div
-          className="button-column"
-          style={{ position: "absolute", top: 5, right: 5, display: "flex", flexDirection: "column", alignItems: "flex-end" }}
-        >
-          <div className="button-container" style={{display: 'flex'}}>
-            <DeleteButton callback={onDelete} />
-            <FavoriteButton isLiked={isLiked} callback={handleCallback} />
+        <>
+          <div
+            className="button-column"
+            style={{
+              position: "absolute",
+              top: 5,
+              right: 5,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+            }}
+          >
+            <div className="button-container" style={{ display: "flex" }}>
+              <DeleteButton callback={onDelete} />
+              <FavoriteButton isLiked={isLiked} callback={handleCallback} />
+            </div>
           </div>
-        </div>
+          <div
+            className="description-icon-container"
+            style={{ position: "absolute", left: 5, bottom: 5 }}
+          >
+            <GridImgDescription child={image.filename} />
+          </div>
+        </>
       )}
-      <div
-        className="download-icon-container"
-        style={{ position: "absolute", left: 5, bottom: 5 }}
-      >
-        <GridImgDescription child={image.filename} />
-      </div>
     </div>
   );
-  
-  
 }
 
 export default GridImg;
