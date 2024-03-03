@@ -27,7 +27,7 @@ function Navbar({ callback }: NavbarProps) {
         <SearchBar/>
         <SortDropdown callback={callback} />
         <div className="d-flex">
-          <UploadButton />
+          <UploadButton callback={callback} />
         </div>
       </div>
     </nav>

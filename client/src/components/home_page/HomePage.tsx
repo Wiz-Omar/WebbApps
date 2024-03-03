@@ -23,13 +23,7 @@ function HomePage() {
   const location = useLocation();
 
   useEffect(() => {
-    // Call getImages and then set the state with the returned images
-    async function fetchImages() {
-      const fetchedImages = await getImages();
-      setImages(fetchedImages);
-    }
-
-    fetchImages();
+    getImages();
   }, [location.pathname]);
 
   async function getImages(sortField = "uploadDate", sortOrder = "desc") {
@@ -38,8 +32,7 @@ function HomePage() {
       const response = await axios.get<Image[]>(
         `http://localhost:8080/image?sortField=${sortField}&sortOrder=${sortOrder}`
       );
-      console.log(response.data);
-      return response.data; // Return fetched images
+      setImages(response.data);
     } catch (error) {
       console.error(error);
       return []; // Return empty array in case of an error

@@ -1,37 +1,69 @@
 import React, { useRef } from "react";
-import axios from "axios"; 
-axios.defaults.withCredentials = true
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
-const UploadButton: React.FC = () => {
+interface UploadButtonProps {
+  callback: () => void;
+}
+
+function UploadButton({ callback }: UploadButtonProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const triggerFileInputClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files ? event.target.files[0] : null;
     if (!file) return;
-  
+
+    // Check if the filname is less than 150 characters. //TODO: might make even smaller.
+    if (file.name.length > 256) {
+      alert("Filename should be less than 256 characters.");
+      return;
+    }
+
+    // Check if the file type is JPEG, JPG, or PNG
+    if (!file.type.match("image/jpeg") && !file.type.match("image/png") && !file.type.match("image/jpg")) {
+      alert("Unsupported filetype. Supported filetypes are JPEG, JPG and PNG.");
+      return;
+    }
+
+    // Check if the file size is greater than 10MB
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File size should be less than 10MB.");
+      return;
+    }
+
     // Create an instance of FormData
     const formData = new FormData();
-    
+
     // Append the file to the FormData instance
-    formData.append('file', file);
-  
-    // Use axios to send the FormData
-    await axios.post("http://localhost:8080/image", formData, {
-      headers: { 
-        'Content-Type': 'multipart/form-data' // This header tells the server about the type of the data
-      },
-      maxBodyLength: Infinity,
-      maxContentLength: Infinity,
-      responseType: "json",
-    }).then(response => {
-      console.log(response); // Handle success
-    }).catch(error => {
+    formData.append("file", file);
+
+    try {
+      // Use axios to send the FormData
+      const response = await axios.post(
+        "http://localhost:8080/image",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // This header tells the server about the type of the data
+          },
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+          responseType: "json",
+        }
+      );
+      console.log(response); // Handle response
+      console.log("RUNNING CALLBACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+      callback();
+    } catch (error) {
       console.error("Error uploading file:", error); // Handle error
-    });
+      alert("Something went wrong. Error uploading file");
+    }
   };
 
   return (
@@ -57,6 +89,6 @@ const UploadButton: React.FC = () => {
       </button>
     </div>
   );
-};
+}
 
 export default UploadButton;

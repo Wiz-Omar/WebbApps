@@ -16,6 +16,7 @@ export class ImageService implements IImageService {
   private pathService: IPathService = new LocalPathService();
 
   //TODO: change name, path should be data?
+  //TODO: does not need to return the image, just a boolean if it was added or not?
   async addImage(
     filename: string,
     data: string,
@@ -25,22 +26,23 @@ export class ImageService implements IImageService {
       const im: Model<Image> = await imageModel;
       const user: User = await this.mappingService.getUser(username);
 
-      //TODO: find a way to ensure both this and mapDatabaseImageToImage are finished before returning, to ensure consistency
       const filePath = await this.pathService.saveFile(user.id, filename, data);
 
-      console.log(filename + " is the filename");
-      return mapDatabaseImageToImage(
+      const dataBaseImage = 
         await im.create({
           userId: user.id,
           filename: filename,
           path: filePath,
           uploadDate: new Date(),
         })
-      );
+
+      return mapDatabaseImageToImage(dataBaseImage);
+
     } catch (e: any) {
       if (e.code === 11000 || e.code === 11001) {
         //codes represent a duplicate key error from mongodb => image exists
-        throw new ImageExistsError(filename); //in case the image already exists for the user
+        //TODO: delete the file from the file system that was uploaded.
+        throw new ImageExistsError(filename); //in case the image already exists for the user. 
       } else {
         throw new Error(e);
       }
@@ -64,9 +66,7 @@ export class ImageService implements IImageService {
       const images = await im
         .find({ userId: user.id })
         .sort({ [sortField]: sortDirection })
-        .limit(6);
-
-      console.log(images + " are the images from the db");
+        .limit(9);
 
       // convert the images to an array of Image objects
       return images.map((image) => mapDatabaseImageToImage(image));
@@ -91,6 +91,7 @@ export class ImageService implements IImageService {
       throw new Error("Error deleting image");
     }
   }
+
   async getImageBySearch(search: string, username: string): Promise<Image[]> {
     try {
       const im: Model<Image> = await imageModel;

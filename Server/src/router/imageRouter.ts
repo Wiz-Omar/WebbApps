@@ -40,35 +40,33 @@ export const imageRouter = express.Router();
 const upload = multer();
 
 imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
-  console.log("getting images");
-  console.log("req.session.username", req.session.username);
+  let sortField = req.query.sortField as string | undefined;
+  let sortOrder = req.query.sortOrder as string | undefined;
+
+  // Validate sortField
+  if (sortField && !validSortFields.includes(sortField)) {
+    res
+      .status(400)
+      .send(
+        "Invalid sort field. Valid options are 'filename' or 'uploadDate'."
+      );
+    return;
+  }
+  // Validate sortOrder
+  if (sortOrder && !validSortOrders.includes(sortOrder)) {
+    res
+      .status(400)
+      .send("Invalid sort order. Valid options are 'asc' or 'desc'.");
+    return;
+  }
+  if (!req.session.username) {
+    res.status(401).send("Unauthorized action. User not logged in");
+    return;
+  }
+
   try {
-    let sortField = req.query.sortField as string | undefined;
-    let sortOrder = req.query.sortOrder as string | undefined;
-
-    // Validate sortField
-    if (sortField && !validSortFields.includes(sortField)) {
-      res
-        .status(400)
-        .send(
-          "Invalid sort field. Valid options are 'filename' or 'uploadDate'."
-        );
-      return;
-    }
-    // Validate sortOrder
-    if (sortOrder && !validSortOrders.includes(sortOrder)) {
-      res
-        .status(400)
-        .send("Invalid sort order. Valid options are 'asc' or 'desc'.");
-      return;
-    }
-    if (!req.session.username) {
-      res.status(401).send("Unauthorized action. User not logged in");
-      return;
-    }
-
     const images = await imageService.getImages(
-      //We put undefind in the interface
+      // We put undefind in the interface
       sortField,
       sortOrder,
       req.session.username
@@ -88,22 +86,35 @@ imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
 });
 
 imageRouter.post("/", upload.single("file"), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).send("No file uploaded.");
-    }
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
 
+  if (req.session.username === undefined) {
+    res.status(401).send("Unauthorized action. User not logged in");
+    return;
+  }
+
+  // Check if the file size is less than 10MB
+  if (req.file.size > 1024 * 1024 * 10) {
+    return res.status(413).send("File size exceeds limit of 10MB.");
+  }
+
+  // Check if the file type is JPEG, JPG or PNG
+  if (!['image/jpeg', 'image/png', 'image/jpg'].includes(req.file.mimetype)) {
+    return res.status(415).send("Invalid file type, only JPEG and PNG are allowed!");
+  }
+
+  try {
     // Convert the uploaded file to Base64
     const base64Data = req.file.buffer.toString("base64");
     const filename = req.file.originalname;
+
     if (typeof filename !== "string") {
       res.status(400).send("Invalid input data for filename or url");
       return;
     }
-    if (req.session.username === undefined) {
-      res.status(401).send("Unauthorized action. User not logged in");
-      return;
-    }
+
     const result = await imageService.addImage(
       filename,
       base64Data,
