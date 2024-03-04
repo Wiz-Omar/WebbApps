@@ -151,7 +151,7 @@ imageRouter.delete(
       await imageService.deleteImage(imageId, req.session.username);
       res.status(200).send({ message: "Image successfully deleted" });
     } catch (e: any) {
-      console.error("Error deleting image" + e);
+      console.error("Error deleting image in imageRouer" + e);
       res.status(500).send(e.message);
     }
   }

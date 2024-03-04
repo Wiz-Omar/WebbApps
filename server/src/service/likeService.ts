@@ -52,6 +52,10 @@ export class LikeService implements ILikeService {
     const lm: Model<LikedImage> = await likeImage;
     const user: User = await this.mappingService.getUser(username);
 
+    console.log("unliking image");
+    console.log("imageId", imageId);
+    console.log("userId", user.id);
+
     if (await lm.findOne({ imageId: imageId, userId: user.id })) {
       const result: DeleteResult = await lm.deleteOne({
         //we can use deleteOne because the combination of imageId and username is unique

@@ -87,16 +87,22 @@ export class ImageService implements IImageService {
     const imageDocument = await im.findById(imageId);
 
     if (!imageDocument) {
-      throw new ImageNotFoundError(`Image with ID ${imageId} not found.`);
+      throw new ImageNotFoundError(`Image with ID ${imageId} not found`);
     }
 
     // does not need be awaited?
     await this.pathService.deleteFile(user.id, imageDocument.filename);
 
+    // Delete the likes for the image (if it is liked)
+    try {
+      await this.likeService.unlikeImage(imageId, username);
+    } catch (error) {
+      console.error("Error deleting likes for image:", error);
+    }
+
     // Proceed with deleting the document from the database
     const result: DeleteResult = await im.deleteOne({ _id: imageId });
     if (result.acknowledged && result.deletedCount === 1) {
-      this.likeService.unlikeImage(imageId, username);
       return true;
     } else {
       // This means that the deletion was not successful
