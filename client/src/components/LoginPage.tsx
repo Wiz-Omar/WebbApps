@@ -26,10 +26,12 @@ const LoginPage: React.FC<CombinedPageProps> = ({ setDisplay }) => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get<{
           isAuthenticated: boolean;
           username: string;
@@ -40,6 +42,8 @@ const LoginPage: React.FC<CombinedPageProps> = ({ setDisplay }) => {
         }
       } catch (error) {
         console.error("Session check failed", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -49,6 +53,7 @@ const LoginPage: React.FC<CombinedPageProps> = ({ setDisplay }) => {
   const loginUser = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     try {
+      setIsLoading(true);
       const response = await axios.post("http://localhost:8080/user/login", {
         username,
         password,
@@ -69,10 +74,18 @@ const LoginPage: React.FC<CombinedPageProps> = ({ setDisplay }) => {
       } else {
         console.error("An unexpected error occurred:", error);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
+    <div>
+      {isLoading ? (
+        <div className="loading-container">
+          <div className="spinner"></div>
+        </div>
+      ) : (
     <Container className="login-container">
       <Row className="justify-content-md-center">
         <Col md={6}>
@@ -130,7 +143,8 @@ const LoginPage: React.FC<CombinedPageProps> = ({ setDisplay }) => {
           </Form>
         </Col>
       </Row>
-    </Container>
+    </Container>      )}
+    </div>
   );
 };
 
