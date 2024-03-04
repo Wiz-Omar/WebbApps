@@ -25,3 +25,17 @@
     font-size: 3rem;
   }
   
+  .file-name-input {
+    border: none;
+    background-color: transparent;
+    outline: none; /* Remove the default focus outline */
+    transition: border-color 0.3s ease; /* Add smooth transition for border color */
+  }
+  
+  .file-name-input:focus {
+    border-bottom: 2px solid #007bff; /* Add a bottom border when the input is focused */
+  }
+  
+  .file-label {
+    cursor: default;
+  }

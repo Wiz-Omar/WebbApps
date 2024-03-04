@@ -182,3 +182,44 @@ imageRouter.get("/search", async (req: SearchImageRequest, res: Response) => {
     res.status(500).send(e.message);
   }
 });
+
+imageRouter.patch("/:imageId", async (req: Request<{ imageId: string }, any, { newFilename: string }>, res: Response) => {
+  try {
+    const imageId = req.params.imageId;
+    const newFilename = req.body.newFilename;
+    const username = req.session.username;
+    console.log(imageId);
+    console.log(newFilename);
+    console.log(username);
+
+    // Check if imageId is valid
+    if (typeof imageId !== "string" || imageId === "" ) {
+      res.status(400).send("Invalid image ID");
+      return;
+    }
+
+    // Check if newFilename is provided
+    if (!newFilename || typeof newFilename !== "string") {
+      res.status(400).send("Invalid new filename");
+      return;
+    }
+
+    // Check if the user is logged in
+    if (!username) {
+      res.status(401).send("Unauthorized action. User not logged in");
+      return;
+    }
+
+    // Call the image service to change the image name
+    const success = await imageService.changeImageName(imageId, newFilename, username);
+
+    if (success) {
+      res.status(200).send("Image name changed successfully");
+    } else {
+      res.status(404).send("Image not found");
+    }
+  } catch (error) {
+    console.error("Error changing image name:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});

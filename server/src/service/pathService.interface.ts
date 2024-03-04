@@ -3,5 +3,6 @@ export interface IPathService {
     getPath(userId: string, imageId: string): Promise<string>;
     getPaths(userId: string): Promise<string[]>;
     deleteFile(userId: string, imageId: string): Promise<void>;
+    renameFile(userId: string, oldFilename: string, newFilename: string): Promise<string>;
   }
   

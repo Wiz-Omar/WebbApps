@@ -37,6 +37,8 @@ function UploadButton({ callback }: UploadButtonProps) {
       return;
     }
 
+    // TODO: check filename doesnt contain special characters?
+
     // Create an instance of FormData
     const formData = new FormData();
 

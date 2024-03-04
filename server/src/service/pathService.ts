@@ -63,4 +63,23 @@ export class PathService implements IPathService {
       throw new Error("Failed to delete file or file not found");
     }
   }
+
+  async renameFile(userId: string, oldFilename: string, newFilename: string): Promise<string> {
+    const userFolderPath = path.join(this.basePath, userId);
+    const oldFilePath = path.join(userFolderPath, oldFilename);
+    const newFilePath = path.join(userFolderPath, newFilename);
+    const baseUrl = 'http://localhost:8080'; // The base URL of the server
+    const relativeFilePath = path.join('images', userId, newFilename); // images/userId/filename - this is the relative path
+
+    try {
+        // Check if the old file exists
+        await fs.access(oldFilePath);
+        // Rename the file
+        await fs.rename(oldFilePath, newFilePath);
+        return `${baseUrl}/${relativeFilePath}`;
+    } catch (error) {
+        throw new Error("Failed to rename file or file not found");
+    }
+}
+
 }
