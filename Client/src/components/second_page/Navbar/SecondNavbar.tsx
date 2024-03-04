@@ -3,17 +3,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import logo from "../../../assets/img/squid.png";
 
-import "./Navbar.css";
-import IconButton from "../../common/IconButton";
-import { Image } from "../../home_page/HomePage";
-import DeleteIcon from "../DeleteIcon";
-import DownloadIcon from "../DownloadIcon";
-import CloseIcon from "../CloseIcon";
-import { handleDownload } from "../../../utils/handleDownload";
+import './Navbar.css'
+import IconButton from '../../common/IconButton';
+import { Image } from "../../../components/home_page/HomePage";
+import DeleteIcon from './DeleteIcon';
+import DownloadIcon from './DownloadIcon';
+import CloseIcon from './CloseIcon';
 
 import axios from "axios";
 import ConfirmationPopup from "../ConfirmationPopup";
 import { handleDelete } from "../../../utils/handleDelete";
+import { handleDownload } from "../../../utils/handleDownload";
 axios.defaults.withCredentials = true;
 
 function Navbar() {

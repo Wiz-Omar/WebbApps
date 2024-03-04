@@ -1,4 +1,5 @@
 import React from 'react'
+import "./Icon.css";
 
 interface IconProps {
     Icon: React.FC<React.SVGProps<SVGSVGElement>>;
@@ -9,7 +10,7 @@ interface IconProps {
 
 const Icon = ({Icon, ariaLabel, onClick, style}: IconProps) => {
   return (
-    <button className="svg-button" aria-label={ariaLabel} onClick={onClick}>
+    <button className="svg-icon" aria-label={ariaLabel} onClick={onClick}>
       <Icon style={style}/>
     </button>
   )

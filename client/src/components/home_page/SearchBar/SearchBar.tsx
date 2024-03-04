@@ -3,7 +3,7 @@ import axios from 'axios';
 import './SearchBar.css';
 import SearchResultsDropdown from '../SearchResultsDropdown/SearchResultsDropdown';
 import { Image } from '../../home_page/HomePage'; // Adjust the import path as necessary
-import SearchIcon from '../SearchIcon';
+import SearchIcon from './SearchIcon';
 import Icon from '../../common/Icon';
 
 axios.defaults.withCredentials = true

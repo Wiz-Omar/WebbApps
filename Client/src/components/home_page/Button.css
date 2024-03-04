@@ -4,6 +4,7 @@
     border-radius: 20px; /* Rounded border */
     margin-top: 5px;
     margin-right: 5px;
+    cursor: auto;
 }
 
 .button:hover {

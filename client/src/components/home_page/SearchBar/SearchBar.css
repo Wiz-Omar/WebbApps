@@ -3,6 +3,7 @@
 .search-form {
   display: flex;
   align-items: center;
+  width: 100%; /* Ensure the form takes up the entire width */
 }
 
 .search-container {
@@ -12,7 +13,7 @@
   background-color: #EEEEEE;
   border-radius: 20px;
   overflow: hidden;
-  
+  position: relative;
 }
 
 .search-input {
@@ -22,6 +23,8 @@
   font-size: 16px; /* Adjust font-size as needed */
   background-color: transparent;
   color: #202124; /* Text color */
+  flex: 1; /* Fill remaining space within the form */
+  
 }
 
 .search-input::placeholder {
@@ -31,4 +34,3 @@
 .search-input:focus {
   outline: none;
 }
-
