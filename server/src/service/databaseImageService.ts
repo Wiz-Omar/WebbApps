@@ -56,9 +56,10 @@ export class DatabaseImageService implements IDatabaseImageService {
     return this.mappingService.mapDatabaseImageToImage(databaseImage);
   }
 
-  async getImageBySearch(search: string): Promise<Image[]> {
+  async getImageBySearch(userId: string, search: string): Promise<Image[]> {
     const im: Model<Image> = await imageModel;
     const images = await im.find({
+      userId: userId,
       filename: { $regex: search, $options: "i" },
     });
     return images.map(this.mappingService.mapDatabaseImageToImage);

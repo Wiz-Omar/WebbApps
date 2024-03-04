@@ -104,7 +104,7 @@ export class ImageService implements IImageService {
   async getImageBySearch(search: string, username: string): Promise<Image[]> {
     try {
       const user: User = await this.mappingService.getUser(username);
-      const images = await this.databaseImageService.getImageBySearch(search);
+      const images = await this.databaseImageService.getImageBySearch(user.id, search);
       return images;
     } catch (error) {
       console.error("Error fetching images:", error);
