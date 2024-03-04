@@ -13,6 +13,7 @@ interface GetImagesRequest extends Request {
   query: {
     sortField?: string;
     sortOrder?: string;
+    onlyLiked?: string;
   };
 }
 interface PostImageRequest extends Request {
@@ -42,6 +43,7 @@ const upload = multer();
 imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
   let sortField = req.query.sortField as string | undefined;
   let sortOrder = req.query.sortOrder as string | undefined;
+  let onlyLiked = req.query.onlyLiked === 'true'; // Convert "onlyLiked" from string to boolean
 
   // Validate sortField
   if (sortField && !validSortFields.includes(sortField)) {
@@ -69,7 +71,8 @@ imageRouter.get("/", async (req: GetImagesRequest, res: Response) => {
       // We put undefind in the interface
       sortField,
       sortOrder,
-      req.session.username
+      req.session.username,
+      onlyLiked
     );
 
     console.log("images", images);

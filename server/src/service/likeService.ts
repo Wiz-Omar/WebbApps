@@ -72,18 +72,22 @@ export class LikeService implements ILikeService {
   }
 
   //TODO: is this necessary?
-  async getLikedImages(username: string): Promise<Image[]> {
+  async getLikedImages(username: string): Promise<string[]> {
     const lm: Model<LikedImage> = await likeImage;
+    const user: User = await this.mappingService.getUser(username);
 
-    const likedImages = await lm.find<Image>({ username: username }); //Will this return a list of documents referencing documents in "image collection" or a list of imageIds?
-    //const likedImagesList = likedImages.map(async (img) => {await im.findOne({_id: img.imageId})}); //In case the line above returns Ids.
-    if (likedImages === null) {
+    // Find liked images by user ID and only select the imageId field
+    const likedImagesDocuments = await lm.find({ userId: user.id }, 'imageId').exec();
+
+    if (!likedImagesDocuments || likedImagesDocuments.length === 0) {
       return [];
     } else {
-      return likedImages; //returns the Images that the user has liked
+      // Map the documents to extract the imageId values and convert them to string
+      const likedImageIds: string[] = likedImagesDocuments.map(doc => doc.imageId.toString());
+      console.log("likedImageIds", likedImageIds);
+      return likedImageIds; // Returns the IDs of Images that the user has liked
     }
-    //return Array.from(this.likes);
-  }
+}
 }
 
 class LikeExistsError extends Error {

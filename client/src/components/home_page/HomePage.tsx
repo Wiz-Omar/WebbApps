@@ -26,11 +26,11 @@ function HomePage() {
     getImages();
   }, [location.pathname]);
 
-  async function getImages(sortField = "uploadDate", sortOrder = "desc") {
+  async function getImages(sortField = "uploadDate", sortOrder = "desc", onlyLiked = false) {
     try {
       setIsLoading(true);
       const response = await axios.get<Image[]>(
-        `http://localhost:8080/image?sortField=${sortField}&sortOrder=${sortOrder}`
+        `http://localhost:8080/image?sortField=${sortField}&sortOrder=${sortOrder}&onlyLiked=${onlyLiked}`
       );
       setImages(response.data);
     } catch (error) {

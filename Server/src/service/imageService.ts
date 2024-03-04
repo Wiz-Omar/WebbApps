@@ -25,7 +25,8 @@ export class ImageService implements IImageService {
   async addImage(
     filename: string,
     data: string,
-    username: string
+    username: string,
+    onlyLiked: boolean = false
   ): Promise<Image> {
     try {
       const im: Model<Image> = await imageModel;
@@ -55,23 +56,42 @@ export class ImageService implements IImageService {
   async getImages(
     sortField: string = "uploadDate",
     sortOrder: string = "desc",
-    username: string
+    username: string,
+    onlyLiked: boolean = false
   ): Promise<Image[]> {
-    // Convert sortOrder to a number for MongoDB sorting
-    const sortDirection = sortOrder === "asc" ? 1 : -1;
+    const sortDirection: 1 | -1 = sortOrder === "asc" ? 1 : -1;
 
-    //TODO: look into .limit(). Seems to crash with more than 6 images right now.
     try {
+      // Assuming imageModel is correctly initialized elsewhere
       const im: Model<Image> = await imageModel;
-      // Get the user
+      // Ensure mappingService.getUser(username) is implemented and works as expected
       const user: User = await this.mappingService.getUser(username);
-      // Use the sortField and sortDirection in the sort() method
-      const images = await im
-        .find({ userId: user.id })
-        .sort({ [sortField]: sortDirection })
-        .limit(9);
 
-      // convert the images to an array of Image objects
+      let query: any = { userId: user.id };
+
+      if (onlyLiked) {
+
+        const likedImageIds = await this.likeService.getLikedImages(username);
+
+        if (likedImageIds.length > 0) {
+          query._id = {
+            $in: likedImageIds.map((id) => new ObjectId(id)),
+          };
+        } else {
+          return []; // Early return if there are no liked images
+        }
+      }
+
+      console.log(query)
+
+      // Fetch and map the images
+      const images = await im
+        .find(query)
+        .sort({ [sortField]: sortDirection })
+        .limit(9)
+        .exec();
+
+      console.log("images", images);  
       return images.map((image) => mapDatabaseImageToImage(image));
     } catch (error) {
       console.error("Error fetching images:", error);

@@ -7,6 +7,6 @@ export interface ILikeService {
    
     unlikeImage(imageId: string, username: string): Promise<void>
 
-    getLikedImages(username: string): Promise<Image[]>
+    getLikedImages(username: string): Promise<string[]>
    
 }
