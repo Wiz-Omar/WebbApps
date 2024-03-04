@@ -1,6 +1,7 @@
 import React from "react";
 import GridImg from "./GridImg";
 import { Image } from "../../components/home_page/HomePage";
+import NoImagesDisplay from "../second_page/NoImagesDisplay";
 
 export interface GridProps {
   images: Image[];
@@ -21,9 +22,7 @@ function Grid({ images, callback }: GridProps) {
   // Check if there are no images
   if (images.length === 0) {
     return (
-      <div className="container mt-4 text-center">
-        <p data-testid="no-images-message">No images to display.</p>
-      </div>
+      <NoImagesDisplay updateScreen={callback} />
     );
   }
 
