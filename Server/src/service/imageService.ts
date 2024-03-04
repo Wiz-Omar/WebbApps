@@ -22,11 +22,11 @@ export class ImageService implements IImageService {
   private likeService: ILikeService;
   private databaseImageService: IDatabaseImageService;
 
-  constructor() {
-    this.mappingService = new MappingService();
-    this.pathService = new PathService();
-    this.likeService = new LikeService();
-    this.databaseImageService = new DatabaseImageService();
+  constructor(mappingService: MappingService = new MappingService(), pathService: IPathService = new PathService(), likeService: ILikeService = new LikeService(), databaseImageService: IDatabaseImageService = new DatabaseImageService()) {
+    this.mappingService = mappingService;
+    this.pathService = pathService;
+    this.likeService = likeService;
+    this.databaseImageService = databaseImageService;
   }
 
   //TODO: change name, path should be data?
@@ -35,7 +35,6 @@ export class ImageService implements IImageService {
     filename: string,
     data: string,
     username: string,
-    onlyLiked: boolean = false
   ): Promise<Image> {
     try {
       const user: User = await this.mappingService.getUser(username);
@@ -93,10 +92,14 @@ export class ImageService implements IImageService {
     try {
       const image = await this.databaseImageService.findImageById(imageId);
       await this.pathService.deleteFile(user.id, image.filename);
-      await this.likeService.unlikeImage(imageId, username);
+      try {
+        await this.likeService.unlikeImage(imageId, username);
+      } catch (error) {
+        console.error("No like was deleted:", error);
+      }
       return await this.databaseImageService.deleteImage(imageId);
     } catch (error) {
-      console.error("Error fetching image:", error);
+      console.error("Error:", error);
       throw error; // Re-throw the error to be handled by the caller
     }
   }
@@ -119,7 +122,7 @@ export class ImageNotFoundError extends Error {
     this.name = "ImageNotFoundError";
   }
 }
-class ImageExistsError extends Error {
+export class ImageExistsError extends Error {
   constructor(filename: string) {
     super(`Image with id ${filename} already exists`);
     this.name = "ImageExistsError";

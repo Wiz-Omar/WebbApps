@@ -1,4 +1,79 @@
 // imageService.test.ts
+
+jest.mock("./mappingService");
+jest.mock("./pathService");
+jest.mock("./likeService");
+jest.mock("./databaseImageService");
+
+import { ImageService } from "./imageService";
+import { MappingService } from "./mappingService";
+import { PathService } from "./pathService";
+import { LikeService } from "./likeService";
+import { DatabaseImageService } from "./databaseImageService";
+import { Image } from "../model/image";
+import { MockMappingService } from "./mappingService.mock";
+import { MockPathService } from "./pathService.mock";
+import { MockLikeService } from "./likeService.mock";
+import { MockDatabaseImageService } from "./databaseImageService.mock";
+
+// Create mock instances
+const mockMappingService = new MockMappingService();
+const mockPathService = new MockPathService();
+const mockLikeService = new MockLikeService();
+const mockDatabaseImageService = new MockDatabaseImageService();
+
+// Setup ImageService with mocked dependencies
+const imageService = new ImageService(mockMappingService, mockPathService, mockLikeService, mockDatabaseImageService);
+
+describe('ImageService', () => {
+  beforeEach(() => {
+    // Reset mocks before each test
+    jest.clearAllMocks();
+  });
+
+  test('Should successfully add and delete an image', async () => {
+    const username = 'testUser';
+    const filename = 'test.jpg';
+    const data = 'base64imageData';
+
+    // Test adding an image
+    const image = await imageService.addImage(filename, data, username);
+    expect(image).toBeDefined();
+    // Test deleting an image
+    const imageId = image.id; // Assuming this is the ID of the added image
+    await expect(imageService.deleteImage(imageId, username));
+    // Verify interactions
+    expect(mockDatabaseImageService.addImage);
+    expect(mockDatabaseImageService.deleteImage);
+  });
+
+  test('Should throw an error when adding an image that already exists', async () => {
+    const username = 'testUser';
+    const filename = 'test.jpg';
+    const data = 'base64imageData';
+
+    // Test adding an image
+    await imageService.addImage(filename, data, username);
+    // Test adding the same image again
+    await expect(imageService.addImage(filename, data, username)).rejects.toThrow();
+    // Verify interactions
+    expect(mockDatabaseImageService.addImage);
+  });
+
+  test('Should return a list of images with matching search query', async () => {
+    const username = 'testUser';
+    const searchQuery = 'test';
+
+    // Test getting images by search query
+    const images = await imageService.getImageBySearch(username, searchQuery);
+    expect(images).toBeDefined();
+    // Verify interactions
+    expect(mockDatabaseImageService.getImageBySearch);
+  });
+
+
+});
+/* // imageService.test.ts
 import mongoose from "mongoose";
 import { ImageService } from "./imageService";
 import { IImageService } from "./imageService.interface";
@@ -57,8 +132,6 @@ test("If two images is added and one is deleted from the list then the correct o
   expect(images.length === 1).toBe(true);
 });
 
-
-/*
 test("If a liked image is removed, it should be removed from the liked images array aswell", async() => {
   const likeService = new LikeService();
   const imageService = new ImageService();

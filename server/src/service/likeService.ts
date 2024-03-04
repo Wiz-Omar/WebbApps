@@ -10,11 +10,10 @@ import { User } from "../model/user";
 import { MappingService } from "./mappingService";
 
 export class LikeService implements ILikeService {
-  mappingService: MappingService = new MappingService();
-  //private likes: Set<string>; // Set of image IDs that the user has liked
+  mappingService: MappingService;
 
   constructor() {
-    //this.likes = new Set<string>();
+    this.mappingService = new MappingService();
   }
 
   async isImageLiked(imageId: string, username: string): Promise<boolean> {
@@ -52,10 +51,6 @@ export class LikeService implements ILikeService {
     const lm: Model<LikedImage> = await likeImage;
     const user: User = await this.mappingService.getUser(username);
 
-    console.log("unliking image");
-    console.log("imageId", imageId);
-    console.log("userId", user.id);
-
     if (await lm.findOne({ imageId: imageId, userId: user.id })) {
       const result: DeleteResult = await lm.deleteOne({
         //we can use deleteOne because the combination of imageId and username is unique
@@ -68,10 +63,8 @@ export class LikeService implements ILikeService {
     } else {
       throw new ImageNotFoundError(imageId);
     }
-    //this.likes.delete(imageId);
   }
 
-  //TODO: is this necessary?
   async getLikedImages(username: string): Promise<string[]> {
     const lm: Model<LikedImage> = await likeImage;
     const user: User = await this.mappingService.getUser(username);
@@ -84,7 +77,6 @@ export class LikeService implements ILikeService {
     } else {
       // Map the documents to extract the imageId values and convert them to string
       const likedImageIds: string[] = likedImagesDocuments.map(doc => doc.imageId.toString());
-      console.log("likedImageIds", likedImageIds);
       return likedImageIds; // Returns the IDs of Images that the user has liked
     }
 }

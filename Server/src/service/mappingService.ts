@@ -44,29 +44,11 @@ export class MappingService implements IMappingService {
   }
 }
 
-/* export function mapDatabaseUserToUser(databaseUser: DatabaseUser): User {
-    return {
-        id: databaseUser._id.toString(),
-        username: databaseUser.username,
-        password: databaseUser.password
-    }
-} */
-
 interface DatabaseUser {
   _id: ObjectId;
   username: string;
   password: string;
 }
-
-//TODO: should this not be in the service? how can this be tested/mocked?
-/* export function mapDatabaseImageToImage(databaseImage: DatabaseImage): Image {
-  return {
-    id: databaseImage._id.toString(),
-    filename: databaseImage.filename,
-    path: databaseImage.path,
-    uploadDate: databaseImage.uploadDate,
-  };
-} */
 
 interface DatabaseImage {
   _id: ObjectId;
