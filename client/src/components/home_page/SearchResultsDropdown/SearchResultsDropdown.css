@@ -42,3 +42,8 @@
 .result-title {
   font-size: 16px; /* Adjust as needed */
 }
+
+.highlight {
+  background-color: yellow;
+  font-weight: bold;
+}

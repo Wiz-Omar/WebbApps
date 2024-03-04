@@ -76,7 +76,7 @@ function SearchBar() {
         />
       </form>
       {isFocused && searchResults.length > 0 && (
-        <SearchResultsDropdown results={searchResults} onSelect={() => {}} />
+        <SearchResultsDropdown results={searchResults} onSelect={() => {}} searchQuery={searchQuery} />
       )}
     </div>
   );
