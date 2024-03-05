@@ -23,15 +23,6 @@ import { ILikeService } from "./likeService.interface";
 import { IDatabaseImageService } from "./databaseImageService.interface";
 import exp from "constants";
 
-/* // Create mock instances
-const mockMappingService = new MockMappingService();
-const mockPathService = new MockPathService();
-const mockLikeService = new MockLikeService();
-const mockDatabaseImageService = new MockDatabaseImageService();
-
-// Setup ImageService with mocked dependencies
-const imageService = new ImageService(mockMappingService, mockPathService, mockLikeService, mockDatabaseImageService); */
-
 let imageService : IImageService;
 let mockMappingService : IMappingService;
 let mockPathService : IPathService;
