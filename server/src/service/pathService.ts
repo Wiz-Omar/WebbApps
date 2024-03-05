@@ -15,16 +15,6 @@ export class PathService implements IPathService {
       dest: path.join(process.cwd(), "temp"),
     });
   }
-  
-  /* async getPaths(userId: string): Promise<string[]> {
-    const userFolderPath = path.join(this.basePath, userId);
-    try {
-      const files = await fs.readdir(userFolderPath);
-      return files.map((file) => path.join(userFolderPath, file));
-    } catch {
-      throw new Error("Failed to get files");
-    }
-  } */
 
   async saveFile(userId: string, fileName: string, base64Data: string): Promise<string> {
     const userFolderPath = path.join(this.basePath, userId); // basePath/userId
@@ -42,17 +32,6 @@ export class PathService implements IPathService {
       throw new Error("Failed to save file");
     }
   }
-  
-  /* async getPath(userId: string, imageId: string): Promise<string> {
-    const filePath = path.join(this.basePath, userId, imageId);
-    // Verify the file exists
-    try {
-      await fs.access(filePath);
-      return filePath;
-    } catch {
-      throw new Error("File not found");
-    }
-  } */
 
   async deleteFile(userId: string, filename: string): Promise<void> {
     console.log("Deleting local file path", userId, filename);
