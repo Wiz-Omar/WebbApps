@@ -28,4 +28,21 @@ export class MockPathService implements IPathService {
       throw new Error("Failed to delete file or file not found");
     }
   }
+
+  async renameFile(userId: string, oldFilename: string, newFilename: string): Promise<string> {
+    // Simulate renaming the file by updating the files object
+    if (this.files[userId]) {
+      const index = this.files[userId].indexOf(oldFilename);
+      if (index > -1) {
+        this.files[userId][index] = newFilename;
+      } else {
+        throw new Error("File not found");
+      }
+    } else {
+      throw new Error("Failed to rename file or file not found");
+    }
+
+    // Return a mock URL for the renamed file
+    return `http://localhost:8080/images/${userId}/${newFilename}`;
+  }
 }

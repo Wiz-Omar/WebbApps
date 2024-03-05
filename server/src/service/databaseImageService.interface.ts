@@ -6,4 +6,5 @@ export interface IDatabaseImageService {
   deleteImage(imageId: string): Promise<boolean>;
   findImageById(imageId: string): Promise<Image>;
   getImageBySearch(userId: string, search: string): Promise<Image[]>;
+  renameImage(imageId: string, oldFilename: string, newFilename: string): Promise<boolean>;
 }

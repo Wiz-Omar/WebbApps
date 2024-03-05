@@ -1,6 +1,6 @@
 import { Image } from "../model/image";
 import { IDatabaseImageService } from "./databaseImageService.interface";
-import { ImageExistsError } from "./imageService";
+import { ImageExistsError, ImageNotFoundError } from "./imageService";
 
 export class MockDatabaseImageService implements IDatabaseImageService {
   // Simulated storage for images, keyed by userId
@@ -87,5 +87,18 @@ export class MockDatabaseImageService implements IDatabaseImageService {
       image.filename.includes(search)
     );
     return searchResults;
+  }
+
+  async renameImage(imageId: string, newFilename: string, newFilepath: string): Promise<boolean> {
+    console.log("MockDatabaseImageService.renameImage called");
+    for (const userId in this.storage) {
+      const image = this.storage[userId].find((image) => image.id === imageId);
+      if (image) {
+        image.filename = newFilename;
+        image.path = newFilepath;
+        return true;
+      }
+    }
+    throw new ImageNotFoundError(imageId);
   }
 }

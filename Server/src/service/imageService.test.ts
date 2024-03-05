@@ -5,7 +5,7 @@ jest.mock("./pathService");
 jest.mock("./likeService");
 jest.mock("./databaseImageService");
 
-import { ImageService } from "./imageService";
+import { ImageNotFoundError, ImageService } from "./imageService";
 import { MappingService } from "./mappingService";
 import { PathService } from "./pathService";
 import { LikeService } from "./likeService";
@@ -15,21 +15,44 @@ import { MockMappingService } from "./mappingService.mock";
 import { MockPathService } from "./pathService.mock";
 import { MockLikeService } from "./likeService.mock";
 import { MockDatabaseImageService } from "./databaseImageService.mock";
+import { user } from "firebase-functions/v1/auth";
+import { IImageService } from "./imageService.interface";
+import { IMappingService } from "./mappingService.interface";
+import { IPathService } from "./pathService.interface";
+import { ILikeService } from "./likeService.interface";
+import { IDatabaseImageService } from "./databaseImageService.interface";
+import exp from "constants";
 
-// Create mock instances
+/* // Create mock instances
 const mockMappingService = new MockMappingService();
 const mockPathService = new MockPathService();
 const mockLikeService = new MockLikeService();
 const mockDatabaseImageService = new MockDatabaseImageService();
 
 // Setup ImageService with mocked dependencies
-const imageService = new ImageService(mockMappingService, mockPathService, mockLikeService, mockDatabaseImageService);
+const imageService = new ImageService(mockMappingService, mockPathService, mockLikeService, mockDatabaseImageService); */
+
+let imageService : IImageService;
+let mockMappingService : IMappingService;
+let mockPathService : IPathService;
+let mockLikeService : ILikeService;
+let mockDatabaseImageService : IDatabaseImageService;
+
+// Reset and reinitialize mocks and service before each test
+beforeEach(() => {
+  // Reinitialize mocks
+  mockMappingService = new MockMappingService();
+  mockPathService = new MockPathService();
+  mockLikeService = new MockLikeService();
+  mockDatabaseImageService = new MockDatabaseImageService();
+
+  // Re-setup ImageService with the new mocks
+  imageService = new ImageService(mockMappingService, mockPathService, mockLikeService, mockDatabaseImageService);
+
+  // Clear all mocks (if jest.clearAllMocks() is not enough or you have custom clearing logic)
+});
 
 describe('ImageService', () => {
-  beforeEach(() => {
-    // Reset mocks before each test
-    jest.clearAllMocks();
-  });
 
   test('Should successfully add and delete an image', async () => {
     const username = 'testUser';
@@ -71,8 +94,68 @@ describe('ImageService', () => {
     expect(mockDatabaseImageService.getImageBySearch);
   });
 
+  test('Should change the name of an image successfully', async () => {
+    const username = 'testUser';
+    const filename = 'test.jpg';
+    const data = 'base64imageData';
 
+    const image = await imageService.addImage(username, filename, data);
+    const imageId = image.id;
+    const newFilename = 'newFilename.jpg';
+  
+    const result = await imageService.changeImageName(imageId, newFilename, username);
+  
+    expect(result).toBeTruthy();
+    // Verify that pathService.renameFile and database update calls were made
+  });
+
+  test('Should throw an ImageNotFoundError for operations on non-existing images', async () => {
+    const username = 'testUser';
+    const nonExistingImageId = 'nonExistingId';
+
+    await expect(imageService.changeImageName(nonExistingImageId, 'newFilename.jpg', username)).rejects.toThrow(Error);
+    await expect(imageService.deleteImage(nonExistingImageId, username)).rejects.toThrow(Error);
+  });
+
+  test('Should return a list of images sorted by filename in ascending order', async () => {
+    const username = 'testUser';
+    const images = await imageService.getImages(username, 'filename', 'asc', false);
+    expect(images).toBeDefined();
+    // Verify interactions
+    expect(mockDatabaseImageService.getImages);
+  });
+
+  test('Should return an empty list of images when no images are found', async () => {
+    const username = 'testUser';
+    const images = await imageService.getImages(username, 'filename', 'asc', false);
+    expect(images).toEqual([]);
+    // Verify interactions
+    expect(mockDatabaseImageService.getImages);
+  });
+
+  test('Should return a list of images with matching search query', async () => {
+    const username = 'testUser';
+    const searchQuery = 'test';
+
+    // add some images
+    await imageService.addImage('test1.jpg', 'base64imageData', username);
+    await imageService.addImage('test2.jpg', 'base64imageData', username);
+    await imageService.addImage('test3.jpg', 'base64imageData', username);
+
+    const images: Image[] = await imageService.getImages(username, 'filename', 'asc', false);
+    expect(images).toBeDefined();
+    expect(images.length).toBe(3);
+
+    // Test getting images by search query
+    const searchedImages = await imageService.getImageBySearch(searchQuery, username);
+    expect(searchedImages).toBeDefined();
+    expect(searchedImages.length).toBe(3);
+    // Verify interactions
+    expect(mockDatabaseImageService.getImageBySearch);
+  });
+  
 });
+
 /* // imageService.test.ts
 import mongoose from "mongoose";
 import { ImageService } from "./imageService";

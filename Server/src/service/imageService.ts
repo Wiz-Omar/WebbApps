@@ -29,8 +29,6 @@ export class ImageService implements IImageService {
     this.databaseImageService = databaseImageService;
   }
 
-  //TODO: change name, path should be data?
-  //TODO: does not need to return the image, just a boolean if it was added or not?
   async addImage(
     filename: string,
     data: string,
@@ -115,25 +113,14 @@ export class ImageService implements IImageService {
     }
   }
 
+  //TODO: can we look into the error handling and divide into cases, depending on the error?
   async changeImageName(imageId: string, newFilename: string, username: string): Promise<boolean> {
     try {
-        const im: Model<Image> = await imageModel;
         const user: User = await this.mappingService.getUser(username);
-
-        // Find the image document to get the current filename
-        const imageDocument = await im.findById(imageId);
-
-        if (!imageDocument) {
-            throw new ImageNotFoundError(`Image with ID ${imageId} not found`);
-        }
-
-        // Call the path service to rename the file
+        const imageDocument = await this.databaseImageService.findImageById(imageId);
+        // Call the path service to rename the file, returns the new file path
         const newFilePath = await this.pathService.renameFile(user.id, imageDocument.filename, newFilename);
-
-        // Update the filename and path in the database
-        await im.updateOne({ _id: imageId }, { $set: { filename: newFilename, path: newFilePath } });
-
-        return true; // Return true if the filename is successfully changed
+        return await this.databaseImageService.renameImage(imageId, newFilename, newFilePath);
     } catch (error) {
         console.error("Error changing image name:", error);
         throw error; // Re-throw the error to be handled by the caller
