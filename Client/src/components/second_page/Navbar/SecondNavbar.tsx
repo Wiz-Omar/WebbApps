@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../../assets/img/squid.png";
 import "./Navbar.css";
-import IconButton from "../../common/IconButton";
+import IconButton from "../../common/IconButton/IconButton";
 import { Image } from "../../../components/home_page/HomePage";
 import DeleteIcon from "./DeleteIcon";
 import DownloadIcon from "./DownloadIcon";

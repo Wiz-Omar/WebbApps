@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { AppDisplay } from "../App";
+import { AppDisplay } from "../../App";
 import {
   Container,
   Row,
@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import "./LoginPage.css"; // Reuse styles from LoginPage
 
-import logo from "../assets/img/squid.png";
+import logo from "../../assets/img/squid.png";
 
 axios.defaults.withCredentials = true;
 

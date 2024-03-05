@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import GridImg from './GridImg';
+import GridImg from '../GridImg/GridImg';
 import axios, { AxiosStatic } from 'axios';
 
 jest.mock('axios');

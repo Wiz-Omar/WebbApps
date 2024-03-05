@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Image } from "../../components/home_page/HomePage";
+import { Image } from "../../HomePage";
 
 import "./GridImg.css";
-import DownloadIcon from "../second_page/Navbar/DownloadIcon";
-import IconButton from "../common/IconButton";
-import FilledHeartIcon from "../common/FilledHeartIcon";
-import FavoriteButton from "./FavoriteButton";
-import GridImgDescription from "./GridImgDescription";
+import DownloadIcon from "../../../second_page/Navbar/DownloadIcon";
+import IconButton from "../../../common/IconButton/IconButton";
+import FavoriteButton from "../../FavoriteButton/FavoriteButton";
+import GridImgDescription from "../GridImgDescription/GridImgDescription";
 import axios from "axios";
-import DeleteButton from "./DeleteButton";
-import { handleDelete } from "../../utils/handleDelete";
+import DeleteButton from "../../DeleteButton";
+import { handleDelete } from "../../../../utils/handleDelete";
 
 interface GridImgProps {
   image: Image;

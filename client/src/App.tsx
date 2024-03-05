@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SecondPage from "./components/second_page/SecondPage";
+import SecondPage from "./components/second_page/SecondPage/SecondPage";
 import HomePage from "./components/home_page/HomePage";
-import StartPage from "./components/StartPage";
-import RegisterPage from "./components/RegisterPage";
+import RegisterPage from "./components/login_page/RegisterPage";
 //import LoginPage from "./components/LoginPage";
-import LoginPage from "./components/LoginPage";
+import LoginPage from "./components/login_page/LoginPage";
 
 export enum AppDisplay {
   REGISTER_PAGE,

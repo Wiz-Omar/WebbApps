@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import DeleteIcon from "./DeleteIcon";
-import CheckIcon from "../common/CheckIcon";
-import CrossIcon from "../common/CrossIcon";
-import Icon from "../common/Icon";
 import "./Button.css";
+import ClickableIcon from "../common/ClickableIcon";
+import { Check2, Trash, XLg } from "react-bootstrap-icons";
 
 interface DeleteButtonProps {
   callback: () => void;
@@ -12,27 +10,26 @@ interface DeleteButtonProps {
 const DeleteButton = ({ callback }: DeleteButtonProps) => {
   const [confirmationNeeded, setConfirmationNeeded] = useState(false);
 
-  /* const handleDeleteClick = () => {
-    setConfirmationNeeded(true);
-  }; */
-
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); // Prevent event from bubbling
     callback();
-    setConfirmationNeeded(false); // Reset state (optional, depending on desired UX)
+    setConfirmationNeeded(false); // It should set to false to close the confirmation options
   };
 
-  const handleCancelDelete = () => {
+  const handleCancelDelete = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); // Prevent event from bubbling
     setConfirmationNeeded(false);
   };
 
   return (
-    <div className="button" onClick={() => setConfirmationNeeded(true)} >
+    <div className="button" onClick={() => setConfirmationNeeded(true)}>
       {!confirmationNeeded ? (
-        <Icon Icon={DeleteIcon} />
+        // Use the Bootstrap Trash icon
+        <Trash />
       ) : (
         <div>
-          <Icon onClick={handleConfirmDelete} Icon={CheckIcon} />
-          <Icon onClick={handleCancelDelete} Icon={CrossIcon} />
+          <ClickableIcon onClick={handleConfirmDelete} icon={<Check2 />} />
+          <ClickableIcon onClick={handleCancelDelete} icon={<XLg />} />
         </div>
       )}
     </div>

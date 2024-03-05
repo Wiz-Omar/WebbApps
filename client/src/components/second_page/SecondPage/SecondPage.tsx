@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import "./SecondPage.css";
-import DownloadIcon from "./Navbar/DownloadIcon";
-import CloseIcon from "./Navbar/CloseIcon";
-import DeleteIcon from "./Navbar/DeleteIcon";
-import { Image } from "../../components/home_page/HomePage";
-import IconButton from "../common/IconButton";
-import FullSizeImage from "./FullSizeImg";
-import Navbar from "./Navbar/SecondNavbar";
+import DownloadIcon from "../Navbar/DownloadIcon";
+import CloseIcon from "../Navbar/CloseIcon";
+import DeleteIcon from "../Navbar/DeleteIcon";
+import { Image } from "../../home_page/HomePage";
+import IconButton from "../../common/IconButton/IconButton";
+import FullSizeImage from "../FullSizeImg/FullSizeImg";
+import Navbar from "../Navbar/SecondNavbar";
 
 // SecondPage props
 interface SecondPageProps {
