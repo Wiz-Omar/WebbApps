@@ -4,6 +4,7 @@ import { Image } from "../model/image";
 import { imageModel } from "../db/image.db";
 import { MappingService } from "./mappingService";
 import { ImageNotFoundError } from "./imageService";
+import { ObjectId } from "mongodb";
 
 //HUMBLE OBJECT, will not be tested
 export class DatabaseImageService implements IDatabaseImageService {
@@ -27,9 +28,15 @@ export class DatabaseImageService implements IDatabaseImageService {
   async getImages(
     userId: string,
     query: any,
-    sortOptions: any
+    sortOptions: any,
+    likedImageIds: string[]
   ): Promise<Image[]> {
     const im: Model<Image> = await imageModel;
+    if(likedImageIds.length > 0) {
+      const objectIdList: ObjectId[] = likedImageIds.map((id: string) => new ObjectId(id));
+      query._id = { $in: objectIdList };
+    }
+    console.log(query);
     const images = await im
       .find(query)
       .sort(sortOptions)
@@ -37,6 +44,7 @@ export class DatabaseImageService implements IDatabaseImageService {
       .exec();
   
     // Assuming mapDatabaseImageToImage correctly maps the document to your Image model
+    console.log(images);
     return images.map(this.mappingService.mapDatabaseImageToImage);
   }
   

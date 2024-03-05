@@ -47,7 +47,8 @@ export class MockDatabaseImageService implements IDatabaseImageService {
   async getImages(
     userId: string,
     query: any = {},
-    sortOptions: any = {}
+    sortOptions: any = {}, 
+    likedImageIds: string[]
   ): Promise<Image[]> {
     console.log("MockDatabaseImageService.getImages called");
     const userImages = this.storage[userId] || [];
