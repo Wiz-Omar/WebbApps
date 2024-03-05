@@ -114,6 +114,32 @@ export class ImageService implements IImageService {
       throw error; // Re-throw the error to be handled by the caller
     }
   }
+
+  async changeImageName(imageId: string, newFilename: string, username: string): Promise<boolean> {
+    try {
+        const im: Model<Image> = await imageModel;
+        const user: User = await this.mappingService.getUser(username);
+
+        // Find the image document to get the current filename
+        const imageDocument = await im.findById(imageId);
+
+        if (!imageDocument) {
+            throw new ImageNotFoundError(`Image with ID ${imageId} not found`);
+        }
+
+        // Call the path service to rename the file
+        const newFilePath = await this.pathService.renameFile(user.id, imageDocument.filename, newFilename);
+
+        // Update the filename and path in the database
+        await im.updateOne({ _id: imageId }, { $set: { filename: newFilename, path: newFilePath } });
+
+        return true; // Return true if the filename is successfully changed
+    } catch (error) {
+        console.error("Error changing image name:", error);
+        throw error; // Re-throw the error to be handled by the caller
+    }
+}
+
 }
 
 export class ImageNotFoundError extends Error {
