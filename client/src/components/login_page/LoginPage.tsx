@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { AppDisplay } from "../App";
+import { AppDisplay } from "../../App";
 
 import {
   Container,
@@ -14,7 +14,7 @@ import {
 
 import "./LoginPage.css";
 
-import logo from "../assets/img/squid.png";
+import logo from "../../assets/img/squid.png";
 
 axios.defaults.withCredentials = true;
 

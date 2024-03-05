@@ -4,7 +4,7 @@ import './SearchBar.css';
 import SearchResultsDropdown from '../SearchResultsDropdown/SearchResultsDropdown';
 import { Image } from '../../home_page/HomePage'; // Adjust the import path as necessary
 import SearchIcon from './SearchIcon/SearchIcon';
-import Icon from '../../common/Icon';
+import ClickableIcon from '../../common/ClickableIcon';
 
 axios.defaults.withCredentials = true
 

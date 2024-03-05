@@ -1,7 +1,6 @@
-import React from "react";
-import GridImg from "./GridImg";
-import { Image } from "../../components/home_page/HomePage";
-import NoImagesDisplay from "../second_page/NoImagesDisplay";
+import GridImg from "./GridImg/GridImg";
+import { Image } from "../HomePage";
+import NoImagesDisplay from "../../second_page/NoImagesDisplay/NoImagesDisplay";
 
 export interface GridProps {
   images: Image[];
