@@ -7,41 +7,42 @@ import { DeleteResult, ObjectId } from "mongodb";
 import mongoose, { Model } from "mongoose";
 import { userModel } from "../db/users.db";
 import { User } from "../model/user";
-import { mapDatabaseImageToImage, MappingService } from "./mappingService";
+import { MappingService } from "./mappingService";
 import { IPathService } from "./pathService.interface";
 import { PathService } from "./pathService";
 import { ILikeService } from "./likeService.interface";
+import { IDatabaseImageService } from "./databaseImageService.interface";
+import { DatabaseImageService } from "./databaseImageService";
 
 //TODO: does every method really need to await the userId from the username every time?
 // is it better to store it as a field in the class?
 export class ImageService implements IImageService {
-  private mappingService: MappingService = new MappingService();
-  private pathService: IPathService = new PathService();
+  private mappingService: MappingService;
+  private pathService: IPathService;
+  private likeService: ILikeService;
+  private databaseImageService: IDatabaseImageService;
 
-  private likeService: ILikeService = new LikeService();
+  constructor(mappingService: MappingService = new MappingService(), pathService: IPathService = new PathService(), likeService: ILikeService = new LikeService(), databaseImageService: IDatabaseImageService = new DatabaseImageService()) {
+    this.mappingService = mappingService;
+    this.pathService = pathService;
+    this.likeService = likeService;
+    this.databaseImageService = databaseImageService;
+  }
 
-  //TODO: change name, path should be data?
-  //TODO: does not need to return the image, just a boolean if it was added or not?
   async addImage(
     filename: string,
     data: string,
     username: string,
-    onlyLiked: boolean = false
   ): Promise<Image> {
     try {
-      const im: Model<Image> = await imageModel;
       const user: User = await this.mappingService.getUser(username);
-
       const filePath = await this.pathService.saveFile(user.id, filename, data);
-
-      const dataBaseImage = await im.create({
-        userId: user.id,
-        filename: filename,
-        path: filePath,
-        uploadDate: new Date(),
-      });
-
-      return mapDatabaseImageToImage(dataBaseImage);
+      const dataBaseImage = await this.databaseImageService.addImage(
+        user.id,
+        filename,
+        filePath
+      );
+      return dataBaseImage;
     } catch (e: any) {
       if (e.code === 11000 || e.code === 11001) {
         //codes represent a duplicate key error from mongodb => image exists
@@ -59,40 +60,25 @@ export class ImageService implements IImageService {
     username: string,
     onlyLiked: boolean = false
   ): Promise<Image[]> {
-    const sortDirection: 1 | -1 = sortOrder === "asc" ? 1 : -1;
-
     try {
-      // Assuming imageModel is correctly initialized elsewhere
-      const im: Model<Image> = await imageModel;
-      // Ensure mappingService.getUser(username) is implemented and works as expected
       const user: User = await this.mappingService.getUser(username);
-
       let query: any = { userId: user.id };
-
+      const sortOptions = { [sortField]: sortOrder === "asc" ? 1 : -1 };
+      // This could also be moved to the databaseImageService, but not direct dependency on mongo
       if (onlyLiked) {
-
         const likedImageIds = await this.likeService.getLikedImages(username);
-
         if (likedImageIds.length > 0) {
-          query._id = {
-            $in: likedImageIds.map((id) => new ObjectId(id)),
-          };
+          query._id = { $in: likedImageIds.map((id) => new ObjectId(id)) };
         } else {
           return []; // Early return if there are no liked images
         }
       }
-
-      console.log(query)
-
-      // Fetch and map the images
-      const images = await im
-        .find(query)
-        .sort({ [sortField]: sortDirection })
-        .limit(9)
-        .exec();
-
-      console.log("images", images);  
-      return images.map((image) => mapDatabaseImageToImage(image));
+      const images = await this.databaseImageService.getImages(
+        user.id,
+        query,
+        sortOptions
+      );
+      return images;
     } catch (error) {
       console.error("Error fetching images:", error);
       throw error; // Re-throw the error to be handled by the caller
@@ -100,71 +86,41 @@ export class ImageService implements IImageService {
   }
 
   async deleteImage(imageId: string, username: string): Promise<boolean> {
-    const im: Model<Image> = await imageModel;
     const user: User = await this.mappingService.getUser(username);
-
-    // First, find the image document to get the filename
-    const imageDocument = await im.findById(imageId);
-
-    if (!imageDocument) {
-      throw new ImageNotFoundError(`Image with ID ${imageId} not found`);
-    }
-
-    // does not need be awaited?
-    await this.pathService.deleteFile(user.id, imageDocument.filename);
-
-    // Delete the likes for the image (if it is liked)
     try {
-      await this.likeService.unlikeImage(imageId, username);
+      const image = await this.databaseImageService.findImageById(imageId);
+      await this.pathService.deleteFile(user.id, image.filename);
+      try {
+        await this.likeService.unlikeImage(imageId, username);
+      } catch (error) {
+        console.error("No like was deleted:", error);
+      }
+      return await this.databaseImageService.deleteImage(imageId);
     } catch (error) {
-      console.error("Error deleting likes for image:", error);
-    }
-
-    // Proceed with deleting the document from the database
-    const result: DeleteResult = await im.deleteOne({ _id: imageId });
-    if (result.acknowledged && result.deletedCount === 1) {
-      return true;
-    } else {
-      // This means that the deletion was not successful
-      throw new Error(`Error deleting image with ID ${imageId}`);
+      console.error("Error:", error);
+      throw error; // Re-throw the error to be handled by the caller
     }
   }
 
   async getImageBySearch(search: string, username: string): Promise<Image[]> {
     try {
-      const im: Model<Image> = await imageModel;
       const user: User = await this.mappingService.getUser(username);
-
-      const images = await im.find({
-        filename: { $regex: search, $options: "i" },
-        userId: user.id,
-      });
-      return images.map((image) => mapDatabaseImageToImage(image));
+      const images = await this.databaseImageService.getImageBySearch(user.id, search);
+      return images;
     } catch (error) {
       console.error("Error fetching images:", error);
       throw error; // Re-throw the error to be handled by the caller
     }
   }
 
+  //TODO: can we look into the error handling and divide into cases, depending on the error?
   async changeImageName(imageId: string, newFilename: string, username: string): Promise<boolean> {
     try {
-        const im: Model<Image> = await imageModel;
         const user: User = await this.mappingService.getUser(username);
-
-        // Find the image document to get the current filename
-        const imageDocument = await im.findById(imageId);
-
-        if (!imageDocument) {
-            throw new ImageNotFoundError(`Image with ID ${imageId} not found`);
-        }
-
-        // Call the path service to rename the file
+        const imageDocument = await this.databaseImageService.findImageById(imageId);
+        // Call the path service to rename the file, returns the new file path
         const newFilePath = await this.pathService.renameFile(user.id, imageDocument.filename, newFilename);
-
-        // Update the filename and path in the database
-        await im.updateOne({ _id: imageId }, { $set: { filename: newFilename, path: newFilePath } });
-
-        return true; // Return true if the filename is successfully changed
+        return await this.databaseImageService.renameImage(imageId, newFilename, newFilePath);
     } catch (error) {
         console.error("Error changing image name:", error);
         throw error; // Re-throw the error to be handled by the caller
@@ -179,7 +135,7 @@ export class ImageNotFoundError extends Error {
     this.name = "ImageNotFoundError";
   }
 }
-class ImageExistsError extends Error {
+export class ImageExistsError extends Error {
   constructor(filename: string) {
     super(`Image with id ${filename} already exists`);
     this.name = "ImageExistsError";
