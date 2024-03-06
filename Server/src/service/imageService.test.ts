@@ -15,7 +15,6 @@ import { MockMappingService } from "./mappingService.mock";
 import { MockPathService } from "./pathService.mock";
 import { MockLikeService } from "./likeService.mock";
 import { MockDatabaseImageService } from "./databaseImageService.mock";
-import { user } from "firebase-functions/v1/auth";
 import { IImageService } from "./imageService.interface";
 import { IMappingService } from "./mappingService.interface";
 import { IPathService } from "./pathService.interface";

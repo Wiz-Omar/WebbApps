@@ -36,7 +36,6 @@ export class DatabaseImageService implements IDatabaseImageService {
       const objectIdList: ObjectId[] = likedImageIds.map((id: string) => new ObjectId(id));
       query._id = { $in: objectIdList };
     }
-    console.log(query);
     const images = await im
       .find(query)
       .sort(sortOptions)
@@ -44,7 +43,6 @@ export class DatabaseImageService implements IDatabaseImageService {
       .exec();
   
     // Assuming mapDatabaseImageToImage correctly maps the document to your Image model
-    console.log(images);
     return images.map(this.mappingService.mapDatabaseImageToImage);
   }
   

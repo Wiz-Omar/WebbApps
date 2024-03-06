@@ -60,9 +60,14 @@ function UploadButton({ callback }: UploadButtonProps) {
         }
       );
       callback();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading file:", error); // Handle error
-      alert("Something went wrong.");
+      if (error.response && error.response.status === 409) {
+        // Duplicate filename error
+        alert("A file with the same name already exists. Please choose a different filename.");
+      } else {
+        alert("Something went wrong.");
+      }
     }
   };
 
