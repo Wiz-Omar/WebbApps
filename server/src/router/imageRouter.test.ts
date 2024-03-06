@@ -96,7 +96,6 @@ describe("Get all images, End-to-End", () => {
       .get("/image") // Adjust the endpoint as necessary
       //.set("Authorization", `Bearer ${"testuser"}`)
       .redirects(1); // Automatically follow redirects
-
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
   });
@@ -121,7 +120,10 @@ describe("Get all images, End-to-End", () => {
     // Like an image first
     const uploadResponse = await authenticatedSession
       .post("/image")
-      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+      .attach(
+        "file",
+        path.resolve(__dirname, "..", "..", "test", "testImage.png")
+      );
     // Get all images
     const images = await authenticatedSession.get("/image").redirects(1);
     // Get an imageId from one of the images
@@ -155,14 +157,15 @@ describe("Get all images, End-to-End", () => {
 });
 
 describe("Delete an image, End-to-End", () => {
-
   // Happy Path
   it("should allow a user to delete their image", async () => {
-
     // Upload an image first
     const uploadResponse = await authenticatedSession
       .post("/image")
-      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+      .attach(
+        "file",
+        path.resolve(__dirname, "..", "..", "test", "testImage.png")
+      );
 
     // Get an imageId from the user's images
     const userImagesResponse = await authenticatedSession
@@ -201,7 +204,10 @@ describe("Search for an image, End-to-End", () => {
     // Upload an image first
     const uploadResponse = await authenticatedSession
       .post("/image")
-      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+      .attach(
+        "file",
+        path.resolve(__dirname, "..", "..", "test", "testImage.png")
+      );
 
     // Search for the image
     const response = await authenticatedSession
@@ -222,7 +228,10 @@ describe("Search for an image, End-to-End", () => {
     // Upload an image first
     const uploadResponse = await authenticatedSession
       .post("/image")
-      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+      .attach(
+        "file",
+        path.resolve(__dirname, "..", "..", "test", "testImage.png")
+      );
 
     // Search for the image
     const response = await authenticatedSession
@@ -238,12 +247,15 @@ describe("Search for an image, End-to-End", () => {
     expect(response.body).toBeInstanceOf(Array);
   });
 
-  // Happy Path #3 - Search should handle special characters 
+  // Happy Path #3 - Search should handle special characters
   it("should allow a user to search for an image with special characters", async () => {
     // Upload an image first
     const uploadResponse = await authenticatedSession
       .post("/image")
-      .attach("file", path.resolve(__dirname, "..", "..", "test", "!specialCaseImage.jpg"));
+      .attach(
+        "file",
+        path.resolve(__dirname, "..", "..", "test", "!specialCaseImage.jpg")
+      );
 
     // Search for the image
     const response = await authenticatedSession
@@ -282,7 +294,10 @@ describe("Rename an image, End-to-End", () => {
     // Upload an image first
     const uploadResponse = await authenticatedSession
       .post("/image")
-      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+      .attach(
+        "file",
+        path.resolve(__dirname, "..", "..", "test", "testImage.png")
+      );
 
     // Get an imageId from the user's images
     const userImagesResponse = await authenticatedSession
@@ -322,7 +337,10 @@ describe("Rename an image, End-to-End", () => {
     // Upload an image first
     const uploadResponse = await authenticatedSession
       .post("/image")
-      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+      .attach(
+        "file",
+        path.resolve(__dirname, "..", "..", "test", "testImage.png")
+      );
 
     // Get an imageId from the user's images
     const userImagesResponse = await authenticatedSession
@@ -343,7 +361,10 @@ describe("Rename an image, End-to-End", () => {
     // Upload an image first
     const uploadResponse = await authenticatedSession
       .post("/image")
-      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+      .attach(
+        "file",
+        path.resolve(__dirname, "..", "..", "test", "testImage.png")
+      );
 
     // Get an imageId from the user's images
     const userImagesResponse = await authenticatedSession
