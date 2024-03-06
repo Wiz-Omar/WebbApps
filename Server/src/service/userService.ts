@@ -13,7 +13,7 @@ export class UserService implements IUserService{
         const um: Model<User> = await userModel;
 
         if (!(await um.findOne({username: username}))) {
-            um.create({
+            await um.create({
                 username: username, 
                 password: password
             });
