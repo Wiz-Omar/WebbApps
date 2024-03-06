@@ -1,14 +1,10 @@
 // likeService.test.ts
-import mongoose from "mongoose";
 import { ImageService } from "./imageService";
 import { IImageService } from "./imageService.interface";
 import { LikeService } from "./likeService";
 import { UserService } from "./userService";
 import { IUserService } from "./userService.interface";
 import {Image} from '../model/image';
-import { User } from "../model/user";
-import { MappingService } from "./mappingService";
-import { conn } from "../db/__mocks__/conn";
 import { ILikeService } from "./likeService.interface";
 
 jest.mock("../db/conn")
