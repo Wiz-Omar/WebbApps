@@ -8,6 +8,7 @@ import { PathService } from "./pathService";
 import { ILikeService } from "./likeService.interface";
 import { IDatabaseImageService } from "./databaseImageService.interface";
 import { DatabaseImageService } from "./databaseImageService";
+import { ImageExistsError } from "../errors/imageErrors";
 
 //TODO: does every method really need to await the userId from the username every time?
 // is it better to store it as a field in the class?
@@ -123,15 +124,5 @@ export class ImageService implements IImageService {
 
 }
 
-export class ImageNotFoundError extends Error {
-  constructor(imageId: string) {
-    super(`Image with id ${imageId} not found`);
-    this.name = "ImageNotFoundError";
-  }
-}
-export class ImageExistsError extends Error {
-  constructor(filename: string) {
-    super(`Image with id ${filename} already exists`);
-    this.name = "ImageExistsError";
-  }
-}
+export { ImageExistsError };
+

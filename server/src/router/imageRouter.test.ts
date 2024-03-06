@@ -9,6 +9,7 @@ const session = require("supertest-session");
 let authenticatedSession: SuperTest<Test>;
 let unauthenticatedSession: SuperTest<Test>;
 
+//TODO: add code for creating a new user that is then deleted after the tests are run!
 beforeAll(async () => {
   // Create a session for an authenticated user
   authenticatedSession = session(app);

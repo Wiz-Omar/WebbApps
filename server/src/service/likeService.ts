@@ -1,13 +1,12 @@
-import { Image } from "../model/image";
 import { ILikeService } from "./likeService.interface";
 import { likeImage } from "../db/like.db";
-import { imageModel } from "../db/image.db";
-import { ImageNotFoundError } from "./imageService";
+
 import { DeleteResult } from "mongodb";
 import { LikedImage } from "../model/likedImage";
 import { Model } from "mongoose";
 import { User } from "../model/user";
 import { MappingService } from "./mappingService";
+import { ImageNotFoundError } from "../errors/imageErrors";
 
 export class LikeService implements ILikeService {
   mappingService: MappingService;

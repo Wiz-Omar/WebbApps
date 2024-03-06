@@ -8,9 +8,8 @@ export interface IImageService {
    
     deleteImage(imageId : string, username: string): Promise<boolean>
 
-    //TODO: should be overloaded method instead?
     getImageBySearch(search: string, username: string): Promise<Image[]>
-   
+ 
     changeImageName(imageId: string, newFilename: string, username: string): Promise<boolean> 
 }
    
