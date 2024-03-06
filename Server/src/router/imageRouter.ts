@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { ImageService } from "../service/imageService";
+import { ImageExistsError, ImageService } from "../service/imageService";
 import { Image } from "../model/image";
 import { validSortOrders, validSortFields } from "../model/sorting";
 import { IImageService } from "../service/imageService.interface";
@@ -127,8 +127,14 @@ imageRouter.post("/", upload.single("file"), async (req, res) => {
     );
     res.status(201).json({ message: "Image uploaded successfully", result });
   } catch (e: any) {
-    console.error("Error adding image" + e);
-    res.status(500).send(e.message);
+    if (e instanceof ImageExistsError) {
+      // If the image already exists, send a 409 conflict response
+      res.status(409).send(e.message);
+    } else {
+      // If something else went wrong, send a 500 internal server error response
+      console.error("Error adding image: " + e);
+      res.status(500).send(e.message);
+    }
   }
 });
 
