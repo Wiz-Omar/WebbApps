@@ -253,7 +253,7 @@ describe("Search for an image, End-to-End", () => {
     // Check that the image(s) returned have the search term in the filename, by looping through the array of images
     // and checking if the filename includes the search term
     for (const image of response.body) {
-      expect(image.filename).toContain("test");
+      expect(image.filename).toContain("!");
     }
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
