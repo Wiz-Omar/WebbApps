@@ -1,11 +1,6 @@
 import { Image } from "../model/image";
-import { validSortFields, validSortOrders } from "../model/sorting";
 import { LikeService } from "./likeService";
 import { IImageService } from "./imageService.interface";
-import { imageModel } from "../db/image.db";
-import { DeleteResult, ObjectId } from "mongodb";
-import mongoose, { Model } from "mongoose";
-import { userModel } from "../db/users.db";
 import { User } from "../model/user";
 import { MappingService } from "./mappingService";
 import { IPathService } from "./pathService.interface";
