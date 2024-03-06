@@ -15,7 +15,7 @@
 
   @font-face {
     font-family: 'Quite Magical';
-    src: url('../../assets/fonts/QuiteMagicalRegular-8VA2.ttf') format('truetype');
+    src: url('../../../assets/fonts/QuiteMagicalRegular-8VA2.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
   }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 
 import Grid from "./Grid/Grid"; // Assuming GridProps are imported within Grid.js if needed
-import Navbar from "./HomeNavbar";
+import Navbar from "./Navbar/HomeNavbar";
 
 import "../../App.css";
 import axios from "axios";

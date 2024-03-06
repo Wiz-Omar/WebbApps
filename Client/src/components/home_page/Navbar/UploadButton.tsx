@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import axios from "axios";
+import { handleUpload } from "../../../utils/handleUpload";
 axios.defaults.withCredentials = true;
 
 interface UploadButtonProps {
@@ -16,9 +17,8 @@ function UploadButton({ callback }: UploadButtonProps) {
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files ? event.target.files[0] : null;
+    const file : File | null = event.target.files ? event.target.files[0] : null;
     if (!file) return;
-
     // Check if the filname is less than 150 characters. //TODO: might make even smaller.
     if (file.name.length > 256) {
       alert("Filename should be less than 256 characters.");
@@ -39,26 +39,9 @@ function UploadButton({ callback }: UploadButtonProps) {
 
     // TODO: check filename doesnt contain special characters?
 
-    // Create an instance of FormData
-    const formData = new FormData();
-
-    // Append the file to the FormData instance
-    formData.append("file", file);
-
     try {
-      // Use axios to send the FormData
-      const response = await axios.post(
-        "http://localhost:8080/image",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // This header tells the server about the type of the data
-          },
-          maxBodyLength: Infinity,
-          maxContentLength: Infinity,
-          responseType: "json",
-        }
-      );
+      const response = await handleUpload(file);
+      // console.log((response).status);
       callback();
     } catch (error: any) {
       console.error("Error uploading file:", error); // Handle error
