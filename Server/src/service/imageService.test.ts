@@ -15,22 +15,12 @@ import { MockMappingService } from "./mappingService.mock";
 import { MockPathService } from "./pathService.mock";
 import { MockLikeService } from "./likeService.mock";
 import { MockDatabaseImageService } from "./databaseImageService.mock";
-import { user } from "firebase-functions/v1/auth";
 import { IImageService } from "./imageService.interface";
 import { IMappingService } from "./mappingService.interface";
 import { IPathService } from "./pathService.interface";
 import { ILikeService } from "./likeService.interface";
 import { IDatabaseImageService } from "./databaseImageService.interface";
 import exp from "constants";
-
-/* // Create mock instances
-const mockMappingService = new MockMappingService();
-const mockPathService = new MockPathService();
-const mockLikeService = new MockLikeService();
-const mockDatabaseImageService = new MockDatabaseImageService();
-
-// Setup ImageService with mocked dependencies
-const imageService = new ImageService(mockMappingService, mockPathService, mockLikeService, mockDatabaseImageService); */
 
 let imageService : IImageService;
 let mockMappingService : IMappingService;
