@@ -217,6 +217,48 @@ describe("Search for an image, End-to-End", () => {
     expect(response.body).toBeInstanceOf(Array);
   });
 
+  // Happy Path #2 - Search should be case insensitive
+  it("should allow a user to search for an image with a case-insensitive search term", async () => {
+    // Upload an image first
+    const uploadResponse = await authenticatedSession
+      .post("/image")
+      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+
+    // Search for the image
+    const response = await authenticatedSession
+      .get("/image/search?search=TEST")
+      .redirects(1); // Automatically follow redirects
+
+    // Check that the image(s) returned have the search term in the filename, by looping through the array of images
+    // and checking if the filename includes the search term
+    for (const image of response.body) {
+      expect(image.filename).toContain("test");
+    }
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+  });
+
+  // Happy Path #3 - Search should handle special characters 
+  it("should allow a user to search for an image with special characters", async () => {
+    // Upload an image first
+    const uploadResponse = await authenticatedSession
+      .post("/image")
+      .attach("file", path.resolve(__dirname, "..", "..", "test", "!specialCaseImage.jpg"));
+
+    // Search for the image
+    const response = await authenticatedSession
+      .get("/image/search?search=!")
+      .redirects(1); // Automatically follow redirects
+
+    // Check that the image(s) returned have the search term in the filename, by looping through the array of images
+    // and checking if the filename includes the search term
+    for (const image of response.body) {
+      expect(image.filename).toContain("test");
+    }
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+  });
+
   // Failure Scenario #1 - Unauthenticated user
   it("should not allow unauthenticated users to search for images", async () => {
     const response = await unauthenticatedSession
