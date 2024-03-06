@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-import logo from "../../assets/img/squid.png";
+import logo from "../../../assets/img/squid.png";
 
 import "./Navbar.css";
 import UploadButton from "./UploadButton";
 import SortDropdown from "./SortDropdown";
-import SearchBar from "./SearchBar/SearchBar";
-import { Image } from "../../components/home_page/HomePage";
+import SearchBar from "../SearchBar/SearchBar";
+import { Image } from "../HomePage";
 import axios from "axios";
 import LikedToggle from "./LikedToggle";
 

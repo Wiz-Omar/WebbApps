@@ -13,7 +13,6 @@ function Grid({ images, callback }: GridProps) {
 
   // Distribute images into columns
   images.forEach((image, index) => {
-    console.log(image.filename);
     const columnIndex = index % 3; // This will cycle through 0, 1, 2 for each image
     columns[columnIndex].push(image);
   });
