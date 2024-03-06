@@ -37,23 +37,18 @@ export class UserService implements IUserService{
 
         return await um.findOne({username: username, password: password}) ? true : false;
     }
-    async validateUser(username: string, password: string): Promise<boolean> {
-        const um: Model<User> = await userModel;
-
-        return await um.findOne({username: username, password: password}) ? true : false;
-    }
 }
 
 class UserNotFoundError extends Error {
     constructor(username: string) {
-      super(`User with id ${username} not found`);
+      super(`User with username ${username} not found`);
       this.name = "UserNotFoundError";
     }
 }
 
 class UserExistsError extends Error {
     constructor(username: string) {
-      super(`User with id ${username} already exists`);
+      super(`User with username ${username} already exists`);
       this.name = "UserExistsError";
     }
 }
