@@ -19,6 +19,10 @@ interface loginRequest extends Request{
     session: Session & Partial<sessionData>,
     body: {username: string, password: string}
 }
+interface deleteRequest extends Request{
+    params: {},
+    session: Session & Partial<sessionData>
+}
 
 userRouter.get("/checkSession", (req, res) => {
   if (req.session.username) {
@@ -102,3 +106,23 @@ userRouter.post(
       }
     }
 );
+
+userRouter.delete('/delete', async (req: deleteRequest, res: Response) => {
+    try {
+        if (!req.session.username){
+            res.status(401).send("User not logged in");
+            return;
+        }
+        await userService.removeUser(req.session.username);
+        req.session.destroy((err: any) => {
+            if (err){
+                res.status(500).send("Error logging out");
+                return;
+            }
+            res.status(200).send({ message: "User successfully deleted"});
+            return;
+        });
+    } catch (e: any) {
+        res.status(500).send(e.message);
+    }
+});
