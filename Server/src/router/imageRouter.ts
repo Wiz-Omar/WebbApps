@@ -62,8 +62,15 @@ imageRouter.post("/", upload.single("file"), async (req, res) => {
   try {
     const base64Data = req.file.buffer.toString("base64");
     const filename = req.file.originalname;
+
+    // Check if filename is provided
     if (typeof filename !== "string") {
       return res.status(400).send("Invalid input data for filename or url");
+    }
+
+    // Check that the filename is shorter than 256 characters
+    if (filename.length > 255) {
+      return res.status(400).send("Filename too long");
     }
     //TODO: add check case for if name is ok. length, special characters etc
     const result = await imageService.addImage(
@@ -133,6 +140,13 @@ imageRouter.patch(
         res.status(400).send("Invalid new filename");
         return;
       }
+
+      // Check that the newFilename is short than 256 characters
+      if (newFilename.length > 255) {
+        res.status(400).send("Filename too long");
+        return;
+      }
+      
       // Call the image service to change the image name
       const success = await imageService.changeImageName(
         imageId,

@@ -122,12 +122,19 @@ describe("Get all images, End-to-End", () => {
     const uploadResponse = await authenticatedSession
       .post("/image")
       .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
-    // 
+    // Get all images
+    const images = await authenticatedSession.get("/image").redirects(1);
+    // Get an imageId from one of the images
+    const imageId = images.body[0].id;
+    // Like the image
     await authenticatedSession.post(`/like/${imageId}`);
+    // Get only liked images
     const response = await authenticatedSession
       .get("/image?onlyLiked=true")
       .redirects(1); // Automatically follow redirects
 
+    // Check that the filename is the same as the image that was uploaded
+    expect(response.body[0].filename).toBe("testImage.png");
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
   });
@@ -147,39 +154,168 @@ describe("Get all images, End-to-End", () => {
   });
 });
 
-//TODO: should be in likeRouter.test.ts
-/* describe("Like an image, End-to-End", () => {
-  // Happy Path
-  it("should allow a user to view their liked images", async () => {
-    const response = await request(app)
-      .get("/user/images/liked") // Adjust the endpoint as necessary
-      .set("Authorization", `Bearer ${userToken}`);
+describe("Delete an image, End-to-End", () => {
 
-    expect(response.statusCode).toBe(200);
+  // Happy Path
+  it("should allow a user to delete their image", async () => {
+
+    // Upload an image first
+    const uploadResponse = await authenticatedSession
+      .post("/image")
+      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+
+    // Get an imageId from the user's images
+    const userImagesResponse = await authenticatedSession
+      .get("/image")
+      .redirects(1); // Automatically follow redirects
+    const imageId = userImagesResponse.body[0].id; // Assuming the first image is the one to be deleted
+
+    // Delete the image
+    const response = await authenticatedSession
+      .delete(`/image/${imageId}`)
+      .redirects(1); // Automatically follow redirects
+
+    expect(response.status).toBe(200);
+  });
+
+  // Failure Scenario #1 - Unauthenticated user
+  it("should not allow unauthenticated users to delete images", async () => {
+    const response = await unauthenticatedSession
+      .delete("/image/123")
+      .redirects(1); // Automatically follow redirects
+    expect(response.status).toBe(401); // Assuming 401 for Unauthorized
+  });
+
+  // Failure Scenario #2 - Invalid imageId
+  it("should reject invalid imageId", async () => {
+    const response = await authenticatedSession
+      .delete("/image/invalid")
+      .redirects(1); // Automatically follow redirects
+    expect(response.status).toBe(500); // 500 - because the error is that no image could be found (internal server error)
+  });
+});
+
+describe("Search for an image, End-to-End", () => {
+  // Happy Path
+  it("should allow a user to search for an image", async () => {
+    // Upload an image first
+    const uploadResponse = await authenticatedSession
+      .post("/image")
+      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+
+    // Search for the image
+    const response = await authenticatedSession
+      .get("/image/search?search=test")
+      .redirects(1); // Automatically follow redirects
+
+    // Check that the image(s) returned have the search term in the filename, by looping through the array of images
+    // and checking if the filename includes the search term
+    for (const image of response.body) {
+      expect(image.filename).toContain("test");
+    }
+    expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
   });
 
-  // Failure Scenario
-  it("should not allow unauthenticated users to view liked images", async () => {
-    const response = await request(app).get("/user/images/liked");
-
-    expect(response.statusCode).toBe(401);
+  // Failure Scenario #1 - Unauthenticated user
+  it("should not allow unauthenticated users to search for images", async () => {
+    const response = await unauthenticatedSession
+      .get("/image/search?search=test")
+      .redirects(1); // Automatically follow redirects
+    expect(response.status).toBe(401); // Assuming 401 for Unauthorized
   });
-}); */
 
-/* describe("Delete an image, End-to-End", () => {
-  // Happy Path
-  it("should allow a user to delete their image", async () => {
-    // Get an imageId from the user's images
-    const userImagesResponse = await request(app)
-      .get("/images")
-      .set("Authorization", `Bearer ${userToken}`);
-    const imageId = userImagesResponse.body[0].id; // Assuming the first image is the one to be deleted
-    const response = await request(app)
-      .delete(`/images/${imageId}`)
-      .set("Authorization", `Bearer ${userToken}`);
-
-    expect(response.statusCode).toBe(200);
+  // Failure Scenario #2 - No search query provided
+  it("should reject search with no query provided", async () => {
+    const response = await authenticatedSession
+      .get("/image/search")
+      .redirects(1); // Automatically follow redirects
+    expect(response.status).toBe(400); // Assuming 400 for Bad Request
   });
 });
- */
+
+describe("Rename an image, End-to-End", () => {
+  // Happy Path
+  it("should allow a user to rename an image", async () => {
+    // Upload an image first
+    const uploadResponse = await authenticatedSession
+      .post("/image")
+      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+
+    // Get an imageId from the user's images
+    const userImagesResponse = await authenticatedSession
+      .get("/image")
+      .redirects(1); // Automatically follow redirects
+    const imageId = userImagesResponse.body[0].id; // Assuming the first image is the one to be renamed
+
+    // Rename the image
+    const response = await authenticatedSession
+      .patch(`/image/${imageId}`)
+      .send({ newFilename: "newFilename" })
+      .redirects(1); // Automatically follow redirects
+
+    expect(response.status).toBe(200);
+  });
+
+  // Failure Scenario #1 - Unauthenticated user
+  it("should not allow unauthenticated users to rename images", async () => {
+    const response = await unauthenticatedSession
+      .patch("/image/123")
+      .send({ newFilename: "newFilename" })
+      .redirects(1); // Automatically follow redirects
+    expect(response.status).toBe(401); // Assuming 401 for Unauthorized
+  });
+
+  // Failure Scenario #2 - Non-existent imageId provided
+  it("should reject non-existent imageId", async () => {
+    const response = await authenticatedSession
+      .patch("/image/123")
+      .send({ newFilename: "newFilename" })
+      .redirects(1); // Automatically follow redirects
+    expect(response.status).toBe(500); // 500 - because the error is that no image could be found (internal server error)
+  });
+
+  // Failure Scenario #3 - No newFilename provided
+  it("should reject rename if no newFilename provided", async () => {
+    // Upload an image first
+    const uploadResponse = await authenticatedSession
+      .post("/image")
+      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+
+    // Get an imageId from the user's images
+    const userImagesResponse = await authenticatedSession
+      .get("/image")
+      .redirects(1); // Automatically follow redirects
+    const imageId = userImagesResponse.body[0].id; // Assuming the first image is the one to be renamed
+
+    // Rename the image
+    const response = await authenticatedSession
+      .patch(`/image/${imageId}`)
+      .redirects(1); // Automatically follow redirects
+
+    expect(response.status).toBe(400);
+  });
+
+  // Failure Scenario #4 - No newFilename provided
+  it("should reject rename if newFilename is too long", async () => {
+    // Upload an image first
+    const uploadResponse = await authenticatedSession
+      .post("/image")
+      .attach("file", path.resolve(__dirname, "..", "..", "test", "testImage.png"));
+
+    // Get an imageId from the user's images
+    const userImagesResponse = await authenticatedSession
+      .get("/image")
+      .redirects(1); // Automatically follow redirects
+    const imageId = userImagesResponse.body[0].id; // Assuming the first image is the one to be renamed
+
+    const longFilename = "a".repeat(257);
+    // Rename the image
+    const response = await authenticatedSession
+      .patch(`/image/${imageId}`)
+      .send({ newFilename: longFilename })
+      .redirects(1); // Automatically follow redirects
+
+    expect(response.status).toBe(400);
+  });
+});
