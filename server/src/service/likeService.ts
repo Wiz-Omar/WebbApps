@@ -42,6 +42,7 @@ export class LikeService implements ILikeService {
         //codes represent a duplicate key error from mongodb => like exists
         throw new LikeExistsError(imageId);
       } else {
+        console.log(e);
         throw new Error(e);
       }
     }
