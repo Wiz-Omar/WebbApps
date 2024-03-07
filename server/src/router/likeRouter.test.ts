@@ -16,6 +16,13 @@ const VALID_IMAGE_ID = "507f1f77bcf85cd799439111"; // Example MongoDB ObjectId (
 beforeAll(async () => {
   // Create a session for an authenticated user
   authenticatedSession = session(app);
+
+  // Create a user
+  await authenticatedSession
+    .post("/user")
+    .send({ username: "username", password: "Testpassword1!" });
+  
+  // Login the user
   await authenticatedSession
     .post("/user/login")
     .send({ username: "username", password: "Testpassword1!" });
@@ -36,7 +43,10 @@ afterEach(async () => {
   }
 });
 
-//TODO: delete the user that was created for the tests
+afterAll(async () => {
+  // Remove the user
+  await authenticatedSession.delete(`/user/delete`);
+});
 
 afterAll(async () => {
   console.log("Closing the server...");
