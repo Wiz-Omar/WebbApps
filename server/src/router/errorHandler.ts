@@ -7,6 +7,7 @@ import { ImageExistsError, ImageNotFoundError } from "../errors/imageErrors";
  * @returns {Object} An object containing the appropriate status code and message.
  */
 function determineErrorResponse(err: Error): { status: number; message: string } {
+  //TODO: work on this more, there are more error types to handle!
   let status = 500; // Default to internal server error
   let message = "Something went wrong"; // Default message
 

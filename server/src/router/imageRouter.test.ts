@@ -191,12 +191,19 @@ describe("Delete an image, End-to-End", () => {
   });
 
   // Failure Scenario #2 - Invalid imageId
-  it("should reject invalid imageId", async () => {
+  it("should reject invalid (non-existent) imageId", async () => {
     const response = await authenticatedSession
       .delete("/image/invalid")
       .redirects(1); // Automatically follow redirects
     expect(response.status).toBe(500); // 500 - because the error is that no image could be found (internal server error)
   });
+
+  // Failure Scenario #3 - No imageId provided
+  it("should reject delete with no imageId provided", async () => {
+    const response = await authenticatedSession.delete("/image").redirects(1); // Automatically follow redirects
+    expect(response.status).toBe(404); // 404 - because the route is not found
+  });
+
 });
 
 describe("Search for an image, End-to-End", () => {
