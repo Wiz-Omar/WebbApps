@@ -31,3 +31,9 @@ export interface SearchImageRequest extends Request {
     search: string;
   };
 }
+
+export interface PatchImageRequest extends Request {
+  params: { imageId: string };
+  session: Session & Partial<sessionData>;
+  body: { newFilename: string };
+}
