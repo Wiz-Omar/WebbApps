@@ -42,7 +42,6 @@ export class ImageService implements IImageService {
     } catch (e: any) {
       if (e.code === 11000 || e.code === 11001) {
         //codes represent a duplicate key error from mongodb => image exists
-        //TODO: delete the file from the file system that was uploaded.
         throw new ImageExistsError(filename); //in case the image already exists for the user.
       } else {
         throw new Error(e);

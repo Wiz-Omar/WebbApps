@@ -14,6 +14,8 @@ function determineErrorResponse(err: Error): { status: number; message: string }
   let status = 500; // Default to internal server error
   let message = "Something went wrong"; // Default message
 
+  console.log("Error:", err.message, " is the error type!!!!!!!!!")
+
   if (err instanceof ImageNotFoundError) {
     status = 404;
     message = "The requested image could not be found.";

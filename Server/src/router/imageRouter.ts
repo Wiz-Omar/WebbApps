@@ -30,15 +30,6 @@ const upload = multer();
 // Use authentication middleware for all routes in this router
 imageRouter.use(ensureAuthenticated);
 
-// Centralized error handling middleware
-imageRouter.use(
-  (err: Error, req: Request, res: Response, next: NextFunction) => {
-    // Determine the type of error and set response status and message accordingly
-    const { status, message } = determineErrorResponse(err);
-    res.status(status).send({ error: message });
-  }
-);
-
 /**
  * GET /images
  * Retrieves a list of images optionally filtered by like status.
@@ -216,5 +207,16 @@ imageRouter.patch(
     } catch (e: any) {
       next(e);
     }
+  }
+);
+
+// Centralized error handling middleware
+// Should be placed after all other middleware and routes
+imageRouter.use(
+  (err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.log("Error handler was used!");
+    // Determine the type of error and set response status and message accordingly
+    const { status, message } = determineErrorResponse(err);
+    res.status(status).send({ error: message });
   }
 );

@@ -92,6 +92,30 @@ describe("Upload an image, End-to-End", () => {
     const response = await authenticatedSession.post("/image");
     expect(response.status).toBe(400);
   });
+
+  // Failure Scenario #4 - Should not be able to upload the same image twice
+  it("should reject an upload with the same image", async () => {
+    // Construct an absolute path to the test image
+    const imagePath = path.resolve(
+      __dirname,
+      "..",
+      "..",
+      "test",
+      "testImage.png"
+    );
+
+    // Upload the image
+    const response = await authenticatedSession
+      .post("/image")
+      .attach("file", imagePath);
+    expect(response.status).toBe(201);
+
+    // Attempt to upload the same image again
+    const response2 = await authenticatedSession
+      .post("/image")
+      .attach("file", imagePath);
+    expect(response2.status).toBe(409);
+  });
 });
 
 describe("Get all images, End-to-End", () => {
