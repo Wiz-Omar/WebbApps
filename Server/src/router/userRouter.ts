@@ -8,6 +8,8 @@ const userService: IUserService = new UserService();
 
 export const userRouter = express.Router();
 
+
+//TODO: move theses interfaces to a separate file!
 export interface sessionData{
   username: string
 }

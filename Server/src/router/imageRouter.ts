@@ -16,7 +16,7 @@ import {
   GetImagesRequest,
   PatchImageRequest,
   SearchImageRequest,
-} from "./requests";
+} from "./imageRequests";
 import { determineErrorResponse } from "./errorHandler";
 import { ErrorMessages, SuccessMessages } from "./responseMessages";
 
