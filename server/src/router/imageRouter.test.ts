@@ -14,6 +14,12 @@ let unauthenticatedSession: SuperTest<Test>;
 beforeAll(async () => {
   // Create a session for an authenticated user
   authenticatedSession = session(app);
+
+  // Create a user
+  await authenticatedSession
+    .post("/user")
+    .send({ username: "username", password: "Testpassword1!" });
+
   await authenticatedSession
     .post("/user/login")
     .send({ username: "username", password: "Testpassword1!" });
@@ -35,7 +41,10 @@ afterEach(async () => {
   }
 });
 
-//TODO: delete the user that was created for the tests
+afterAll(async () => {
+  // Remove the user
+  await authenticatedSession.delete(`/user/delete`);
+});
 
 describe("Upload an image, End-to-End", () => {
   // Happy Path
