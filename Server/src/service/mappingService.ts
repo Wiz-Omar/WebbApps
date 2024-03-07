@@ -6,6 +6,7 @@ import { User } from "../model/user";
 import { IUserService } from "./userService.interface";
 import { Image } from "../model/image";
 import { IMappingService } from "./mappingService.interface";
+import { UserNotFoundError } from "../errors/userErrors";
 
 export class MappingService implements IMappingService {
   async getUser(username: string): Promise<User> {
@@ -55,10 +56,4 @@ interface DatabaseImage {
   filename: string;
   path: string;
   uploadDate: Date;
-}
-
-export class UserNotFoundError extends Error {
-  constructor(username: string) {
-    super("User not found: " + username);
-  }
 }

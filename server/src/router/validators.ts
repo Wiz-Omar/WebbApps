@@ -119,3 +119,21 @@ export const fileUploadValidation = (
   }
   next();
 };
+
+//TODO: should be same in both server and client?
+// Constants for validation criteria
+const MIN_USERNAME_LENGTH = 8;
+const MIN_PASSWORD_LENGTH = 8;
+const USERNAME_PATTERN = /^[a-zA-Z0-9]+$/; // Only alphanumeric characters allowed
+
+// Middleware to validate the credentials for user registration
+export function validateUserCredentials(req: Request, res: Response, next: NextFunction) {
+  const { username, password } = req.body;
+  const isUsernameValid = typeof username === "string" && username.length >= MIN_USERNAME_LENGTH && USERNAME_PATTERN.test(username);
+  const isPasswordValid = typeof password === "string" && password.length >= MIN_PASSWORD_LENGTH;
+  if (!isUsernameValid || !isPasswordValid) {
+    return res.status(400).send("Invalid input data for username or password");
+  }
+  next();
+}
+

@@ -3,7 +3,7 @@ import {userModel} from "../db/users.db";
 import { Model } from "mongoose";
 import { User } from "../model/user";
 import { ObjectId } from "mongodb";
-
+import { UserExistsError, UserNotFoundError } from "../errors/userErrors";
 
 export class UserService implements IUserService{
 
@@ -21,6 +21,7 @@ export class UserService implements IUserService{
             throw new UserExistsError(username);
         }
     }
+
     async removeUser(username: string): Promise<void> {
         const um: Model<User> = await userModel;
 
@@ -32,23 +33,10 @@ export class UserService implements IUserService{
             throw new UserNotFoundError(username);
         }
     }
+
     async find(username: string, password: string): Promise<boolean> {
         const um: Model<User> = await userModel;
-
         return await um.findOne({username: username, password: password}) ? true : false;
     }
 }
 
-class UserNotFoundError extends Error {
-    constructor(username: string) {
-      super(`User with username ${username} not found`);
-      this.name = "UserNotFoundError";
-    }
-}
-
-class UserExistsError extends Error {
-    constructor(username: string) {
-      super(`User with username ${username} already exists`);
-      this.name = "UserExistsError";
-    }
-}
