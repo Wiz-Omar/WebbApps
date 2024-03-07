@@ -4,6 +4,7 @@ import { Images } from "./image.db";
 import { ObjectId } from "mongodb";
 import {LikedImage} from "../model/likedImage";
 
+//TODO: why is imageid type ObjectId and userId type string?
 const LikedImages : Schema = new Schema({
  
  imageId : {

@@ -12,7 +12,7 @@ export class MappingService implements IMappingService {
     const um: Model<User> = await userModel;
     const databaseUser = await um.findOne({ username: username });
     if (databaseUser === null) {
-      throw new Error("User not found");
+      throw new UserNotFoundError(username);
     }
     return this.mapDatabaseUserToUser(databaseUser);
   }
@@ -55,4 +55,10 @@ interface DatabaseImage {
   filename: string;
   path: string;
   uploadDate: Date;
+}
+
+export class UserNotFoundError extends Error {
+  constructor(username: string) {
+    super("User not found: " + username);
+  }
 }

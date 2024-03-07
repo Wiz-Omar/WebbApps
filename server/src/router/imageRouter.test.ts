@@ -33,8 +33,9 @@ afterEach(async () => {
     // remove the like from the image (if it exists)
     await authenticatedSession.delete(`/like/${image.id}`);
   }
-  //TODO: delete the user that was created for the tests
 });
+
+//TODO: delete the user that was created for the tests
 
 describe("Upload an image, End-to-End", () => {
   // Happy Path

@@ -17,7 +17,7 @@ import {
   PatchImageRequest,
   SearchImageRequest,
 } from "./imageRequests";
-import { determineErrorResponse } from "./errorHandler";
+import { determineErrorResponse } from "./imageErrorHandler";
 import { ErrorMessages, SuccessMessages } from "./responseMessages";
 
 export const imageRouter = express.Router();

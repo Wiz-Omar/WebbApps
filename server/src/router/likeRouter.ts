@@ -4,6 +4,7 @@ import { ILikeService } from "../service/likeService.interface";
 
 import { ensureAuthenticated, validateImageId } from "./validators";
 import { AllLikedImagesRequest, ImageLikeRequest } from "./likeRequests";
+import { determineErrorResponse } from "./likeErrorHandler";
 
 export const likeService: ILikeService = new LikeService();
 export const likeRouter = express.Router();
@@ -31,7 +32,7 @@ likeRouter.post(
     try {
       const imageId = req.params.imageId;
       // Safe to call ! here because of the ensureAuthenticated middleware
-      likeService.likeImage(imageId, req.session.username!);
+      await likeService.likeImage(imageId, req.session.username!);
       res.status(200).send("Image liked successfully");
       return;
     } catch (error: any) {
@@ -75,16 +76,16 @@ likeRouter.delete(
 /**
  * GET /like/:imageId
  * Checks if an image is liked by the user.
- * 
+ *
  * Request Parameters:
  * - imageId (string): ID of the image to check.
- * 
+ *
  * Responses:
  * - 200: Returns a boolean indicating whether the image is liked by the user.
  * - 401: Unauthorized if the user is not logged in.
  * - 404: Image not found.
  * - 500: Internal server error. Failed to check if the image is liked.
- * 
+ *
  */
 likeRouter.get(
   "/:imageId",
@@ -107,12 +108,12 @@ likeRouter.get(
 /**
  * GET /like
  * Gets all images liked by the user.
- * 
+ *
  * Responses:
  * - 200: Returns an array of image IDs liked by the user.
  * - 401: Unauthorized if the user is not logged in.
  * - 500: Internal server error. Failed to retrieve liked images.
- * 
+ *
  */
 likeRouter.get("/", async (req: AllLikedImagesRequest, res: Response) => {
   try {
@@ -127,3 +128,14 @@ likeRouter.get("/", async (req: AllLikedImagesRequest, res: Response) => {
     res.status(500).send("Internal server error");
   }
 });
+
+// Centralized error handling middleware
+// Should be placed after all other middleware and routes
+likeRouter.use(
+  (err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.log("Error handler was used!");
+    // Determine the type of error and set response status and message accordingly
+    const { status, message } = determineErrorResponse(err);
+    res.status(status).send({ error: message });
+  }
+);
