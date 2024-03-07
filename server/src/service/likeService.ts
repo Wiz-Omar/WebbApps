@@ -82,7 +82,7 @@ export class LikeService implements ILikeService {
 }
 }
 
-class LikeExistsError extends Error {
+export class LikeExistsError extends Error {
   constructor(imageId: string) {
     super(`Like already exists for image with id ${imageId}`);
     this.name = "LikeExistsError";
