@@ -5,11 +5,12 @@ import { DeleteResult } from "mongodb";
 import { LikedImage } from "../model/likedImage";
 import mongoose, { Model } from "mongoose";
 import { User } from "../model/user";
-import { MappingService, UserNotFoundError } from "./mappingService";
+import { MappingService } from "./mappingService";
 import { ImageNotFoundError } from "../errors/imageErrors";
 import { IMappingService } from "./mappingService.interface";
 import { IDatabaseImageService } from "./databaseImageService.interface";
 import { DatabaseImageService } from "./databaseImageService";
+import { UserNotFoundError } from "../errors/userErrors";
 
 const ObjectId = mongoose.Types.ObjectId;
 
