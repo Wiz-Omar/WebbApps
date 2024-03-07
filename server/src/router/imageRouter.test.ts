@@ -10,6 +10,7 @@ let authenticatedSession: SuperTest<Test>;
 let unauthenticatedSession: SuperTest<Test>;
 
 //TODO: add code for creating a new user that is then deleted after the tests are run!
+//TODO: could also check the recieved message, as the messages are now stored in responseMessage.ts
 beforeAll(async () => {
   // Create a session for an authenticated user
   authenticatedSession = session(app);
@@ -29,8 +30,12 @@ afterEach(async () => {
   const images = response.body;
   for (const image of images) {
     await authenticatedSession.delete(`/image/${image.id}`);
+    // remove the like from the image (if it exists)
+    await authenticatedSession.delete(`/like/${image.id}`);
   }
 });
+
+//TODO: delete the user that was created for the tests
 
 describe("Upload an image, End-to-End", () => {
   // Happy Path
@@ -87,6 +92,30 @@ describe("Upload an image, End-to-End", () => {
   it("should reject an upload with no file", async () => {
     const response = await authenticatedSession.post("/image");
     expect(response.status).toBe(400);
+  });
+
+  // Failure Scenario #4 - Should not be able to upload the same image twice
+  it("should reject an upload with the same image", async () => {
+    // Construct an absolute path to the test image
+    const imagePath = path.resolve(
+      __dirname,
+      "..",
+      "..",
+      "test",
+      "testImage.png"
+    );
+
+    // Upload the image
+    const response = await authenticatedSession
+      .post("/image")
+      .attach("file", imagePath);
+    expect(response.status).toBe(201);
+
+    // Attempt to upload the same image again
+    const response2 = await authenticatedSession
+      .post("/image")
+      .attach("file", imagePath);
+    expect(response2.status).toBe(409);
   });
 });
 

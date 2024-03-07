@@ -4,7 +4,7 @@ import exp from "constants";
 import { ErrorMessages } from "./responseMessages";
 
 export const MAX_FILE_SIZE = 1024 * 1024 * 10; // 10MB
-export const MAX_FILENAME_LENGTH = 255;
+export const MAX_FILENAME_LENGTH = 255; // 255 characters
 
 // Middleware to ensure that the user is authenticated
 export const ensureAuthenticated = (
@@ -19,7 +19,6 @@ export const ensureAuthenticated = (
   next();
 };
 
-// ImageRouter specific middleware
 // Middleware to validate the imageId parameter
 export const validateImageId = (
   req: Request,
@@ -36,7 +35,9 @@ export const validateImageId = (
   next();
 };
 
-// ImageRouter specific middleware
+
+// ImageRouter specific middleware(s):
+
 // Middleware to validate the sorting query parameters
 export const validateSorting = (
   req: Request,
@@ -57,6 +58,7 @@ export const validateSorting = (
   next();
 };
 
+// Middleware to validate the search query parameter
 export const validateSearchQuery = (
   req: Request,
   res: Response,
@@ -70,6 +72,7 @@ export const validateSearchQuery = (
   next();
 };
 
+// Middleware to validate the new image name
 export const validateNewImageName = (
   req: Request,
   res: Response,

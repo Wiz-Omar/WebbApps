@@ -3,65 +3,122 @@ import { likeImage } from "../db/like.db";
 
 import { DeleteResult } from "mongodb";
 import { LikedImage } from "../model/likedImage";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { User } from "../model/user";
-import { MappingService } from "./mappingService";
+import { MappingService, UserNotFoundError } from "./mappingService";
 import { ImageNotFoundError } from "../errors/imageErrors";
+import { IMappingService } from "./mappingService.interface";
+import { IDatabaseImageService } from "./databaseImageService.interface";
+import { DatabaseImageService } from "./databaseImageService";
+
+const ObjectId = mongoose.Types.ObjectId;
 
 export class LikeService implements ILikeService {
-  mappingService: MappingService;
+  mappingService: IMappingService;
+  databaseImageService: IDatabaseImageService;
 
   constructor() {
     this.mappingService = new MappingService();
+    this.databaseImageService = new DatabaseImageService();
   }
 
   async isImageLiked(imageId: string, username: string): Promise<boolean> {
-    const lm: Model<LikedImage> = await likeImage;
-    const user: User = await this.mappingService.getUser(username);
-
-    const like = await lm.findOne({
-      imageId: imageId,
-      userId: user.id,
-    });
-    
-    return like !== null;
+    if (!ObjectId.isValid(imageId)) throw new InvalidIdError(imageId);
+    try {
+      const lm: Model<LikedImage> = await likeImage;
+      const user: User = await this.mappingService.getUser(username);
+      const imageExists = await this.databaseImageService.findImageById(
+        imageId
+      );
+      if (!imageExists) throw new ImageNotFoundError(imageId);
+      const like = await lm.findOne({
+        imageId: new ObjectId(imageId),
+        userId: user.id,
+      });
+      return like !== null;
+    } catch (e: any) {
+      if (e instanceof UserNotFoundError) {
+        throw new UserNotFoundError(username);
+      } else {
+        throw e;
+      }
+    }
   }
 
   async likeImage(imageId: string, username: string): Promise<void> {
-    const lm: Model<LikedImage> = await likeImage;
-    const user: User = await this.mappingService.getUser(username);
-
+    if (!ObjectId.isValid(imageId)) {
+      throw new InvalidIdError(imageId);
+    }
     try {
+      const lm: Model<LikedImage> = await likeImage;
+      // Ensure the user exists, and get the user
+      const user: User = await this.mappingService.getUser(username);
+      // Ensure the image exists
+      const imageExists = await this.databaseImageService.findImageById(
+        imageId
+      );
+      if (!imageExists) throw new ImageNotFoundError(imageId);
+      // Create a new like
       await lm.create({
-        imageId: imageId,
+        imageId: new ObjectId(imageId),
         userId: user.id,
       });
     } catch (e: any) {
       if (e.code === 11000 || e.code === 11001) {
         //codes represent a duplicate key error from mongodb => like exists
         throw new LikeExistsError(imageId);
+        // catch error that User does not exist
+      } else if (e instanceof ImageNotFoundError) {
+        throw new ImageNotFoundError(imageId);
+      } else if (e instanceof UserNotFoundError) {
+        throw new UserNotFoundError(username);
+        // catch error that Image does not exist
       } else {
-        console.log(e);
-        throw new Error(e);
+        throw new Error(
+          "Unexpected error when trying to like the image: " + e.message
+        );
       }
     }
   }
 
   async unlikeImage(imageId: string, username: string): Promise<void> {
-    const lm: Model<LikedImage> = await likeImage;
-    const user: User = await this.mappingService.getUser(username);
+    if (!ObjectId.isValid(imageId)) {
+      throw new InvalidIdError(imageId);
+    }
 
-    if (await lm.findOne({ imageId: imageId, userId: user.id })) {
+    try {
+      const lm: Model<LikedImage> = await likeImage;
+      // Ensure the user exists, and get the user
+      const user: User = await this.mappingService.getUser(username);
+      // Ensure the image exists
+      const imageExists = await this.databaseImageService.findImageById(
+        imageId
+      );
+      if (!imageExists) {
+        throw new ImageNotFoundError(imageId);
+      }
+
+      // Delete the like
       const result: DeleteResult = await lm.deleteOne({
-        //we can use deleteOne because the combination of imageId and username is unique
-        imageId: imageId,
+        imageId: new ObjectId(imageId),
         userId: user.id,
       });
+
       if (!result.acknowledged) {
-        throw new Error("Error deleting like");
+        throw new LikeNotFoundError(imageId);
       }
-    } else {
-      throw new ImageNotFoundError(imageId);
+    } catch (e: any) {
+      if (e instanceof UserNotFoundError) {
+        throw e; // User not found
+      } else if (e instanceof ImageNotFoundError) {
+        throw new ImageNotFoundError(imageId);
+      } else if (e instanceof LikeNotFoundError) {
+        throw e; // Like not found
+      } else {
+        throw new Error(
+          "Unexpected error when trying to unlike the image: " + e.message
+        );
+      }
     }
   }
 
@@ -70,21 +127,39 @@ export class LikeService implements ILikeService {
     const user: User = await this.mappingService.getUser(username);
 
     // Find liked images by user ID and only select the imageId field
-    const likedImagesDocuments = await lm.find({ userId: user.id }, 'imageId').exec();
+    const likedImagesDocuments = await lm
+      .find({ userId: user.id }, "imageId")
+      .exec();
 
     if (!likedImagesDocuments || likedImagesDocuments.length === 0) {
       return [];
     } else {
       // Map the documents to extract the imageId values and convert them to string
-      const likedImageIds: string[] = likedImagesDocuments.map(doc => doc.imageId.toString());
+      const likedImageIds: string[] = likedImagesDocuments.map((doc) =>
+        doc.imageId.toString()
+      );
       return likedImageIds; // Returns the IDs of Images that the user has liked
     }
-}
+  }
 }
 
-class LikeExistsError extends Error {
+export class InvalidIdError extends Error {
+  constructor(imageId: string) {
+    super(`Invalid image ID: ${imageId}`);
+    this.name = "InvalidImageID";
+  }
+}
+
+export class LikeExistsError extends Error {
   constructor(imageId: string) {
     super(`Like already exists for image with id ${imageId}`);
     this.name = "LikeExistsError";
+  }
+}
+
+export class LikeNotFoundError extends Error {
+  constructor(imageId: string) {
+    super(`Like not found for image with id ${imageId}`);
+    this.name = "LikeNotFoundError";
   }
 }
