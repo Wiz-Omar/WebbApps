@@ -89,6 +89,7 @@ imageRouter.get(
  * - 400: Invalid file data or filename.
  * - 401: Unauthorized if the user is not logged in.
  * - 413: File size exceeds the limit.
+ * - 409: Image with the same filename already exists.
  * - 415: Unsupported media type if the file type is not JPEG or PNG.
  * - 500: Internal server error. Image upload failed.
  */
