@@ -1,7 +1,9 @@
 import React, { useRef } from "react";
 import axios from "axios";
 import { handleUpload } from "../../../utils/handleUpload";
+import { validateFile } from "../../../utils/validateFile";
 axios.defaults.withCredentials = true;
+
 
 interface UploadButtonProps {
   callback: () => void;
@@ -18,36 +20,24 @@ function UploadButton({ callback }: UploadButtonProps) {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file : File | null = event.target.files ? event.target.files[0] : null;
-    if (!file) return;
-    // Check if the filname is less than 150 characters. //TODO: might make even smaller.
-    if (file.name.length > 256) {
-      alert("Filename should be less than 256 characters.");
-      return;
-    }
-
-    // Check if the file type is JPEG, JPG, or PNG
-    if (!file.type.match("image/jpeg") && !file.type.match("image/png") && !file.type.match("image/jpg")) {
-      alert("Unsupported filetype. Supported filetypes are JPEG, JPG and PNG.");
-      return;
-    }
-
-    // Check if the file size is greater than 10MB
-    if (file.size > 10 * 1024 * 1024) {
-      alert("File size should be less than 10MB.");
-      return;
-    }
-
-    // TODO: check filename doesnt contain special characters?
-
+    
     try {
-      const response = await handleUpload(file);
-      // console.log((response).status);
+      validateFile(file);
+    } catch (error : any) {
+      alert(error.message);
+      return;
+    }
+    
+    try {
+      // If validateFile passes, we know that the file is a correctly formatted image
+      await handleUpload(file as File);
       callback();
     } catch (error: any) {
       console.error("Error uploading file:", error); // Handle error
+      console.error("Error: " + error.response.status);
       if (error.response && error.response.status === 409) {
         // Duplicate filename error
-        alert("A file with the same name already exists. Please choose a different filename.");
+        alert("A file with that name already exists. Please choose a different filename.");
       } else {
         alert("Something went wrong.");
       }
