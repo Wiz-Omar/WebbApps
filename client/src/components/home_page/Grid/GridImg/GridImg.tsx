@@ -43,7 +43,7 @@ function GridImg({ image, callback }: GridImgProps) {
       //TODO: write functionality for checking for just one image instead
       setIsLiked(isLiked);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   }
 
@@ -59,7 +59,7 @@ function GridImg({ image, callback }: GridImgProps) {
       }
     } catch (error) {
       //TODO: show that something went wrong
-      console.error(error);
+      console.log(error);
     }
   }
 
@@ -69,10 +69,14 @@ function GridImg({ image, callback }: GridImgProps) {
       const response = await axios.delete(
         `http://localhost:8080/like/${imageId}`
       );
+      // if response is 200, set isLiked to false
       if (response.status === 200) {
         setIsLiked(false);
       }
-    } catch (error) {}
+    } catch (error) {
+      //TODO: show that something went wrong
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -107,6 +111,7 @@ function GridImg({ image, callback }: GridImgProps) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ position: "relative" }}
+      data-testid="grid-img"
     >
       <img
         src={image.path}

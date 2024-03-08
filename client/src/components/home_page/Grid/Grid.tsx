@@ -20,7 +20,7 @@ function Grid({ images, callback }: GridProps) {
   // Check if there are no images
   if (images.length === 0) {
     return (
-      <NoImagesDisplay updateScreen={callback} />
+      <NoImagesDisplay updateScreen={callback} data-testid="no-images-display"/>
     );
   }
 
