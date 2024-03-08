@@ -2,25 +2,30 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import FavoriteButton from './FavoriteButton';
 
-describe('FavoriteButton component', () => {
-
-  test('renders unfilled heart icon when not liked', () => {
-    const { container } = render(<FavoriteButton isLiked={false} callback={() => {}} />);
-    const unfilledHeartIcon = container.querySelector('.bi.bi-heart');
-    expect(unfilledHeartIcon).toBeInTheDocument();
+describe('FavoriteButton', () => {
+  it('renders without crashing', () => {
+    const { getByTestId } = render(<FavoriteButton isLiked={false} callback={() => {}} />);
+    const favoriteButton = getByTestId('favorite-button');
+    expect(favoriteButton).toBeInTheDocument();
   });
 
-  test('renders filled heart icon when liked', () => {
-    const { container } = render(<FavoriteButton isLiked={true} callback={() => {}} />);
-    const filledHeartIcon = container.querySelector('.bi.bi-heart-fill');
-    expect(filledHeartIcon).toBeInTheDocument();
-  });
-  
-  test('calls callback function when clicked', () => {
+  it('calls the callback function when clicked', () => {
     const mockCallback = jest.fn();
-    const { container } = render(<FavoriteButton isLiked={false} callback={mockCallback} />);
-    const favoriteButton = container.querySelector('.button') as HTMLElement;
+    const { getByTestId } = render(<FavoriteButton isLiked={false} callback={mockCallback} />);
+    const favoriteButton = getByTestId('favorite-button');
     fireEvent.click(favoriteButton);
     expect(mockCallback).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders a filled heart icon when isLiked is true', () => {
+    const { container } = render(<FavoriteButton isLiked={true} callback={() => {}} />);
+    const heartFillIcon = container.querySelector('.button svg[fill="red"]');
+    expect(heartFillIcon).toBeInTheDocument();
+  });
+
+  it('renders an outline heart icon when isLiked is false', () => {
+    const { container } = render(<FavoriteButton isLiked={false} callback={() => {}} />);
+    const heartIcon = container.querySelector('.button svg:not([fill="red"])');
+    expect(heartIcon).toBeInTheDocument();
   });
 });

@@ -3,8 +3,56 @@ import { render, screen } from "@testing-library/react";
 import Grid from "./Grid";
 import { Image } from "../HomePage";
 
+// Mock useNavigate from 'react-router-dom'
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(), // Mocking useNavigate as a jest.fn()
+}));
+
+// Mock GridImg
+/* jest.mock('./GridImg/GridImg', () => ({
+  __esModule: true,
+  default: jest.fn(() => null), // Mock GridImg as a functional component that renders nothing
+})); */
+
+jest.mock("./GridImg/GridImg", () => {
+  return ({ image }: { image: Image }) => (
+    <div data-testid="grid-img">{image.path}</div>
+  );
+});
+
+// Mock Image data
+const images: Image[] = Array.from({ length: 3 }, (_, i) => ({
+  id: i + 1,
+  filename: `${i + 1}.png`,
+  path: `https://example.com/${i + 1}.png`,
+  uploadDate: new Date(),
+}));
+
+// Mock callback function
+const mockCallback = jest.fn();
+
+describe('Grid component', () => {
+  it('renders without crashing', () => {
+    render(<Grid images={images} callback={mockCallback} />);
+  });
+
+  it('renders GridImg component for each image', () => {
+    const { getAllByTestId } = render(<Grid images={images} callback={mockCallback} />);
+    const gridImages = getAllByTestId('grid-img');
+    expect(gridImages.length).toBe(images.length);
+  });
+
+  it('renders NoImagesDisplay component when no images are provided', () => {
+    const { getByTestId } = render(<Grid images={[]} callback={mockCallback} />);
+    const noImagesDisplay = getByTestId('no-images-display');
+    expect(noImagesDisplay).toBeInTheDocument();
+  });
+});
+
+
 //TODO: change this later!
-jest.mock("./GridImg", () => {
+/* jest.mock("./GridImg", () => {
   return ({ image }: { image: Image }) => (
     <div data-testid={`grid-img-${image.id}`}>{image.path}</div>
   );
@@ -47,4 +95,4 @@ describe("Grid component", () => {
       });
     });
   });
-});
+}); */

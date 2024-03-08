@@ -9,7 +9,7 @@ export const handleUpload = async (file : File) => {
     formData.append("file", file);
 
     // Use axios to send the FormData
-    return await axios.post(
+    return axios.post(
     "http://localhost:8080/image",
     formData,
     {

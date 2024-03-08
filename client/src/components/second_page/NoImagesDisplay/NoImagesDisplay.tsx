@@ -6,7 +6,7 @@ interface NoImagesDisplayProps {
 
 const NoImagesDisplay = ({ updateScreen } : NoImagesDisplayProps) => {
   return (
-    <div className="no-images-container">
+    <div className="no-images-container" data-testid="no-images-display"> 
       <div className="no-images-content">
         <h2>No images to display here!</h2>
       </div>
