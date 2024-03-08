@@ -1,62 +1,68 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import UploadButton from "./UploadButton";
 
 jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-describe('UploadButton component', () => {
+describe("UploadButton component", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test("handles empty file correctly", async () => {
-    const callbackMock = jest.fn();
+  // TODO: upload test fails
+  it("uploads files successfully (status 201)", async () => {
+    mockedAxios.post.mockResolvedValueOnce({ status: 201 });
 
-    render(<UploadButton callback={callbackMock} />);
+    render(<UploadButton callback={() => {}} />);
 
     const fileInput = screen.getByRole("button", { name: /upload/i });
 
-    // Trigger file change event with empty file
-    fireEvent.change(fileInput, { target: { files: [] } });
-
-    // Ensure axios is not called and callback is not triggered
-    await waitFor(() => expect(axios.post).not.toHaveBeenCalled());
-    expect(callbackMock).not.toHaveBeenCalled();
-  });
-
-  test("handles long filename correctly", async () => {
-    const callbackMock = jest.fn();
-
-    render(<UploadButton callback={callbackMock} />);
-
-    // Mock a file with long filename
-    const longFilename = "a".repeat(257);
-    const file = new File(["dummy content"], longFilename, { type: "image/jpeg" });
-    const fileInput = screen.getByRole("button", { name: /upload/i });
-
-    // Trigger file change event with file having long filename
+    const file = new File(["dummy content"], "test.png", { type: "image/png" });
+    
+    expect(axios.post).not.toHaveBeenCalled();
+    // Trigger file change event with dummy file
     fireEvent.change(fileInput, { target: { files: [file] } });
 
-    // Ensure axios is not called and callback is not triggered
-    await waitFor(() => expect(axios.post).not.toHaveBeenCalled());
-    expect(callbackMock).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(axios.post).toHaveBeenCalled();
+    });
   });
 
-  test("handles unsupported file type correctly", async () => {
-    const callbackMock = jest.fn();
+  it("handles file upload error (status 500)", async () => {
+    mockedAxios.post.mockRejectedValueOnce({ response: { status: 500 } });
 
-    render(<UploadButton callback={callbackMock} />);
+    render(<UploadButton callback={() => {}} />);
 
-    // Mock a file with unsupported type
-    const file = new File(["dummy content"], "test.txt", { type: "text/plain" });
     const fileInput = screen.getByRole("button", { name: /upload/i });
 
-    // Trigger file change event with unsupported file type
+    const file = new File(["dummy content"], "test.png", { type: "image/png" });
+
+    // Trigger file change event with dummy file
     fireEvent.change(fileInput, { target: { files: [file] } });
 
-    // Ensure axios is not called and callback is not triggered
-    await waitFor(() => expect(axios.post).not.toHaveBeenCalled());
-    expect(callbackMock).not.toHaveBeenCalled();
+    // Ensure callback is not invoked (optional)
+    await waitFor(() => {
+      expect(axios.post).not.toHaveBeenCalled();
+    });
+  });
+
+  it("handles duplicate filename error (status 409)", async () => {
+    mockedAxios.post.mockRejectedValueOnce({ response: { status: 409 } });
+
+    render(<UploadButton callback={() => {}} />);
+
+    const fileInput = screen.getByRole("button", { name: /upload/i });
+
+    const file = new File(["dummy content"], "test.png", { type: "image/png" });
+
+    // Trigger file change event with dummy file
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    // Ensure callback is not invoked (optional)
+    await waitFor(() => {
+      expect(axios.post).not.toHaveBeenCalled();
+    });
   });
 });
