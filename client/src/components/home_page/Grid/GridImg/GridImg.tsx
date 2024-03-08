@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Image } from "../../HomePage";
 
 import "./GridImg.css";
-import DownloadIcon from "../../../second_page/Navbar/DownloadIcon";
-import IconButton from "../../../common/IconButton/IconButton";
 import FavoriteButton from "../../FavoriteButton/FavoriteButton";
 import GridImgDescription from "../GridImgDescription/GridImgDescription";
-import axios from "axios";
 import DeleteButton from "../../DeleteButton";
 import { handleDelete } from "../../../../utils/handleDelete";
+import { getLikeStatus } from "../../../../utils/getLike";
+import { setLike } from "../../../../utils/setLike";
 
 interface GridImgProps {
   image: Image;
@@ -19,6 +18,7 @@ interface GridImgProps {
 function GridImg({ image, callback }: GridImgProps) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -33,73 +33,39 @@ function GridImg({ image, callback }: GridImgProps) {
     navigate(`/second`, { state: { image } });
   };
 
-  const [isLiked, setIsLiked] = useState(false);
-
-  async function getLike(imageId: string) {
-    try {
-      const response = await axios.get(`http://localhost:8080/like/${imageId}`);
-      const isLiked = response.data.liked;
-      // check if image.id is in likedImages
-      //TODO: write functionality for checking for just one image instead
-      setIsLiked(isLiked);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  // set like status
-  async function setLike(imageId: string) {
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/like/${imageId}`
-      );
-      // if response is 200, set isLiked to true
-      if (response.status === 200) {
-        setIsLiked(true);
-      }
-    } catch (error) {
-      //TODO: show that something went wrong
-      console.error(error);
-    }
-  }
-
-  // set unlike status
-  async function setUnlike(imageId: string) {
-    try {
-      const response = await axios.delete(
-        `http://localhost:8080/like/${imageId}`
-      );
-      if (response.status === 200) {
-        setIsLiked(false);
-      }
-    } catch (error) {}
-  }
-
   useEffect(() => {
-    //TODO: fix later, will id be a string or a number?
-    console.log(!image.id);
-    getLike(image.id.toString());
+    const fetchLikeStatus = async () => {
+      try {
+        const isLiked = await getLikeStatus(image.id.toString());
+        setIsLiked(isLiked);
+      } catch (error) {
+        // Could handle the error, but probably no need to display anything to the user
+      }
+    };
+
+    fetchLikeStatus();
   }, [image.id]);
 
   const handleCallback = async () => {
-    const imageId = image.id.toString(); // Assuming image.id is the identifier used in your backend
-    if (isLiked) {
-      await setUnlike(imageId); // If the image is currently liked, send a request to unlike it
-    } else {
-      await setLike(imageId); // If the image is currently unliked, send a request to like it
+    const imageId = image.id.toString();
+    try {
+      // Toggle the like status based on the current state
+      const newIsLiked = await setLike(imageId, !isLiked);
+      setIsLiked(newIsLiked); // Update the state based on the response
+    } catch (error) {
+      // Could handle the error, but probably no need to display anything to the user
     }
-    // The setIsLiked state update is now moved inside the setLike and setUnlike functions
   };
 
   const onDelete = async () => {
     try {
       const response = await handleDelete(image.id);
       if (response.status === 200) {
-        // TODO: fix delete
         callback();
-        console.log("image deleted");
       }
-    } catch (error) {}
+    } catch (error) {
+      alert("Error deleting image");
+    }
   };
 
   return (
@@ -117,26 +83,14 @@ function GridImg({ image, callback }: GridImgProps) {
       />
       {isHovered && (
         <>
-          <div
-            className="button-column"
-            style={{
-              position: "absolute",
-              top: 5,
-              right: 5,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-            }}
-          >
+          <div className="button-column button-column-container">
             <div className="button-container" style={{ display: "flex" }}>
               <DeleteButton callback={onDelete} />
               <FavoriteButton isLiked={isLiked} callback={handleCallback} />
             </div>
           </div>
-          <div
-            className="description-icon-container"
-            style={{ position: "absolute", left: 5, bottom: 5 }}
-          >
+
+          <div className="description-icon-container">
             <GridImgDescription child={image.filename} />
           </div>
         </>

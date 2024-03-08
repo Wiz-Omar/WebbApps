@@ -11,3 +11,18 @@
   filter: grayscale(50%); /* Greyscale effect on hover */
   transform: scale(1.01); /* Slightly enlarges the image */
 }
+
+.button-column-container {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.description-icon-container {
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+}
