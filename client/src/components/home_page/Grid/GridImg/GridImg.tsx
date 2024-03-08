@@ -15,6 +15,17 @@ interface GridImgProps {
   callback: () => void;
 }
 
+/**
+ * Displays an image within a grid, including hover effects that reveal additional actions such as liking,
+ * deleting, and viewing more details. The component fetches and updates the like status of the image using
+ * external API calls.
+ *
+ * Props:
+ * - `image` (Image): Object containing image details. The Image type should include `id`, `path`, and `filename`.
+ * - `callback` (function): A callback function that is called after a successful delete operation. It can be used
+ *    to trigger a re-fetch or update of the parent component's state.
+ *
+ */
 function GridImg({ image, callback }: GridImgProps) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
@@ -49,7 +60,6 @@ function GridImg({ image, callback }: GridImgProps) {
   const handleCallback = async () => {
     const imageId = image.id.toString();
     try {
-      // Toggle the like status based on the current state
       const newIsLiked = await setLike(imageId, !isLiked);
       setIsLiked(newIsLiked); // Update the state based on the response
     } catch (error) {
