@@ -25,8 +25,6 @@ describe("User Authentication, End-to-End", () => {
     console.log(reponse.status);
   });
 
-  // Tests go here
-
   // Happy path - Login
   it("should log in a user with valid credentials", async () => {
     const response = await authenticatedSession

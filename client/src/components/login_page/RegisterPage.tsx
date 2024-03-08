@@ -20,6 +20,10 @@ interface RegisterPageProps {
   setDisplay: (display: AppDisplay) => void;
 }
 
+const MIN_USERNAME_LENGTH = 8;
+const MIN_PASSWORD_LENGTH = 8;
+const USERNAME_PATTERN = /^[a-zA-Z0-9]+$/; // Only alphanumeric characters allowed
+
 const RegisterPage: React.FC<RegisterPageProps> = ({ setDisplay }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,13 +35,13 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setDisplay }) => {
   const validateUsername = (value: string) => {
     setUsername(value.trim()); // Trim the input value
     setUsernameError(""); // Reset the username error message
-    if (value.trim().length < 6) {
+    if (value.trim().length < MIN_USERNAME_LENGTH) {
       setUsernameValid(false);
-      setUsernameError("Username must be at least 6 characters long");
-    } else if (!/^[a-zA-Z0-9]{1,25}$/.test(value)) {
+      setUsernameError("Username must be at least " + MIN_USERNAME_LENGTH.toString() + " characters long");
+    } else if (!USERNAME_PATTERN.test(value)) {
       setUsernameValid(false);
       setUsernameError(
-        "Username must be alphanumeric and less than 25 characters"
+        "Username must be alphanumeric"
       );
     } else {
       setUsernameValid(true);
@@ -52,21 +56,17 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setDisplay }) => {
       setPasswordValid(false);
     } else {
       // Perform validation only if the field is not empty
-      const isValid =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}$/.test(
-          value
-        );
+      const isValid = value.length >= MIN_PASSWORD_LENGTH;
       setPasswordValid(isValid);
       if (!isValid) {
         setPasswordError(
-          "Password must be at least 8 characters long, include one lowercase letter, one uppercase letter, one number, and one special character"
+          "Password must be at least " + MIN_PASSWORD_LENGTH.toString() + " characters long"
         );
       }
     }
   };
 
   const registerUser = async () => {
-
     if (!usernameValid || !passwordValid) {
       alert("Please fix the errors in the form before submitting");
       return;

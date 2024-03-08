@@ -37,7 +37,18 @@ export class PathService implements IPathService {
     console.log("Deleting local file path", userId, filename);
     const filePath = path.join(this.basePath, userId, filename);
     try {
+      // Delete the specified file
       await fs.unlink(filePath);
+
+      // Check if the directory is empty after deleting the file
+      const directoryPath = path.join(this.basePath, userId);
+      const files = await fs.readdir(directoryPath);
+
+      if (files.length === 0) {
+          // Directory is empty, so delete it
+          await fs.rmdir(directoryPath);
+          console.log(`Deleted empty directory: ${directoryPath}`);
+      }
     } catch {
       throw new Error("Failed to delete file or file not found");
     }
