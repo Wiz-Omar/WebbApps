@@ -37,7 +37,8 @@ function UploadButton({ callback }: UploadButtonProps) {
 
     try {
       validateFile(file);
-    } catch (error: any) {
+    } catch (error : any) {
+      // If file is unvalid, display the error message and return
       alert(error.message);
       return;
     }
@@ -70,6 +71,7 @@ function UploadButton({ callback }: UploadButtonProps) {
         ref={fileInputRef}
         onChange={handleFileChange}
         style={{ display: "none" }}
+        data-testid="file-input"
       />
       <button className="btn btn-primary" onClick={triggerFileInputClick}>
         <Upload /> Upload

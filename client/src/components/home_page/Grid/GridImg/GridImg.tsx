@@ -83,6 +83,7 @@ function GridImg({ image, callback }: GridImgProps) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ position: "relative" }}
+      data-testid="grid-img"
     >
       <img
         src={image.path}
