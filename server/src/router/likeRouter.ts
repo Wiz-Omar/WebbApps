@@ -24,6 +24,7 @@ likeRouter.use(ensureAuthenticated);
  * - 404: Image not found.
  * - 409: Conflict. The image has already been liked by the user.
  * - 500: Internal server error. Failed to like the image.
+ * -
  */
 likeRouter.post(
   "/:imageId",
