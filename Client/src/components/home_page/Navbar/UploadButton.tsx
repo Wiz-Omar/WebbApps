@@ -50,13 +50,13 @@ function UploadButton({ callback }: UploadButtonProps) {
     } catch (error: any) {
       if (error.response && error.response.status === 409) {
         // Duplicate filename error
-        alert(error.response.data.message);
+        alert("A file with that name already exists. Please rename the file and try again.");
       } else if (error.response && error.response.status === 413) {
         // File too large error
-        alert(error.response.data.message);
+        alert("The file is too large. Please upload a file that is less than 5MB.");
       } else if (error.response && error.response.status === 415) {
         // Unsupported file type error
-        alert(error.response.data.message);
+        alert("The file type is not supported. Please upload a .jpg, .jpeg, or .png file.");
       } else {
         // Something else went wrong
         alert("Something went wrong.");
