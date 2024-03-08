@@ -70,7 +70,7 @@ test("If a liked image is removed, it should be removed from the liked images ar
     expect(images.some((image) => image.id === imageId)).toBeFalsy();
 
     //Image should not be in liked images list
-    expect(await likeService.isImageLiked(imageId.toString(), 'testUser')).toBe(false);
+    expect(await likeService.getLikedImages('testUser')).toStrictEqual([]);
 
     //reset database values
     await userService.removeUser('testUser');
