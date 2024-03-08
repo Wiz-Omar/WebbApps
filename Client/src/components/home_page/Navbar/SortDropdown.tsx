@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 
+const SORT_BY_UPLOAD_DATE_DESC = "Sort by upload date (newest first)";
+const SORT_BY_UPLOAD_DATE_ASC = "Sort by upload date (oldest first)";
+const SORT_BY_FILENAME_ASC = "Sort by file name (A-Z)";
+const SORT_BY_FILENAME_DESC = "Sort by file name (Z-A)";
+
 interface SortDropdownProps {
   callback: (sortField?: string, sortOrder?: string) => void;
 }
 
+/**
+ * A dropdown button that allows the user to sort images by different criteria.
+ * 
+ * Props:
+ * - `callback` (function): A callback function that is called when the user selects a sorting option. It should accept
+ *  two optional parameters: `sortField` (string) and `sortOrder` (string).
+ */
 const SortDropdown: React.FC<SortDropdownProps> = ({ callback }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -20,12 +32,11 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ callback }) => {
       onClick={() => setIsOpen(!isOpen)}
     >
       {isOpen && (
-        // TODO: break out to Component:
         <div>
-          <Dropdown.Item href="#/action-1" onClick={() => handleSort('uploadDate', 'desc')}>Sort by upload date (newest first)</Dropdown.Item>
-          <Dropdown.Item href="#/action-1" onClick={() => handleSort('uploadDate', 'asc')}>Sort by upload date (oldest first)</Dropdown.Item>
-          <Dropdown.Item href="#/action-1" onClick={() => handleSort('filename', 'asc')}>Sort by file name (A-Z)</Dropdown.Item>
-          <Dropdown.Item href="#/action-1" onClick={() => handleSort('filename', 'desc')}>Sort by file name (Z-A)</Dropdown.Item>
+          <Dropdown.Item onClick={() => handleSort('uploadDate', 'desc')}> {SORT_BY_UPLOAD_DATE_DESC} </Dropdown.Item>
+          <Dropdown.Item onClick={() => handleSort('uploadDate', 'asc')}> {SORT_BY_UPLOAD_DATE_ASC} </Dropdown.Item>
+          <Dropdown.Item onClick={() => handleSort('filename', 'asc')}> {SORT_BY_FILENAME_ASC} </Dropdown.Item>
+          <Dropdown.Item onClick={() => handleSort('filename', 'desc')}> {SORT_BY_FILENAME_DESC} </Dropdown.Item>
         </div>
       )}
     </DropdownButton>

@@ -28,7 +28,7 @@ function Navbar({ callback }: NavbarProps) {
         </a>
         <SearchBar />
         <SortDropdown callback={callback} />
-        <LikedToggle callback={callback} />
+        <LikedToggle onToggle={callback} />
         <UploadButton callback={callback} />
       </div>
     </nav>

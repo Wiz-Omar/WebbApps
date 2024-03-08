@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
 
 interface LikedToggleProps {
-  callback: (sortField?: string, sortOrder?: string, onlyLiked?: boolean) => void;
+  onToggle: (sortField?: string, sortOrder?: string, onlyLiked?: boolean) => void;
 }
 
-function LikedToggle({ callback }: LikedToggleProps) {
+const SHOW_ALL_LABEL = 'Showing All Images';
+const SHOW_LIKED_LABEL = 'Showing Liked Images';
+
+/**
+ * A button that toggles between showing all images and showing only liked images.
+ * 
+ * Props:
+ * - `onToggle` (function): A callback function that is called when the toggle button is clicked. It should accept
+ *   three optional parameters: `sortField` (string), `sortOrder` (string), and `onlyLiked` (boolean).
+ * 
+ */
+function LikedToggle({ onToggle: callback }: LikedToggleProps) {
   const [onlyLiked, setOnlyLiked] = useState(false);
 
   const handleToggle = () => {
@@ -16,7 +27,7 @@ function LikedToggle({ callback }: LikedToggleProps) {
 
   return (
     <button className="btn btn-outline-primary ms-2" onClick={handleToggle}>
-      {onlyLiked ? 'Showing Liked Images' : 'Showing All Images'}
+      {onlyLiked ? SHOW_LIKED_LABEL : SHOW_ALL_LABEL}
     </button>
   );
 };
