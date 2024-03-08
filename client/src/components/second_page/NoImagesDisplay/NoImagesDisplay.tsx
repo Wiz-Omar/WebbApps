@@ -1,10 +1,6 @@
 import './NoImagesDisplay.css'; // Assuming your styling is in this CSS file
 
-interface NoImagesDisplayProps {
-    updateScreen: () => void;
-}
-
-const NoImagesDisplay = ({ updateScreen } : NoImagesDisplayProps) => {
+const NoImagesDisplay = () => {
   return (
     <div className="no-images-container" data-testid="no-images-display"> 
       <div className="no-images-content">

@@ -9,6 +9,9 @@ interface ConfirmationPopupProps {
   onCancel: () => void;
 }
 
+/**
+ * A confirmation popup component. It is used to confirm an action before it is executed.
+ */
 const ConfirmationPopup: React.FC<ConfirmationPopupProps> = ({ isOpen, message, onConfirm, onCancel }) => {
   return (
     <Modal show={isOpen} onHide={onCancel} centered>

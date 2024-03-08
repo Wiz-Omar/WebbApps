@@ -44,6 +44,7 @@ function HomePage() {
       const response = await axios.get<Image[]>(
         `http://localhost:8080/image?sortField=${currentSortField}&sortOrder=${currentSortOrder}&onlyLiked=${currentOnlyLiked}`
       );
+      console.log(response.data);
       setImages(response.data);
     } catch (error) {
       console.error(error);

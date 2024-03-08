@@ -15,6 +15,11 @@ import { handleChangeName } from "../../../utils/handleChangeName";
 
 axios.defaults.withCredentials = true;
 
+/**
+ * Navbar component for the second page. 
+ * It displays the filename of the image and provides options to download, delete, and rename the image.
+ * 
+ */
 function Navbar() {
   const location = useLocation();
   const { image } = location.state as { image: Image };
@@ -27,11 +32,16 @@ function Navbar() {
   
   let [newFilename, setNewFilename] = useState(initialFilename);
 
-  // Handler to navigate back to the HomePage
+  /** 
+   * Handler to navigate back to the HomePage 
+   */ 
   const handleClose = () => {
     navigate("/"); // Use '/' to navigate to the home page route
   };
 
+  /**
+   * Handler to download the image.
+   */
   const handleDownloadClick = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -58,6 +68,9 @@ function Navbar() {
     setShowDeletePopup(false); // Simply close the popup
   };
 
+  /**
+   * Handler to delete the image.
+   */
   const onDelete = async (image: Image) => {
     try {
       const response = await handleDelete(image.id);
@@ -92,6 +105,9 @@ function Navbar() {
     }
   };
 
+  /**
+   * Handler to change the filename of the image.
+   */
   const handleChangeFilename = (event: React.ChangeEvent<HTMLInputElement>) => {
     let input = event.target.value;
     // Regular expression to match special characters
@@ -101,7 +117,9 @@ function Navbar() {
     setNewFilename(input);
   };
   
-  
+  /**
+   * Handler to change the filename of the image when the Enter key is pressed.
+   */
   const handleKeyDown = async (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {

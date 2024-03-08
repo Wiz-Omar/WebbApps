@@ -60,10 +60,15 @@ export class ImageService implements IImageService {
       let query: any = { userId: user.id };
       const sortOptions = { [sortField]: sortOrder === "asc" ? 1 : -1 };
       // This could also be moved to the databaseImageService, but not direct dependency on mongo
-      let likedImageIds: string[];
+      let likedImageIds: string[] | null;
       if (onlyLiked) {
         likedImageIds = await this.likeService.getLikedImages(username);
-      }else{
+        // If the user has not liked any images, return an empty array
+        if (!likedImageIds || likedImageIds.length === 0) {
+          const emptyImages: Image[] = [];
+          return emptyImages;
+        }
+      } else {
         likedImageIds = [];
       }
       const images = await this.databaseImageService.getImages(

@@ -29,17 +29,16 @@ export class DatabaseImageService implements IDatabaseImageService {
     userId: string,
     query: any,
     sortOptions: any,
-    likedImageIds: string[]
+    likedImageIds: string[] | undefined
   ): Promise<Image[]> {
     const im: Model<Image> = await imageModel;
-    if(likedImageIds.length > 0) {
+    if(likedImageIds && likedImageIds.length > 0) {
       const objectIdList: ObjectId[] = likedImageIds.map((id: string) => new ObjectId(id));
       query._id = { $in: objectIdList };
-    }
+    } 
     const images = await im
       .find(query)
       .sort(sortOptions)
-      //.limit(9)
       .exec();
   
     // Assuming mapDatabaseImageToImage correctly maps the document to your Image model

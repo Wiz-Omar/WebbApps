@@ -21,7 +21,3 @@
   transition: fill 0.3s ease; /* Smooth transition effect */
 }
 
-/* TODO: what is this? */
-.svg-button:hover .svg-icon {
-  fill: red; /* Color change on hover */
-}
