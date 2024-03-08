@@ -72,14 +72,11 @@ export class DatabaseImageService implements IDatabaseImageService {
 
   async renameImage(imageId: string, newFilename: string, newFilepath: string): Promise<boolean> {
     const im: Model<Image> = await imageModel;
-
     // Find the image document to get the current filename
     const imageDocument = await im.findById(imageId);
-
     if (!imageDocument) {
         throw new ImageNotFoundError(`Image with ID ${imageId} not found`);
     }
-
     // Update the filename and path in the database
     await im.updateOne({ _id: imageId }, { $set: { filename: newFilename, path: newFilepath } });
     return true; // Return true if the filename is successfully changed

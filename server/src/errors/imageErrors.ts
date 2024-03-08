@@ -11,3 +11,10 @@ export class ImageExistsError extends Error {
     this.name = "ImageExistsError";
   }
 }
+
+export class FileSaveError extends Error {
+  constructor() {
+    super(`Error saving the file`);
+    this.name = "FileSaveError";
+  }
+}

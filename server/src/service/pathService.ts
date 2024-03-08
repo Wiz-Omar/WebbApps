@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import multer from "multer";
 import { IPathService } from "./pathService.interface";
+import { FileSaveError as FilePathError } from "../errors/imageErrors";
 
 //TODO: define own error types!
 export class PathService implements IPathService {
@@ -29,7 +30,7 @@ export class PathService implements IPathService {
       await fs.writeFile(finalFilePath, fileBuffer);
       return `${baseUrl}/${relativeFilePath}`;
     } catch (error) {
-      throw new Error("Failed to save file");
+      throw new FilePathError();
     }
   }
 
@@ -48,7 +49,7 @@ export class PathService implements IPathService {
           await fs.rmdir(directoryPath);
       }
     } catch {
-      throw new Error("Failed to delete file or file not found");
+      throw new FilePathError();
     }
   }
 
@@ -66,7 +67,7 @@ export class PathService implements IPathService {
         await fs.rename(oldFilePath, newFilePath);
         return `${baseUrl}/${relativeFilePath}`;
     } catch (error) {
-        throw new Error("Failed to rename file or file not found");
+        throw new FilePathError();
     }
 }
 

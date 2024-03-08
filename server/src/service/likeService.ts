@@ -14,6 +14,11 @@ import { UserNotFoundError } from "../errors/userErrors";
 
 const ObjectId = mongoose.Types.ObjectId;
 
+/**
+ * Service for handling like operations.
+ * It is responsible for liking and unliking images, as well as checking if an image is liked.
+ * Also handles getting a list of images liked by a user.
+ */
 export class LikeService implements ILikeService {
   mappingService: IMappingService;
   databaseImageService: IDatabaseImageService;
@@ -22,6 +27,7 @@ export class LikeService implements ILikeService {
     this.mappingService = new MappingService();
     this.databaseImageService = new DatabaseImageService();
   }
+
 
   async isImageLiked(imageId: string, username: string): Promise<boolean> {
     if (!ObjectId.isValid(imageId)) throw new InvalidIdError(imageId);
