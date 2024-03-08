@@ -15,7 +15,7 @@ const FullSizeImage = ({ image, onClose }: FullSizeImageProps) => {
   };
 
   return (
-    <div className="full-size-image-container" onClick={handleClick}>
+    <div className="full-size-image-container" onClick={handleClick} data-testid="close-full-size-image">
       <img src={image.path} alt="Full Size" />
       <div style={{ position: "absolute", right: 5, top: 5}}>
       </div>
