@@ -28,7 +28,6 @@ test("If an image is added and deleted from the list then it should not be in th
 });
 
 test("If two images is added and one is deleted from the list then the correct one should be in the list", async () => {
-    console.log("Starting test 2");
     const imageService: IImageService = new ImageService();
     const userService: IUserService = new UserService();
 

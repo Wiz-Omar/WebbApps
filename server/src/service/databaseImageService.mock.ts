@@ -1,6 +1,7 @@
+import { ImageNotFoundError } from "../errors/imageErrors";
 import { Image } from "../model/image";
 import { IDatabaseImageService } from "./databaseImageService.interface";
-import { ImageExistsError, ImageNotFoundError } from "./imageService";
+import { ImageExistsError } from "./imageService";
 
 export class MockDatabaseImageService implements IDatabaseImageService {
   // Simulated storage for images, keyed by userId

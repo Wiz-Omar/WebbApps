@@ -215,7 +215,6 @@ imageRouter.patch(
 // Should be placed after all other middleware and routes
 imageRouter.use(
   (err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.log("Error handler was used!");
     // Determine the type of error and set response status and message accordingly
     const { status, message } = determineErrorResponse(err);
     res.status(status).send({ error: message });

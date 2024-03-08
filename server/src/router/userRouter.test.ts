@@ -22,7 +22,6 @@ describe("User Authentication, End-to-End", () => {
   // Delete the user after all tests
   afterAll(async () => {
     const reponse = await authenticatedSession.delete(`/user/delete`);
-    console.log(reponse.status);
   });
 
   // Happy path - Login

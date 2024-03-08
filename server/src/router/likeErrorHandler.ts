@@ -19,8 +19,6 @@ function determineErrorResponse(err: Error): {
   status: number;
   message: string;
 } {
-  console.log("Error handler was used hereeeeeee!");
-  console.log(err + " is the error type!!!!!!!!!!!!!!!");
   //TODO: work on this more, there are more error types to handle!
   let status = 500; // Default to internal server error
   let message = "Something went wrong"; // Default message

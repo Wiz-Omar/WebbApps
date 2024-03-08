@@ -48,10 +48,6 @@ afterAll(async () => {
   await authenticatedSession.delete(`/user/delete`);
 });
 
-afterAll(async () => {
-  console.log("Closing the server...");
-});
-
 describe("Like an image, End-to-End", () => {
   // Happy path - like an image
   it("should be able to like an image", async () => {

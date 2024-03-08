@@ -34,7 +34,6 @@ export class PathService implements IPathService {
   }
 
   async deleteFile(userId: string, filename: string): Promise<void> {
-    console.log("Deleting local file path", userId, filename);
     const filePath = path.join(this.basePath, userId, filename);
     try {
       // Delete the specified file
@@ -47,7 +46,6 @@ export class PathService implements IPathService {
       if (files.length === 0) {
           // Directory is empty, so delete it
           await fs.rmdir(directoryPath);
-          console.log(`Deleted empty directory: ${directoryPath}`);
       }
     } catch {
       throw new Error("Failed to delete file or file not found");

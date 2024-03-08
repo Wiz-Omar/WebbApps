@@ -74,7 +74,6 @@ export class ImageService implements IImageService {
       );
       return images;
     } catch (error) {
-      console.error("Error fetching images:", error);
       throw error; // Re-throw the error to be handled by the caller
     }
   }
@@ -87,11 +86,9 @@ export class ImageService implements IImageService {
       try {
         await this.likeService.unlikeImage(imageId, username);
       } catch (error) {
-        console.error("No like was deleted:", error);
       }
       return await this.databaseImageService.deleteImage(imageId);
     } catch (error) {
-      console.error("Error:", error);
       throw error; // Re-throw the error to be handled by the caller
     }
   }
@@ -102,7 +99,6 @@ export class ImageService implements IImageService {
       const images = await this.databaseImageService.getImageBySearch(user.id, search);
       return images;
     } catch (error) {
-      console.error("Error fetching images:", error);
       throw error; // Re-throw the error to be handled by the caller
     }
   }
@@ -116,7 +112,6 @@ export class ImageService implements IImageService {
         const newFilePath = await this.pathService.renameFile(user.id, imageDocument.filename, newFilename);
         return await this.databaseImageService.renameImage(imageId, newFilename, newFilePath);
     } catch (error) {
-        console.error("Error changing image name:", error);
         throw error; // Re-throw the error to be handled by the caller
     }
 }

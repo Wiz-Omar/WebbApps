@@ -124,7 +124,6 @@ likeRouter.get("/", async (req: AllLikedImagesRequest, res: Response) => {
     const likedImages = await likeService.getLikedImages(req.session.username);
     res.status(200).send(likedImages);
   } catch (error) {
-    console.error("Error getting liked images:", error);
     res.status(500).send("Internal server error");
   }
 });
@@ -133,7 +132,6 @@ likeRouter.get("/", async (req: AllLikedImagesRequest, res: Response) => {
 // Should be placed after all other middleware and routes
 likeRouter.use(
   (err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.log("Error handler was used!");
     // Determine the type of error and set response status and message accordingly
     const { status, message } = determineErrorResponse(err);
     res.status(status).send({ error: message });
