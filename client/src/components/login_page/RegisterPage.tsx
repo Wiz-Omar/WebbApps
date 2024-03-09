@@ -14,22 +14,35 @@ import { Logo } from "./Logo";
 
 axios.defaults.withCredentials = true;
 
+const REGISTER_PROMPT = "Don't have an account? Register to start using PicPics";
+
 interface RegisterPageProps {
   setDisplay: (display: AppDisplay) => void;
 }
 
-const REGISTER_PROMPT = "Don't have an account? Register to start using PicPics";
-
+/**
+ * A component that renders the registration page. This page includes a registration form for new users
+ * to create an account. Upon successful registration, the user is redirected to the login page.
+ * 
+ * The component also provides a button to navigate to the login page for users who already have an account.
+ * 
+ * Props:
+ *  - setDisplay: Function - A callback function that sets the current display component of the app.
+ *    It is used to navigate between different parts of the application, such as from the registration page to
+ *    the login page or the home page.
+ */
 const RegisterPage: React.FC<RegisterPageProps> = ({ setDisplay }) => {
 
+  // Handle successful registration by redirecting to the login page
   const handleRegisterSuccess = () => {
     setDisplay(AppDisplay.LOGIN_PAGE);
   };
 
+  // Handle registration errors by displaying an alert with the error message
   const handleRegisterError = (error: string) => {
     alert(error); // Display an alert with the error message
   };
-  
+
   return (
     <div>
       <Container className="register-container">

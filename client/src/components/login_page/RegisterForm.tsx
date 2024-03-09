@@ -38,6 +38,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const [passwordValid, setPasswordValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Handle changes to the username field
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newUsername = e.target.value;
     setUsername(newUsername);
@@ -46,6 +47,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     setUsernameValid(!error);
   };
 
+  // Handle changes to the password field
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
