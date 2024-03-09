@@ -9,11 +9,13 @@ import { ILikeService } from "./likeService.interface";
 import { IDatabaseImageService } from "./databaseImageService.interface";
 import { DatabaseImageService } from "./databaseImageService";
 import {
-  FileSaveError,
+  FileOperationError,
   ImageExistsError,
   ImageNotFoundError,
 } from "../errors/imageErrors";
 import { UserNotFoundError } from "../errors/userErrors";
+import { UserService } from "./userService";
+import { IUserService } from "./userService.interface";
 
 /**
  * Service for handling image operations.
@@ -22,18 +24,21 @@ import { UserNotFoundError } from "../errors/userErrors";
  * Delegates like operations to the like service and mapping operations to the mapping service.
  */
 export class ImageService implements IImageService {
-  private mappingService: MappingService;
+  //private mappingService: MappingService;
+  private userService: IUserService;
   private pathService: IPathService;
   private likeService: ILikeService;
   private databaseImageService: IDatabaseImageService;
 
   constructor(
-    mappingService: MappingService = new MappingService(),
+    //mappingService: MappingService = new MappingService(),
+    userService: IUserService = new UserService(),
     pathService: IPathService = new PathService(),
     likeService: ILikeService = new LikeService(),
     databaseImageService: IDatabaseImageService = new DatabaseImageService(),
   ) {
-    this.mappingService = mappingService;
+    //this.mappingService = mappingService;
+    this.userService = userService;
     this.pathService = pathService;
     this.likeService = likeService;
     this.databaseImageService = databaseImageService;
@@ -45,7 +50,7 @@ export class ImageService implements IImageService {
    * @returns A promise that resolves to a User object.
    */
   private async getUser(username: string): Promise<User> {
-    return this.mappingService.getUser(username);
+    return this.userService.getUser(username);
   }
 
   /**
@@ -81,8 +86,8 @@ export class ImageService implements IImageService {
         throw new ImageExistsError(filename); //in case the image already exists for the user.
       } else if (e instanceof UserNotFoundError) {
         throw new UserNotFoundError(username);
-      } else if (e instanceof FileSaveError) {
-        throw new FileSaveError();
+      } else if (e instanceof FileOperationError) {
+        throw new FileOperationError();
       } else {
         throw new Error(e);
       }
@@ -167,8 +172,8 @@ export class ImageService implements IImageService {
     } catch (error) {
       if (error instanceof ImageNotFoundError) {
         throw new ImageNotFoundError(imageId);
-      } else if (error instanceof FileSaveError) {
-        throw new FileSaveError();
+      } else if (error instanceof FileOperationError) {
+        throw new FileOperationError();
       } else {
         throw error;
       }
@@ -238,8 +243,8 @@ export class ImageService implements IImageService {
     } catch (error) {
       if (error instanceof ImageNotFoundError) {
         throw new ImageNotFoundError(imageId);
-      } else if (error instanceof FileSaveError) {
-        throw new FileSaveError();
+      } else if (error instanceof FileOperationError) {
+        throw new FileOperationError();
       } else {
         throw error;
       }

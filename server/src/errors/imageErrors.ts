@@ -12,7 +12,7 @@ export class ImageExistsError extends Error {
   }
 }
 
-export class FileSaveError extends Error {
+export class FileOperationError extends Error {
   constructor() {
     super(`Error saving the file`);
     this.name = "FileSaveError";

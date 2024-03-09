@@ -5,12 +5,13 @@ import { DeleteResult } from "mongodb";
 import { LikedImage } from "../model/likedImage";
 import mongoose, { Model } from "mongoose";
 import { User } from "../model/user";
-import { MappingService } from "./mappingService";
 import { ImageNotFoundError } from "../errors/imageErrors";
-import { IMappingService } from "./mappingService.interface";
 import { IDatabaseImageService } from "./databaseImageService.interface";
 import { DatabaseImageService } from "./databaseImageService";
 import { UserNotFoundError } from "../errors/userErrors";
+import { IUserService } from "./userService.interface";
+import { UserService } from "./userService";
+import { Image } from "../model/image";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -20,23 +21,35 @@ const ObjectId = mongoose.Types.ObjectId;
  * Also handles getting a list of images liked by a user.
  */
 export class LikeService implements ILikeService {
-  mappingService: IMappingService;
+  userService: IUserService;
   databaseImageService: IDatabaseImageService;
 
-  constructor() {
-    this.mappingService = new MappingService();
+  constructor(
+    userService: IUserService = new UserService(),
+    databaseImageService: IDatabaseImageService = new DatabaseImageService()
+  ) {
+    this.userService = userService;
     this.databaseImageService = new DatabaseImageService();
   }
 
+  private async getLikeImageModel(): Promise<Model<LikedImage>> {
+    return await likeImage;
+  }
+
+  private async getUser(username: string): Promise<User> {
+    return this.userService.getUser(username);
+  }
+
+  private async getImage(imageId: string): Promise<Image> {
+    return this.databaseImageService.findImageById(imageId);
+  }
 
   async isImageLiked(imageId: string, username: string): Promise<boolean> {
     if (!ObjectId.isValid(imageId)) throw new InvalidIdError(imageId);
     try {
-      const lm: Model<LikedImage> = await likeImage;
-      const user: User = await this.mappingService.getUser(username);
-      const imageExists = await this.databaseImageService.findImageById(
-        imageId
-      );
+      const lm: Model<LikedImage> = await this.getLikeImageModel();
+      const user: User = await this.getUser(username);
+      const imageExists = await this.getImage(imageId);
       if (!imageExists) throw new ImageNotFoundError(imageId);
       const like = await lm.findOne({
         imageId: new ObjectId(imageId),
@@ -57,13 +70,11 @@ export class LikeService implements ILikeService {
       throw new InvalidIdError(imageId);
     }
     try {
-      const lm: Model<LikedImage> = await likeImage;
+      const lm: Model<LikedImage> = await this.getLikeImageModel();
       // Ensure the user exists, and get the user
-      const user: User = await this.mappingService.getUser(username);
+      const user: User = await this.getUser(username);
       // Ensure the image exists
-      const imageExists = await this.databaseImageService.findImageById(
-        imageId
-      );
+      const imageExists = await this.getImage(imageId);
       if (!imageExists) throw new ImageNotFoundError(imageId);
       // Create a new like
       await lm.create({
@@ -94,13 +105,11 @@ export class LikeService implements ILikeService {
     }
 
     try {
-      const lm: Model<LikedImage> = await likeImage;
+      const lm: Model<LikedImage> = await this.getLikeImageModel();
       // Ensure the user exists, and get the user
-      const user: User = await this.mappingService.getUser(username);
+      const user: User = await this.getUser(username);
       // Ensure the image exists
-      const imageExists = await this.databaseImageService.findImageById(
-        imageId
-      );
+      const imageExists = await this.getImage(imageId);
       if (!imageExists) {
         throw new ImageNotFoundError(imageId);
       }
@@ -130,8 +139,8 @@ export class LikeService implements ILikeService {
   }
 
   async getLikedImages(username: string): Promise<string[]> {
-    const lm: Model<LikedImage> = await likeImage;
-    const user: User = await this.mappingService.getUser(username);
+    const lm: Model<LikedImage> = await this.getLikeImageModel();
+    const user: User = await this.getUser(username);
 
     // Find liked images by user ID and only select the imageId field
     const likedImagesDocuments = await lm
