@@ -10,4 +10,8 @@
 .button:hover {
     transition: transform 0.3s ease, filter 0.3s ease;
     transform: scale(1.1); /* Scale effect on hover */
-  }
+}
+
+.btn{
+    white-space: nowrap;
+}
