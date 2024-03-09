@@ -9,10 +9,9 @@ import { IMappingService } from "./mappingService.interface";
 import { UserNotFoundError } from "../errors/userErrors";
 import { ImageNotFoundError } from "../errors/imageErrors";
 
-//TODO: Make methods static? No need to create an instance of this class then.
-export class MappingService implements IMappingService {
+export class MappingService {
 
-  mapDatabaseUserToUser(databaseUser: DatabaseUser): User {
+  static mapDatabaseUserToUser(databaseUser: DatabaseUser): User {
     return {
       id: databaseUser._id.toString(),
       username: databaseUser.username,
@@ -20,7 +19,7 @@ export class MappingService implements IMappingService {
     };
   }
 
-  mapDatabaseImageToImage(databaseImage: DatabaseImage): Image {
+  static mapDatabaseImageToImage(databaseImage: DatabaseImage): Image {
     return {
       id: databaseImage._id.toString(),
       filename: databaseImage.filename,
@@ -30,14 +29,15 @@ export class MappingService implements IMappingService {
   }
 }
 
+
 //TOOD: move to separate files
-interface DatabaseUser {
+export interface DatabaseUser {
   _id: ObjectId;
   username: string;
   password: string;
 }
 
-interface DatabaseImage {
+export interface DatabaseImage {
   _id: ObjectId;
   filename: string;
   path: string;

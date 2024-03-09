@@ -19,11 +19,6 @@ interface ImageQuery {
 }
 
 export class DatabaseImageService implements IDatabaseImageService {
-  private mappingService: IMappingService;
-
-  constructor(mappingService: IMappingService = new MappingService()) {
-    this.mappingService = mappingService;
-  }
 
   /**
    * Retrieves the Image model from the database.
@@ -57,7 +52,7 @@ export class DatabaseImageService implements IDatabaseImageService {
       path: filePath,
       uploadDate: new Date(),
     });
-    return this.mappingService.mapDatabaseImageToImage(databaseImage);
+    return MappingService.mapDatabaseImageToImage(databaseImage);
   }
 
   /**
@@ -88,7 +83,7 @@ export class DatabaseImageService implements IDatabaseImageService {
     }
 
     const images = await im.find(query).sort(sortOptions).exec();
-    return images.map(this.mappingService.mapDatabaseImageToImage);
+    return images.map(MappingService.mapDatabaseImageToImage);
   }
 
   /**
@@ -123,7 +118,7 @@ export class DatabaseImageService implements IDatabaseImageService {
     if (databaseImage === null) {
       throw new ImageNotFoundError(`Image with ID ${imageId} not found`);
     }
-    return this.mappingService.mapDatabaseImageToImage(databaseImage);
+    return MappingService.mapDatabaseImageToImage(databaseImage);
   }
 
   /**
@@ -142,7 +137,7 @@ export class DatabaseImageService implements IDatabaseImageService {
       filename: { $regex: search, $options: "i" },
     };
     const images = await im.find(query);
-    return images.map(this.mappingService.mapDatabaseImageToImage);
+    return images.map(MappingService.mapDatabaseImageToImage);
   }
 
   /**

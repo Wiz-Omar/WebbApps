@@ -8,11 +8,7 @@ import { IMappingService } from "./mappingService.interface";
 import { MappingService } from "./mappingService";
 
 export class UserService implements IUserService {
-  private mappingService: IMappingService;
 
-  constructor(mappingService: IMappingService = new MappingService()) {
-    this.mappingService = mappingService;
-  }
   async addUser(username: string, password: string): Promise<void> {
     const um: Model<User> = await userModel;
 
@@ -51,6 +47,6 @@ export class UserService implements IUserService {
     if (!databaseUser) {
       throw new UserNotFoundError(username);
     }
-    return this.mappingService.mapDatabaseUserToUser(databaseUser);
+    return MappingService.mapDatabaseUserToUser(databaseUser);
   }
 }
