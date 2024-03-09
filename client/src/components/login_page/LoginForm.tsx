@@ -61,12 +61,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button
-          variant="outline-secondary"
-          onClick={() => setPasswordVisible(!passwordVisible)}
-        >
+        <InputGroup.Text onClick={() => setPasswordVisible(!passwordVisible)} style={{ cursor: "pointer" }}>
           {passwordVisible ? <EyeSlashFill /> : <EyeFill />}
-        </Button>
+        </InputGroup.Text>
       </InputGroup>
       <div className="d-grid gap-2">
         <Button variant="primary" type="submit">

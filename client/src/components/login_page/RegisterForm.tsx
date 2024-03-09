@@ -2,15 +2,17 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Form, Button, InputGroup, FormControl } from "react-bootstrap";
 import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
+import {
+  validatePassword,
+  validateUsername,
+} from "../../utils/validateCredentials";
+import { registerUser } from "../../utils/registerUser";
+import "./LoginPage.css";
 
 interface RegisterFormProps {
   onRegisterSuccess: () => void;
   onRegisterError: (error: string) => void;
 }
-
-const MIN_USERNAME_LENGTH = 8;
-const MIN_PASSWORD_LENGTH = 8;
-const USERNAME_PATTERN = /^[a-zA-Z0-9]+$/; // Only alphanumeric characters allowed
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({
   onRegisterSuccess,
@@ -24,72 +26,62 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const [passwordValid, setPasswordValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const validateUsername = (value: string) => {
-    setUsername(value.trim()); // Trim the input value
-    setUsernameError(""); // Reset the username error message
-    if (value.trim().length < MIN_USERNAME_LENGTH) {
-      setUsernameValid(false);
-      setUsernameError(
-        "Username must be at least " +
-          MIN_USERNAME_LENGTH.toString() +
-          " characters long"
-      );
-    } else if (!USERNAME_PATTERN.test(value)) {
-      setUsernameValid(false);
-      setUsernameError("Username must be alphanumeric");
-    } else {
-      setUsernameValid(true);
-    }
+  // Call validation functions separately after state update
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newUsername = e.target.value;
+    setUsername(newUsername);
+    const error = validateUsername(newUsername);
+    setUsernameError(error);
+    setUsernameValid(!error);
   };
 
-  const validatePassword = (value: string) => {
-    setPassword(value); // Update the password state
-    setPasswordError(""); // Reset the password error message
-    if (value.trim().length < MIN_PASSWORD_LENGTH) {
-      setPasswordValid(false);
-      setPasswordError(
-        "Password must be at least " +
-          MIN_PASSWORD_LENGTH.toString() +
-          " characters long"
-      );
-    } else {
-      setPasswordValid(true);
-    }
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    const error = validatePassword(newPassword);
+    setPasswordError(error);
+    setPasswordValid(!error);
   };
 
-  const registerUser = async () => {
-    if (!usernameValid || !passwordValid) {
-      onRegisterError("Please fix the errors in the form before submitting");
+  const handleRegister = async () => {
+    if (usernameError || passwordError || !usernameValid || !passwordValid) {
+      const errorMessage = usernameError || passwordError || "Please fill in all fields.";
+      onRegisterError(errorMessage);
       return;
     }
-
+  
     try {
-      const response = await axios.post("http://localhost:8080/user", {
-        username,
-        password,
-      });
-
-      // If the registration is successful
+      const response = await registerUser(username, password);
+      // Assuming a successful response includes specific data indicating success
       if (response.status === 201) {
-        onRegisterSuccess(); // Invoke the success callback
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        if (error.response.status === 409) {
-          onRegisterError("User already exists");
-        } else if (error.response.status === 400) {
-          onRegisterError("Invalid input data for username or password");
-        } else {
-          onRegisterError(
-            "An error occurred during registration. Please try again later."
-          );
-        }
+        onRegisterSuccess();
       } else {
-        console.error("An unexpected error occurred:", error);
-        onRegisterError("An unexpected error occurred");
+        onRegisterError("Registration was successful, but an unexpected response was received. Please verify your account status.");
       }
+    } catch (error: any) {
+      let errorMsg = "An unexpected error occurred during registration. Please try again later.";
+  
+      if (axios.isAxiosError(error)) {
+        // You can handle specific status codes here
+        switch (error.response?.status) {
+          case 400:
+            errorMsg = "Invalid request. Please ensure all fields are filled out correctly.";
+            break;
+          case 409:
+            errorMsg = "An account with this username already exists.";
+            break;
+          case 500:
+            errorMsg = "A server error occurred. Please try again later.";
+            break;
+          // Add more cases as needed
+          default:
+            // Leave errorMsg as the default message for unexpected status codes
+            break;
+        }
+      }
+      onRegisterError(errorMsg);
     }
-  };
+  };  
 
   return (
     <Form noValidate>
@@ -98,7 +90,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           placeholder="Username"
           aria-label="Username"
           value={username}
-          onChange={(e) => validateUsername(e.target.value)}
+          onChange={handleUsernameChange}
           isInvalid={!!usernameError}
         />
         <Form.Control.Feedback type="invalid">
@@ -111,22 +103,18 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           placeholder="Password"
           aria-label="Password"
           value={password}
-          onChange={(e) => validatePassword(e.target.value)}
+          onChange={handlePasswordChange}
           isInvalid={!!passwordError}
         />
-        <InputGroup.Text
-          onClick={() => setShowPassword(!showPassword)}
-          style={{ cursor: "pointer" }}
-        >
+        <InputGroup.Text onClick={() => setShowPassword(!showPassword)} style={{ cursor: "pointer" }}>
           {showPassword ? <EyeSlashFill /> : <EyeFill />}
         </InputGroup.Text>
         <Form.Control.Feedback type="invalid">
           {passwordError}
         </Form.Control.Feedback>
       </InputGroup>
-
       <div className="d-grid gap-2">
-        <Button variant="primary" type="button" onClick={registerUser}>
+        <Button variant="primary" type="button" onClick={handleRegister}>
           Register
         </Button>
       </div>
