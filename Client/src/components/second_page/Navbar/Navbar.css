@@ -32,7 +32,7 @@
     border: none;
     background-color: transparent;
     font-size: 30px;
-    width: 40%;
+    width: 5%;
     outline: none; /* Remove the default focus outline */
     transition: border-color 0.3s ease; /* Add smooth transition for border color */
   }

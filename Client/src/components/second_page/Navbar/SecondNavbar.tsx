@@ -57,16 +57,16 @@ function Navbar() {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
 
   const handleDeleteClick = () => {
-    setShowDeletePopup(true); // Show the confirmation popup
+    setShowDeletePopup(true); 
   };
 
   const handleConfirmDelete = async () => {
-    setShowDeletePopup(false); // Close the popup
-    await onDelete(image); // Proceed with the deletion
+    setShowDeletePopup(false); 
+    await onDelete(image); 
   };
 
   const handleCancelDelete = () => {
-    setShowDeletePopup(false); // Simply close the popup
+    setShowDeletePopup(false); 
   };
 
   /**
@@ -76,9 +76,7 @@ function Navbar() {
     try {
       const response = await handleDelete(image.id);
       console.log("Image deleted successfully:", response.data.message);
-      // Assuming navigate is available in this scope. If not, you might need to pass it as a parameter or use React Router's `useNavigate` hook
       navigate("/");
-      // Optionally, update the UI here (e.g., removing the image from the state)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // Axios error with response from the server
@@ -110,8 +108,14 @@ function Navbar() {
    * Handler to change the filename of the image.
    */
   const handleChangeFilename = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newFilename = event.target.value;
+    let newWidth = Math.max(Math.ceil(newFilename.length*(5/3)), 5); // Minimum width of 10%
+    newWidth = Math.min(newWidth, 70); // Maximum width of 70%
+    const inputElement = document.querySelector('.file-name-input') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.style.width = `${newWidth}%`;
+    }
     let input = event.target.value;
-    // Regular expression to match special characters
     const specialCharsRegex = /[^a-zA-Z0-9-. ]/g;
     // Remove special characters from the input
     input = input.replace(specialCharsRegex, '');
