@@ -64,9 +64,7 @@ export class PathService implements IPathService {
    * @param userId Unique identifier for the user
    * @param fileName The name of the file
    * @param base64Data The base64 encoded file data
-   * 
    * @throws {FilePathError} If the file cannot be saved
-   * 
    * @returns A promise that resolves to the URL of the saved file
    */
   async saveFile(
@@ -92,9 +90,7 @@ export class PathService implements IPathService {
    * Deletes a file from the file system.
    * @param userId Unique identifier for the user
    * @param filename The name of the file to be deleted
-   * 
    * @throws {FilePathError} If the file does not exist or cannot be deleted
-   * 
    * @returns A promise that resolves when the file is successfully deleted
    */
   async deleteFile(userId: string, filename: string): Promise<void> {
@@ -116,9 +112,7 @@ export class PathService implements IPathService {
    * @param userId Unique identifier for the user
    * @param oldFilename The current name of the file
    * @param newFilename The new name for the file
-   * 
    * @throws {FilePathError} If the file does not exist or cannot be renamed
-   * 
    * @returns A promise that resolves to the new URL for the file
    */
   async renameFile(

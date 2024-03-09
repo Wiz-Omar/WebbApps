@@ -25,20 +25,17 @@ import { Sorting, defaultSorting } from "../model/sorting";
  * Delegates like operations to the like service and mapping operations to the mapping service.
  */
 export class ImageService implements IImageService {
-  //private mappingService: MappingService;
   private userService: IUserService;
   private pathService: IPathService;
   private likeService: ILikeService;
   private databaseImageService: IDatabaseImageService;
 
   constructor(
-    //mappingService: MappingService = new MappingService(),
     userService: IUserService = new UserService(),
     pathService: IPathService = new PathService(),
     likeService: ILikeService = new LikeService(),
     databaseImageService: IDatabaseImageService = new DatabaseImageService(),
   ) {
-    //this.mappingService = mappingService;
     this.userService = userService;
     this.pathService = pathService;
     this.likeService = likeService;
@@ -56,7 +53,6 @@ export class ImageService implements IImageService {
 
   /**
    * Adds an image to the database associated with a specific user.
-   * 
    * Retrieves the user by their username using the mapping service,
    * then saves the image file using the path service. Finally, it adds the image
    * information to the database through the database image service.
@@ -64,7 +60,6 @@ export class ImageService implements IImageService {
    * @param {string} filename The name of the image file.
    * @param {string} data The base64 encoded image data.
    * @param {string} username The username of the user who owns the image.
-   * 
    * @returns {Promise<Image>} A promise that resolves to an Image object.
    */
   async addImage(
@@ -97,7 +92,6 @@ export class ImageService implements IImageService {
 
   /**
    * Retrieves an array of images associated with a specific user. 
-   * 
    * Allows filtering images by whether they are liked by the user and supports sorting by
    * a specified field in either ascending or descending order.
    *
@@ -105,7 +99,6 @@ export class ImageService implements IImageService {
    * @param {string} sortOrder The order to sort the images by. Defaults to "desc".
    * @param {string} username The username of the user who owns the images.
    * @param {boolean} onlyLiked Whether to only return images that the user has liked. Defaults to false.
-   * 
    * @returns {Promise<Image[]>} A promise that resolves to an array of Image objects.
    */
   async getImages(
@@ -144,14 +137,12 @@ export class ImageService implements IImageService {
 
   /**
    * Deletes an image from the database and file system associated with a specific user.
-   * 
    * Retrieves the user by their username, then finds the image by its ID
    * and deletes the corresponding file using the path service. It also attempts to remove any
    * likes associated with the image before finally deleting the image record from the database.
    * 
    * @param {string} imageId The unique identifier of the image to delete.
    * @param {string} username The username of the user who owns the image.
-   * 
    * @returns {Promise<boolean>} A promise that resolves to true if the image was successfully deleted, or false if the image was not found.
    */
   async deleteImage(imageId: string, username: string): Promise<boolean> {
