@@ -48,3 +48,14 @@ test("Removing a non-existent user throws an error", async () => {
         expect(e.name).toBe("UserNotFoundError");
     }
 });
+
+test("Getting a user that does not exist throws an error", async () => {
+    const userService: IUserService = new UserService();
+    try{
+        await userService.getUser('testUser');
+        fail();
+    }catch(e: any){
+        expect(e.name).toBe("UserNotFoundError");
+    }
+});
+

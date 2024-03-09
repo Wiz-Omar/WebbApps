@@ -1,4 +1,18 @@
-// Define enums or valid values arrays
+/**
+ * Interface for sorting options.
+ * Used to define the sorting options for getting images.
+ */
+export interface Sorting {
+  sortField: string;
+  sortOrder: "asc" | "desc";
+}
+
+// Default sorting parameters
+export const defaultSorting: Sorting = {
+  sortField: "defaultFieldName", // e.g., 'uploadDate'
+  sortOrder: "desc", // or 'asc' as your default preference
+};
+
 const validSortFields = ["filename", "uploadDate"];
 const validSortOrders = ["asc", "desc"];
 

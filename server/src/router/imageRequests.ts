@@ -1,5 +1,5 @@
 import { Session } from "express-session";
-import { sessionData } from "./userRouter";
+import { sessionData } from "../router/userRequests";
 import express, { Request } from "express";
 
 export interface GetImagesRequest extends Request {

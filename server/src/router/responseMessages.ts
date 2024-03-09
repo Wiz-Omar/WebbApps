@@ -1,3 +1,4 @@
+// Contains response error messages for the server.
 export const ErrorMessages = {
   Unauthorized: "Unauthorized action. User not logged in",
   InvalidImageID: "Invalid image ID",
@@ -14,8 +15,12 @@ export const ErrorMessages = {
   
   ImageNotFound: "Image not found",
   ImageAlreadyExists: "Image already exists",
+
+  LikeNotFound: "Like not found",
+  LikeAlreadyExists: "Like already exists",
 };
 
+// Contains response success messages for the server.
 export const SuccessMessages = {
   ImageUploaded: "Image uploaded successfully",
   ImageDeleted: "Image successfully deleted",

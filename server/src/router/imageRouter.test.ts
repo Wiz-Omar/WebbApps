@@ -34,7 +34,8 @@ afterEach(async () => {
   // Clean up the database
   const response = await authenticatedSession.get("/image");
   const images = response.body;
-  for (const image of images) {
+  for (let i = 0; i < images.length; i++) {
+    const image = images[i];
     await authenticatedSession.delete(`/image/${image.id}`);
     // remove the like from the image (if it exists)
     await authenticatedSession.delete(`/like/${image.id}`);
@@ -262,7 +263,8 @@ describe("Search for an image, End-to-End", () => {
 
     // Check that the image(s) returned have the search term in the filename, by looping through the array of images
     // and checking if the filename includes the search term
-    for (const image of response.body) {
+    for (let i = 0; i < response.body.length; i++) {
+      const image = response.body[i];
       expect(image.filename).toContain("test");
     }
     expect(response.status).toBe(200);
@@ -286,7 +288,8 @@ describe("Search for an image, End-to-End", () => {
 
     // Check that the image(s) returned have the search term in the filename, by looping through the array of images
     // and checking if the filename includes the search term
-    for (const image of response.body) {
+    for (let i = 0; i < response.body.length; i++) {
+      const image = response.body[i];
       expect(image.filename).toContain("test");
     }
     expect(response.status).toBe(200);
@@ -305,12 +308,13 @@ describe("Search for an image, End-to-End", () => {
 
     // Search for the image
     const response = await authenticatedSession
-      .get("/image/search?search=!")
+      .get("/image/search?search=!special")
       .redirects(1); // Automatically follow redirects
 
     // Check that the image(s) returned have the search term in the filename, by looping through the array of images
     // and checking if the filename includes the search term
-    for (const image of response.body) {
+    for (let i = 0; i < response.body.length; i++) {
+      const image = response.body[i];
       expect(image.filename).toContain("!");
     }
     expect(response.status).toBe(200);
@@ -412,11 +416,8 @@ describe("Rename an image, End-to-End", () => {
         path.resolve(__dirname, "..", "..", "test", "testImage.png")
       );
 
-    // Get an imageId from the user's images
-    const userImagesResponse = await authenticatedSession
-      .get("/image")
-      .redirects(1); // Automatically follow redirects
-    const imageId = userImagesResponse.body[0].id; // Assuming the first image is the one to be renamed
+    // Get the imageId from the uploaded image
+    const imageId = uploadResponse.body.id;
 
     const longFilename = "a".repeat(257);
     // Rename the image

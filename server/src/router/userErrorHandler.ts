@@ -1,5 +1,8 @@
-
-import { InvalidCredentialsError, UserExistsError, UserNotFoundError } from "../errors/userErrors";
+import {
+  InvalidCredentialsError,
+  UserExistsError,
+  UserNotFoundError,
+} from "../errors/userErrors";
 
 /**
  * Determines the appropriate HTTP response for a given error.
@@ -15,14 +18,19 @@ function determineErrorResponse(err: Error): {
   let status = 500; // Default to internal server error
   let message = "Something went wrong"; // Default message
 
-  // Check for userExistsError
   if (err.name === "UserExistsError" || err instanceof UserExistsError) {
     status = 409;
     message = "This username is already in use.";
-  } else if (err.name === "InvalidCredentialsError" ||err instanceof InvalidCredentialsError) {
+  } else if (
+    err.name === "InvalidCredentialsError" ||
+    err instanceof InvalidCredentialsError
+  ) {
     status = 401;
     message = "The requested user could not be found.";
-  } else if (err.name === "UserNotFoundError" || err instanceof UserNotFoundError) {
+  } else if (
+    err.name === "UserNotFoundError" ||
+    err instanceof UserNotFoundError
+  ) {
     status = 404;
     message = "The requested user could not be found.";
   }

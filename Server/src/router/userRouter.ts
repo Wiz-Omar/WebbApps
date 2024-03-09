@@ -9,7 +9,6 @@ import { InvalidCredentialsError } from "../errors/userErrors";
 const userService: IUserService = new UserService();
 export const userRouter = express.Router();
 
-//TODO: check if this is rigth reponse codes
 /**
  * GET /users/checkSession
  * Checks if the user is logged in.
