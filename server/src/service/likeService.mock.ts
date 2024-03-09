@@ -1,3 +1,4 @@
+import { LikeExistsError, LikeNotFoundError } from "./likeService";
 import { ILikeService } from "./likeService.interface";
 
 export class MockLikeService implements ILikeService {
@@ -16,7 +17,7 @@ export class MockLikeService implements ILikeService {
       this.likedImages[username].push(imageId);
     } else {
       // Simulate the duplicate key error by throwing an error
-      throw new Error("Like already exists");
+      throw new LikeExistsError(imageId);
     }
   }
 
@@ -26,7 +27,7 @@ export class MockLikeService implements ILikeService {
       this.likedImages[username].splice(index, 1);
     } else {
       // Simulate not finding the like to unlike by throwing an error
-      throw new Error("Like not found");
+      throw new LikeNotFoundError(imageId);
     }
   }
 

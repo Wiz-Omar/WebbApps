@@ -4,7 +4,6 @@ import { Model } from "mongoose";
 import { User } from "../model/user";
 import { ObjectId } from "mongodb";
 import { UserExistsError, UserNotFoundError } from "../errors/userErrors";
-import { IMappingService } from "./mappingService.interface";
 import { MappingService } from "./mappingService";
 
 export class UserService implements IUserService {

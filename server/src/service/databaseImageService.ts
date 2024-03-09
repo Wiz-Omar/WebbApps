@@ -5,7 +5,6 @@ import { imageModel } from "../db/image.db";
 import { MappingService } from "./mappingService";
 import { ObjectId } from "mongodb";
 import { ImageNotFoundError } from "../errors/imageErrors";
-import { IMappingService } from "./mappingService.interface";
 
 interface ImageQuery {
   userId: string;

@@ -1,8 +1,9 @@
-import { DatabaseImage, MappingService } from './mappingService';
+import { MappingService } from './mappingService';
 import { ObjectId } from 'mongodb';
-import { DatabaseUser } from '../service/mappingService';
 import { User } from '../model/user';
 import { Image } from '../model/image';
+import { DatabaseUser } from '../model/databaseUser';
+import { DatabaseImage } from '../model/databaseImage';
 
 describe('MappingService', () => {
 

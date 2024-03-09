@@ -1,16 +1,20 @@
 import { ObjectId } from "mongodb";
-import mongoose, { Model } from "mongoose";
-import { imageModel } from "../db/image.db";
-import { userModel } from "../db/users.db";
 import { User } from "../model/user";
-import { IUserService } from "./userService.interface";
 import { Image } from "../model/image";
-import { IMappingService } from "./mappingService.interface";
-import { UserNotFoundError } from "../errors/userErrors";
-import { ImageNotFoundError } from "../errors/imageErrors";
+import { DatabaseUser } from "../model/databaseUser";
+import { DatabaseImage } from "../model/databaseImage";
 
+/**
+ * MappingService thath maps between the database and the application models
+ * 
+ */
 export class MappingService {
 
+  /**
+   * Maps a User to a DatabaseUser
+   * @param databaseUser The DatabaseUser to map
+   * @returns The mapped User
+   */
   static mapDatabaseUserToUser(databaseUser: DatabaseUser): User {
     return {
       id: databaseUser._id.toString(),
@@ -19,6 +23,11 @@ export class MappingService {
     };
   }
 
+  /**
+   * Maps a DatabaseImage to an Image
+   * @param databaseImage The DatabaseImage to map
+   * @returns The mapped Image
+   */
   static mapDatabaseImageToImage(databaseImage: DatabaseImage): Image {
     return {
       id: databaseImage._id.toString(),
@@ -27,19 +36,4 @@ export class MappingService {
       uploadDate: databaseImage.uploadDate,
     };
   }
-}
-
-
-//TOOD: move to separate files
-export interface DatabaseUser {
-  _id: ObjectId;
-  username: string;
-  password: string;
-}
-
-export interface DatabaseImage {
-  _id: ObjectId;
-  filename: string;
-  path: string;
-  uploadDate: Date;
 }
