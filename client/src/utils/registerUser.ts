@@ -1,4 +1,3 @@
-// src/api/apiCalls.ts
 import axios from "axios";
 
 const REGISTER_ENDPOINT = "http://localhost:8080/user";
