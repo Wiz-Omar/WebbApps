@@ -8,6 +8,7 @@ import { Image } from "../model/image";
 import { IMappingService } from "./mappingService.interface";
 import { UserNotFoundError } from "../errors/userErrors";
 
+
 export class MappingService implements IMappingService {
   async getUser(username: string): Promise<User> {
     const um: Model<User> = await userModel;

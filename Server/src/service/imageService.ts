@@ -14,11 +14,12 @@ import {
   ImageNotFoundError,
 } from "../errors/imageErrors";
 import { UserNotFoundError } from "../errors/userErrors";
-import { val } from "cheerio/lib/api/attributes";
 
 /**
  * Service for handling image operations.
  * It is responsible for adding, getting and deleting images. Also handles renaming images and searching for images.
+ * Delegates file operations to the path service and database operations to the database image service.
+ * Delegates like operations to the like service and mapping operations to the mapping service.
  */
 export class ImageService implements IImageService {
   private mappingService: MappingService;
@@ -30,7 +31,7 @@ export class ImageService implements IImageService {
     mappingService: MappingService = new MappingService(),
     pathService: IPathService = new PathService(),
     likeService: ILikeService = new LikeService(),
-    databaseImageService: IDatabaseImageService = new DatabaseImageService()
+    databaseImageService: IDatabaseImageService = new DatabaseImageService(),
   ) {
     this.mappingService = mappingService;
     this.pathService = pathService;
@@ -39,10 +40,26 @@ export class ImageService implements IImageService {
   }
 
   /**
+   * Retrieves a user by their username.
+   * @param username 
+   * @returns A promise that resolves to a User object.
+   */
+  private async getUser(username: string): Promise<User> {
+    return this.mappingService.getUser(username);
+  }
+
+  /**
    * Adds an image to the database associated with a specific user.
-   * The function first retrieves the user by their username using the mapping service,
+   * 
+   * Retrieves the user by their username using the mapping service,
    * then saves the image file using the path service. Finally, it adds the image
    * information to the database through the database image service.
+   * 
+   * @param {string} filename The name of the image file.
+   * @param {string} data The base64 encoded image data.
+   * @param {string} username The username of the user who owns the image.
+   * 
+   * @returns {Promise<Image>} A promise that resolves to an Image object.
    */
   async addImage(
     filename: string,
@@ -50,7 +67,7 @@ export class ImageService implements IImageService {
     username: string
   ): Promise<Image> {
     try {
-      const user: User = await this.mappingService.getUser(username);
+      const user: User = await this.getUser(username);
       const filePath = await this.pathService.saveFile(user.id, filename, data);
       const dataBaseImage = await this.databaseImageService.addImage(
         user.id,
@@ -73,10 +90,17 @@ export class ImageService implements IImageService {
   }
 
   /**
-   * Retrieves an array of images associated with a specific user. The function allows
-   * filtering images by whether they are liked by the user and supports sorting by
+   * Retrieves an array of images associated with a specific user. 
+   * 
+   * Allows filtering images by whether they are liked by the user and supports sorting by
    * a specified field in either ascending or descending order.
    *
+   * @param {string} sortField The field to sort the images by. Defaults to "uploadDate".
+   * @param {string} sortOrder The order to sort the images by. Defaults to "desc".
+   * @param {string} username The username of the user who owns the images.
+   * @param {boolean} onlyLiked Whether to only return images that the user has liked. Defaults to false.
+   * 
+   * @returns {Promise<Image[]>} A promise that resolves to an array of Image objects.
    */
   async getImages(
     sortField: string = "uploadDate",
@@ -85,12 +109,9 @@ export class ImageService implements IImageService {
     onlyLiked: boolean = false
   ): Promise<Image[]> {
     try {
-      const user: User = await this.mappingService.getUser(username);
-
-      let query: any = { userId: user.id };
+      const user: User = await this.getUser(username);
       const sortOptions = { [sortField]: sortOrder === "asc" ? 1 : -1 };
       let likedImageIds: string[] | null;
-
       if (onlyLiked) {
         likedImageIds = await this.likeService.getLikedImages(username);
         // If the user has not liked any images, return an empty array
@@ -103,7 +124,6 @@ export class ImageService implements IImageService {
       }
       const images = await this.databaseImageService.getImages(
         user.id,
-        query,
         sortOptions,
         likedImageIds
       );
@@ -119,12 +139,18 @@ export class ImageService implements IImageService {
 
   /**
    * Deletes an image from the database and file system associated with a specific user.
-   * This function first retrieves the user by their username, then finds the image by its ID
+   * 
+   * Retrieves the user by their username, then finds the image by its ID
    * and deletes the corresponding file using the path service. It also attempts to remove any
    * likes associated with the image before finally deleting the image record from the database.
+   * 
+   * @param {string} imageId The unique identifier of the image to delete.
+   * @param {string} username The username of the user who owns the image.
+   * 
+   * @returns {Promise<boolean>} A promise that resolves to true if the image was successfully deleted, or false if the image was not found.
    */
   async deleteImage(imageId: string, username: string): Promise<boolean> {
-    const user: User = await this.mappingService.getUser(username);
+    const user: User = await this.getUser(username);
     try {
       const image = await this.databaseImageService.findImageById(imageId);
       // Call the path service to delete the file
@@ -150,13 +176,20 @@ export class ImageService implements IImageService {
   }
 
   /**
-   * Retrieves an array of images associated with a specific user that match a search string.
+   * Retrieves an array of images.
+   * 
+   * Retrieves images associated with a specific user that match a search string.
    * This function first retrieves the user by their username, then calls the database image
    * service to retrieve the images that match the search string.
+   * 
+   * @param {string} search The search string to match against image filenames.
+   * @param {string} username The username of the user who owns the images.
+   * 
+   * @returns {Promise<Image[]>} A promise that resolves to an array of Image objects that match the search string.
    */
   async getImageBySearch(search: string, username: string): Promise<Image[]> {
     try {
-      const user: User = await this.mappingService.getUser(username);
+      const user: User = await this.getUser(username);
       const images = await this.databaseImageService.getImageBySearch(
         user.id,
         search
@@ -168,9 +201,17 @@ export class ImageService implements IImageService {
   }
 
   /**
-   * Renames an image associated with a specific user. This function first retrieves the user by their username,
+   * Renames an image. 
+   * 
+   * This function first retrieves the user by their username,
    * then finds the image by its ID and calls the path service to rename the file. Finally, it updates the image
    * record in the database with the new filename and file path.
+   * 
+   * @param {string} imageId The unique identifier of the image to rename.
+   * @param {string} newFilename The new filename for the image.
+   * @param {string} username The username of the user who owns the image.
+   * 
+   * @returns {Promise<boolean>} A promise that resolves to true if the image was successfully renamed, or false if the image was not found.
    */
   async changeImageName(
     imageId: string,
@@ -178,7 +219,7 @@ export class ImageService implements IImageService {
     username: string
   ): Promise<boolean> {
     try {
-      const user: User = await this.mappingService.getUser(username);
+      const user: User = await this.getUser(username);
       const imageDocument = await this.databaseImageService.findImageById(
         imageId
       );
@@ -205,5 +246,3 @@ export class ImageService implements IImageService {
     }
   }
 }
-
-export { ImageExistsError };
