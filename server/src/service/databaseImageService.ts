@@ -6,6 +6,10 @@ import { MappingService } from "./mappingService";
 import { ObjectId } from "mongodb";
 import { ImageNotFoundError } from "../errors/imageErrors";
 
+/**
+ * Model for the an query.
+ * Used to filter images in the database.
+ */
 interface ImageQuery {
   userId: string;
   _id?: {
