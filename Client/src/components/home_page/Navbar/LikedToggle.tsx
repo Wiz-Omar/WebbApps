@@ -26,7 +26,7 @@ function LikedToggle({ onToggle: callback }: LikedToggleProps) {
   };
 
   return (
-    <button className="btn btn-outline-primary ms-2" onClick={handleToggle}>
+    <button className="btn btn-outline-primary mx-2" onClick={handleToggle}>
       {onlyLiked ? SHOW_LIKED_LABEL : SHOW_ALL_LABEL}
     </button>
   );
