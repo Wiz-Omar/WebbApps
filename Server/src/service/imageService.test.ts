@@ -17,6 +17,7 @@ import { ILikeService } from "./likeService.interface";
 import { IDatabaseImageService } from "./databaseImageService.interface";
 import { IUserService } from "./userService.interface";
 import { MockUserService, USER } from "./userService.mock";
+import { Sorting } from "../model/sorting";
 
 let imageService : IImageService;
 let mockUserService : IUserService;
@@ -48,20 +49,20 @@ describe('ImageService', () => {
   const NON_EXISTING_IMAGE_ID = 'nonExistingId';
 
   test('Should successfully add and delete an image', async () => {
-    const imagesBefore: Image[] = await imageService.getImages(undefined, undefined, TEST_USERNAME, undefined);
+    const imagesBefore: Image[] = await imageService.getImages(undefined, TEST_USERNAME, undefined);
     expect(imagesBefore.length).toEqual(0);
 
     const image = await imageService.addImage(TEST_FILENAME, TEST_DATA, TEST_USERNAME);
     expect(image).toBeDefined();
 
-    const imagesDuring = await imageService.getImages(undefined, undefined, TEST_USERNAME, undefined);
+    const imagesDuring = await imageService.getImages(undefined, TEST_USERNAME, undefined);
     expect(imagesDuring.length).toEqual(1);
     
     const imageId = image.id;
     const response = await imageService.deleteImage(imageId, TEST_USERNAME);
     expect(response).toBeTruthy();
   
-    const imagesAfter = await imageService.getImages(undefined, undefined, TEST_USERNAME, undefined);
+    const imagesAfter = await imageService.getImages(undefined, TEST_USERNAME, undefined);
     expect(imagesAfter.length).toEqual(0);
   });
 
@@ -89,7 +90,8 @@ describe('ImageService', () => {
   });
 
   test('Should return a list of images sorted by filename in ascending order', async () => {
-    const images = await imageService.getImages("filename", "asc", TEST_USERNAME, undefined);
+    const sorting: Sorting  = { sortField: 'filename', sortOrder: 'asc' };
+    const images = await imageService.getImages(sorting, TEST_USERNAME, undefined);
     expect(images).toBeDefined();
   });
 
@@ -98,7 +100,8 @@ describe('ImageService', () => {
     await imageService.addImage('test2.jpg', TEST_DATA, TEST_USERNAME);
     await imageService.addImage('test3.jpg', TEST_DATA, TEST_USERNAME);
 
-    const images = await imageService.getImages('filename', 'asc', TEST_USERNAME, undefined);
+    const sorting: Sorting  = { sortField: 'filename', sortOrder: 'asc' };
+    const images = await imageService.getImages(sorting, TEST_USERNAME, undefined);
     expect(images.length).toBe(3);
 
     const searchedImages = await imageService.getImageBySearch(SEARCH_QUERY, TEST_USERNAME);

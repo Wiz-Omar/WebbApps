@@ -6,6 +6,7 @@ import { UserService } from "./userService";
 import { IUserService } from "./userService.interface";
 import { Image } from '../model/image';
 import { ILikeService } from "./likeService.interface";
+import { Sorting } from "../model/sorting";
 
 jest.mock("../db/conn")
 
@@ -16,10 +17,10 @@ test("If an image is added and deleted from the list then it should not be in th
 
     await userService.addUser("testUser", "12345678");
     const image: Image = await imageService.addImage('testImage', 'http://test.com', 'testUser'); // Add a mock image for the user 'testUser'.
-    let images: Image[] = (await imageService.getImages(undefined, undefined, 'testUser', false));
+    let images: Image[] = (await imageService.getImages(undefined, 'testUser', false));
     expect(images.length === 1).toBe(true);
     await imageService.deleteImage(image.id, 'testUser');
-    images = await imageService.getImages(undefined, undefined, 'testUser', false);
+    images = await imageService.getImages(undefined, 'testUser', false);
     expect(images.some((randomImage) => randomImage.id === image.id)).toBeFalsy();
     expect(images.length === 0).toBe(true);
 
@@ -34,10 +35,10 @@ test("If two images is added and one is deleted from the list then the correct o
     await userService.addUser("testUser", "12345678");
     const image1: Image = await imageService.addImage('testImage1', 'http://test1.com', 'testUser'); // Add a mock image for the user 'testUser'.
     const image2: Image = await imageService.addImage('testImage2', 'http://test2.com', 'testUser'); // Add a mock image for the user 'testUser'.
-    let images: Image[] = (await imageService.getImages(undefined, undefined, 'testUser', false));
+    let images: Image[] = (await imageService.getImages(undefined, 'testUser', false));
     expect(images.length === 2).toBe(true);
     await imageService.deleteImage(image1.id, 'testUser');
-    images = await imageService.getImages(undefined, undefined, 'testUser', false);
+    images = await imageService.getImages(undefined, 'testUser', false);
     expect(images.some((randomImage) => randomImage.id === image1.id)).toBeFalsy();
     expect(images.some((randomImage) => randomImage.id === image2.id)).toBeTruthy();
     expect(images.length === 1).toBe(true);
@@ -64,7 +65,7 @@ test("If a liked image is removed, it should be removed from the liked images ar
 
     //Delete image
     await imageService.deleteImage(imageId, 'testUser');
-    const images = await imageService.getImages(undefined, undefined, 'testUser', false);
+    const images = await imageService.getImages(undefined, 'testUser', false);
 
     //Image should not be in images list
     expect(images.some((image) => image.id === imageId)).toBeFalsy();
@@ -85,7 +86,8 @@ test("Images should be sorted by filename in ascending order", async () => {
     // Use enums for sortField and sortOrder
     const image1: Image = await imageService.addImage('testImage2', 'http://test1.com', 'testUser'); // Add a mock image for the user 'testUser'.
     const image2: Image = await imageService.addImage('testImage1', 'http://test2.com', 'testUser'); // Add a mock image for the user 'testUser'.
-    const images: Image[] = (await imageService.getImages('filename', 'asc', 'testUser', false));
+    const sorting: Sorting = { sortField: 'filename', sortOrder: 'asc' };
+    const images: Image[] = (await imageService.getImages(sorting, 'testUser', false));
     const filenames = images.map((image) => image.filename);
     const sortedFilenames = [...filenames].sort((a, b) => a.localeCompare(b)); // Explicit sorting for clarity
     expect(filenames).toEqual(sortedFilenames);
@@ -105,7 +107,8 @@ test("Images should be sorted by filename in descending order", async () => {
     const image1: Image = await imageService.addImage('testImage1b', 'http://test1.com', 'testUser'); // Add a mock image for the user 'testUser'.
     const image2: Image = await imageService.addImage('testImage2a', 'http://test2.com', 'testUser'); // Add a mock image for the user 'testUser'.
     // Use enums for sortField and sortOrder
-    const images: Image[] = (await imageService.getImages('filename', 'desc', 'testUser', false));
+    const sorting: Sorting = { sortField: 'filename', sortOrder: 'desc' };
+    const images: Image[] = (await imageService.getImages(sorting, 'testUser', false));
     const filenames = images.map((image) => image.filename);
     const sortedFilenames = [...filenames].sort((a, b) => b.localeCompare(a)); // Sort and then reverse for descending
     expect(filenames).toEqual(sortedFilenames);

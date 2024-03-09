@@ -2,7 +2,6 @@ import { Image } from "../model/image";
 import { LikeService } from "./likeService";
 import { IImageService } from "./imageService.interface";
 import { User } from "../model/user";
-import { MappingService } from "./mappingService";
 import { IPathService } from "./pathService.interface";
 import { PathService } from "./pathService";
 import { ILikeService } from "./likeService.interface";
@@ -17,6 +16,7 @@ import { UserNotFoundError } from "../errors/userErrors";
 import { UserService } from "./userService";
 import { IUserService } from "./userService.interface";
 import { LikeNotFoundError } from "../errors/likeErrors";
+import { Sorting, defaultSorting } from "../model/sorting";
 
 /**
  * Service for handling image operations.
@@ -47,7 +47,7 @@ export class ImageService implements IImageService {
 
   /**
    * Retrieves a user by their username.
-   * @param username 
+   * @param username The username of the user to retrieve.
    * @returns A promise that resolves to a User object.
    */
   private async getUser(username: string): Promise<User> {
@@ -109,14 +109,13 @@ export class ImageService implements IImageService {
    * @returns {Promise<Image[]>} A promise that resolves to an array of Image objects.
    */
   async getImages(
-    sortField: string = "uploadDate",
-    sortOrder: string = "desc",
+    sort: Sorting = defaultSorting,
     username: string,
     onlyLiked: boolean = false
   ): Promise<Image[]> {
     try {
       const user: User = await this.getUser(username);
-      const sortOptions = { [sortField]: sortOrder === "asc" ? 1 : -1 };
+      const sortOptions = { [sort.sortField]: sort.sortOrder === "asc" ? 1 : -1 };
       let likedImageIds: string[] | null;
       if (onlyLiked) {
         likedImageIds = await this.likeService.getLikedImages(username);

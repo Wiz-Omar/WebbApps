@@ -19,6 +19,7 @@ import {
 } from "./imageRequests";
 import { determineErrorResponse } from "./imageErrorHandler";
 import { ErrorMessages, SuccessMessages } from "./responseMessages";
+import { Sorting, defaultSorting } from "../model/sorting";
 
 export const imageRouter = express.Router();
 
@@ -49,14 +50,16 @@ imageRouter.get(
   "/",
   validateSorting,
   async (req: GetImagesRequest, res: Response, next: NextFunction) => {
-    let sortField = req.query.sortField as string | undefined;
-    let sortOrder = req.query.sortOrder as string | undefined;
+    // Get the sorting parameters from the request query, or use the default values
+    const sortField = req.query.sortField as string || defaultSorting.sortField;
+    const sortOrder = req.query.sortOrder as 'asc' | 'desc' || defaultSorting.sortOrder;
     let onlyLiked = req.query.onlyLiked === "true"; // Convert "onlyLiked" from string to boolean
+
+    const sort = { sortField, sortOrder } as Sorting;
 
     try {
       const images = await imageService.getImages(
-        sortField,
-        sortOrder,
+        sort,
         // safe to use ! here because we are using the ensureAuthenticated middleware
         req.session.username!,
         onlyLiked
