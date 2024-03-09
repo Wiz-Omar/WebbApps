@@ -2,12 +2,23 @@ import React, { useState } from "react";
 import { Form, Button, InputGroup, FormControl } from "react-bootstrap";
 import axios from "axios";
 import { EyeSlashFill, EyeFill } from "react-bootstrap-icons"; // Make sure to import EyeFill as well
+import { performLogin } from "../../utils/loginUser";
 
 interface LoginFormProps {
   onLoginSuccess: () => void;
   onLoginError: (error: string) => void;
 }
 
+/**
+ * Provides a user interface for logging in, featuring a form with username and password fields. 
+ * Includes a toggle for showing or hiding the password. On form submission, it executes the `performLogin` 
+ * utility function with the provided credentials and callback functions for handling the outcomes.
+ * Utilizes React Bootstrap for styling, with icons for toggling password visibility.
+ *
+ * Props:
+ * - `onLoginSuccess: () => void` - Callback executed upon successful login.
+ * - `onLoginError: (error: string) => void` - Callback executed upon a login error, receiving error message.
+ */
 export const LoginForm: React.FC<LoginFormProps> = ({
   onLoginSuccess,
   onLoginError,
@@ -18,29 +29,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
   const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:8080/user/login", {
-        username,
-        password,
-      });
-      if (response.status === 200) {
-        console.log(response.data.message);
-        onLoginSuccess();
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          onLoginError("Invalid username or password");
-        } else if (error.response?.status === 400) {
-          onLoginError("Invalid input data for username or password");
-        } else {
-          onLoginError("An error occurred. Please try again later.");
-        }
-      } else {
-        console.error("An unexpected error occurred:", error);
-        onLoginError("An unexpected error occurred");
-      }
-    }
+    performLogin({ username, password, onLoginSuccess, onLoginError });
   };
 
   return (

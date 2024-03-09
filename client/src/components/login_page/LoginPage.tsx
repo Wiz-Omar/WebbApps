@@ -15,6 +15,19 @@ interface CombinedPageProps {
   setDisplay: (display: AppDisplay) => void;
 }
 
+/**
+ * A component that renders the login page. This page includes a login form for existing users
+ * to authenticate themselves. Upon successful login, the user is redirected to the home page.
+ * If the user is already logged in (session check is positive), they are immediately redirected
+ * to the home page, bypassing the login form.
+ * 
+ * The component also provides a button to navigate the registration page for users who do not have an account.
+ * 
+ * Props:
+ *  - setDisplay: Function - A callback function that sets the current display component of the app.
+ *    It is used to navigate between different parts of the application, such as from the login page to
+ *    the home page or the registration page.
+ */
 const LoginPage: React.FC<CombinedPageProps> = ({ setDisplay }) => {
   const [isLoading, setIsLoading] = useState(false);
 

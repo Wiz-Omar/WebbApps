@@ -14,6 +14,18 @@ interface RegisterFormProps {
   onRegisterError: (error: string) => void;
 }
 
+/**
+ * A component for rendering and handling a registration form where new users can create an account.
+ * It includes input fields for username and password, along with validation for both. Upon submitting
+ * the form with valid credentials, it attempts to register the user using a provided registration utility.
+ * If the registration is successful, a success callback is triggered. If there's an error (e.g., username
+ * already exists, validation fails), an error callback is called with an appropriate message.
+ *
+ * Props:
+ *  - onRegisterSuccess: Function - A callback function that is called upon successful registration of the user.
+ *  - onRegisterError: Function - A callback function that is called with an error message if the registration fails
+ *    or if there are validation errors.
+ */
 export const RegisterForm: React.FC<RegisterFormProps> = ({
   onRegisterSuccess,
   onRegisterError,
@@ -26,7 +38,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const [passwordValid, setPasswordValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Call validation functions separately after state update
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newUsername = e.target.value;
     setUsername(newUsername);
@@ -43,45 +54,23 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     setPasswordValid(!error);
   };
 
+  // Attempt to register the user using the provided utility function
   const handleRegister = async () => {
     if (usernameError || passwordError || !usernameValid || !passwordValid) {
-      const errorMessage = usernameError || passwordError || "Please fill in all fields.";
+      const errorMessage =
+        usernameError || passwordError || "Please fill in all fields.";
       onRegisterError(errorMessage);
       return;
     }
-  
-    try {
-      const response = await registerUser(username, password);
-      // Assuming a successful response includes specific data indicating success
-      if (response.status === 201) {
-        onRegisterSuccess();
-      } else {
-        onRegisterError("Registration was successful, but an unexpected response was received. Please verify your account status.");
-      }
-    } catch (error: any) {
-      let errorMsg = "An unexpected error occurred during registration. Please try again later.";
-  
-      if (axios.isAxiosError(error)) {
-        // You can handle specific status codes here
-        switch (error.response?.status) {
-          case 400:
-            errorMsg = "Invalid request. Please ensure all fields are filled out correctly.";
-            break;
-          case 409:
-            errorMsg = "An account with this username already exists.";
-            break;
-          case 500:
-            errorMsg = "A server error occurred. Please try again later.";
-            break;
-          // Add more cases as needed
-          default:
-            // Leave errorMsg as the default message for unexpected status codes
-            break;
-        }
-      }
-      onRegisterError(errorMsg);
-    }
-  };  
+
+    // Call the registration utility function
+    await registerUser({
+      username,
+      password,
+      onRegisterSuccess: onRegisterSuccess,
+      onRegisterError: onRegisterError,
+    });
+  };
 
   return (
     <Form noValidate>
@@ -106,7 +95,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           onChange={handlePasswordChange}
           isInvalid={!!passwordError}
         />
-        <InputGroup.Text onClick={() => setShowPassword(!showPassword)} style={{ cursor: "pointer" }}>
+        <InputGroup.Text
+          onClick={() => setShowPassword(!showPassword)}
+          style={{ cursor: "pointer" }}
+        >
           {showPassword ? <EyeSlashFill /> : <EyeFill />}
         </InputGroup.Text>
         <Form.Control.Feedback type="invalid">
