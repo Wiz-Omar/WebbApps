@@ -12,6 +12,9 @@
     max-height: 70px; /* Set your desired max height for the logo */
     width: auto;
   }
+  .file-info-container {
+    width: 100%;
+  }
 
   @font-face {
     font-family: 'Quite Magical';
@@ -28,6 +31,8 @@
   .file-name-input {
     border: none;
     background-color: transparent;
+    font-size: 30px;
+    width: 5%;
     outline: none; /* Remove the default focus outline */
     transition: border-color 0.3s ease; /* Add smooth transition for border color */
   }
@@ -37,5 +42,6 @@
   }
   
   .file-label {
+    font-size: 35px;
     cursor: default;
   }
