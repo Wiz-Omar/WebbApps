@@ -12,6 +12,7 @@ import ConfirmationPopup from "../ConfirmationPopup";
 import { handleDelete } from "../../../utils/handleDelete";
 import { handleDownload } from "../../../utils/handleDownload";
 import { handleChangeName } from "../../../utils/handleChangeName";
+import { Container, Row, Col } from "react-bootstrap";
 
 axios.defaults.withCredentials = true;
 
@@ -29,12 +30,12 @@ function Navbar() {
   const initialFilename = filenameParts.slice(0, -1).join("."); // Join all parts except the last one
   const fileExtension = filenameParts.pop() as string;
   const inputRef = useRef<HTMLInputElement>(null); // Create a ref for the input element
-  
+
   let [newFilename, setNewFilename] = useState(initialFilename);
 
   /** 
    * Handler to navigate back to the HomePage 
-   */ 
+   */
   const handleClose = () => {
     navigate("/"); // Use '/' to navigate to the home page route
   };
@@ -116,7 +117,7 @@ function Navbar() {
     input = input.replace(specialCharsRegex, '');
     setNewFilename(input);
   };
-  
+
   /**
    * Handler to change the filename of the image when the Enter key is pressed.
    */
@@ -140,7 +141,7 @@ function Navbar() {
           // TODO: Save the original filename somewhere and change it back to that?
           newFilename = initialFilename;
         }
-        
+
         // Update newFilename if the request is successful
         setNewFilename(newFilename);
 
@@ -153,61 +154,67 @@ function Navbar() {
       }
     }
   };
-  
+
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <div className="container d-flex justify-content-between align-items-center">
-        <a className="navbar-brand" href="/">
-          <img src={logo} alt="Logo" className="logo-img mr-2"></img>
-          <span className="logo-text">PicPics</span>
-        </a>
-        <div className="file-info-container text-center">
-          <h1 className="mb-0">
-            <span className="file-label">File:</span>{" "}
-            <input
-              ref={inputRef}
-              type="text"
-              className="file-name-input"
-              value={newFilename}
-              onChange={handleChangeFilename}
-              onKeyDown={handleKeyDown}
-              pattern="[a-zA-Z]+"
-              title="Only letters, numbers, hyphens, dots, and spaces are allowed"
+    <Container fluid className="navbar-light sticky-top rounded bg-light">
+      <Row className="mx-5">
+        <Col md={2} className="d-flex justify-content-center mb-2 align-items-center">
+          <a className="navbar-brand" href="/">
+            <img src={logo} alt="Logo" className="logo-img mr-2"></img>
+            <span className="logo-text">PicPics</span>
+          </a>
+        </Col>
+        <Col md={8} className="d-flex justify-content-center my-3 align-items-center">
+          <div className="file-info-container">
+            <h1 className="mb-0">
+              <span className="file-label">File:</span>{" "}
+              <input
+                ref={inputRef}
+                type="text"
+                className="file-name-input"
+                value={newFilename}
+                onChange={handleChangeFilename}
+                onKeyDown={handleKeyDown}
+                pattern="[a-zA-Z]+"
+                title="Only letters, numbers, hyphens, dots, and spaces are allowed"
               />
-          </h1>
-        </div>
-        <div className="icon-buttons-container d-flex align-items-center">
-          <div className="mr-3">
-            <IconButton
-              Icon={DeleteIcon}
-              ariaLabel="delete"
-              onClick={handleDeleteClick} // Changed to show confirmation popup
-            />
+            </h1>
           </div>
-          <div className="mr-3">
-            <IconButton
-              Icon={DownloadIcon}
-              ariaLabel="download"
-              onClick={handleDownloadClick}
-            />
+        </Col>
+        <Col md={2} className="d-flex justify-content-center mb-2 align-items-center">
+          <div className="icon-buttons-container d-flex align-items-center">
+            <div className="mr-3">
+              <IconButton
+                Icon={DeleteIcon}
+                ariaLabel="delete"
+                onClick={handleDeleteClick} // Changed to show confirmation popup
+              />
+            </div>
+            <div className="mr-3">
+              <IconButton
+                Icon={DownloadIcon}
+                ariaLabel="download"
+                onClick={handleDownloadClick}
+              />
+            </div>
+            <div className="mr-3">
+              <IconButton
+                Icon={CloseIcon}
+                ariaLabel="close"
+                onClick={handleClose}
+              />
+            </div>
           </div>
-          <div className="mr-3">
-            <IconButton
-              Icon={CloseIcon}
-              ariaLabel="close"
-              onClick={handleClose}
-            />
-          </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
       <ConfirmationPopup
         isOpen={showDeletePopup}
         message="Are you sure you want to delete this image?"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
       />
-    </nav>
+    </Container>
   );
 }
 
