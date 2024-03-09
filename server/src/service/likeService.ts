@@ -5,14 +5,14 @@ import { DeleteResult } from "mongodb";
 import { LikedImage } from "../model/likedImage";
 import mongoose, { Model } from "mongoose";
 import { User } from "../model/user";
-import { ImageNotFoundError } from "../errors/imageErrors";
+import { ImageNotFoundError, InvalidIdError } from "../errors/imageErrors";
 import { IDatabaseImageService } from "./databaseImageService.interface";
 import { DatabaseImageService } from "./databaseImageService";
 import { UserNotFoundError } from "../errors/userErrors";
 import { IUserService } from "./userService.interface";
 import { UserService } from "./userService";
 import { Image } from "../model/image";
-import { InvalidIdError, LikeExistsError, LikeNotFoundError } from "../errors/likeErrors";
+import { LikeExistsError, LikeNotFoundError } from "../errors/likeErrors";
 
 const ObjectId = mongoose.Types.ObjectId;
 

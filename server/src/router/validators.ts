@@ -6,7 +6,10 @@ import { ErrorMessages } from "./responseMessages";
 export const MAX_FILE_SIZE = 1024 * 1024 * 10; // 10MB
 export const MAX_FILENAME_LENGTH = 255; // 255 characters
 
-// Middleware to ensure that the user is authenticated
+/**
+ * Middleware function to ensure that the user is authenticated.
+ * If the user is not authenticated, it sends a 401 Unauthorized response.
+ */
 export const ensureAuthenticated = (
   req: Request,
   res: Response,
@@ -19,7 +22,10 @@ export const ensureAuthenticated = (
   next();
 };
 
-// Middleware to validate the imageId parameter
+/**
+ * Middleware function to ensure that the provided imageId is valid format (non-empty string).
+ * If the imageId is invalid, it sends a 400 Bad Request response.
+ */
 export const validateImageId = (
   req: Request,
   res: Response,
@@ -38,7 +44,10 @@ export const validateImageId = (
 
 // ImageRouter specific middleware(s):
 
-// Middleware to validate the sorting query parameters
+/**
+ * Middleware function to ensure that the provided sortField and sortOrder are valid.
+ * If the sortField or sortOrder is invalid, it sends a 400 Bad Request response.
+ */
 export const validateSorting = (
   req: Request,
   res: Response,
@@ -58,7 +67,10 @@ export const validateSorting = (
   next();
 };
 
-// Middleware to validate the search query parameter
+/**
+ * Middleware function to ensure that the provided limit and offset are valid.
+ * If the search query is invalid (empty), it sends a 400 Bad Request response.
+ */
 export const validateSearchQuery = (
   req: Request,
   res: Response,
@@ -72,7 +84,10 @@ export const validateSearchQuery = (
   next();
 };
 
-// Middleware to validate the new image name
+/**
+ * Middleware function to ensure that new file name is valid.
+ * If the new file name is invalid, it sends a 400 Bad Request response.
+ */
 export const validateNewImageName = (
   req: Request,
   res: Response,
@@ -90,7 +105,12 @@ export const validateNewImageName = (
   next();
 };
 
-// File validation middleware
+/**
+ * Middleware function to ensure that the file upload is valid.
+ * If the file uploaded is too large, returns a 413 Payload Too Large response.
+ * If the file uploaded is not a JPEG, JPG, or PNG, returns a 415 Unsupported Media Type response.
+ * If the file uploaded does not have a valid original filename, returns a 400 Bad Request response.
+ */
 export const fileUploadValidation = (
   req: Request,
   res: Response,
@@ -120,13 +140,15 @@ export const fileUploadValidation = (
   next();
 };
 
-//TODO: should be same in both server and client?
 // Constants for validation criteria
 const MIN_USERNAME_LENGTH = 8;
 const MIN_PASSWORD_LENGTH = 8;
 const USERNAME_PATTERN = /^[a-zA-Z0-9]+$/; // Only alphanumeric characters allowed
 
-// Middleware to validate the credentials for user registration
+/**
+ * Middleware function to ensure that the user credentials are valid.
+ * If the username or password is invalid, it sends a 400 Bad Request response.
+ */
 export function validateUserCredentials(req: Request, res: Response, next: NextFunction) {
   const { username, password } = req.body;
   const isUsernameValid = typeof username === "string" && username.length >= MIN_USERNAME_LENGTH && USERNAME_PATTERN.test(username);

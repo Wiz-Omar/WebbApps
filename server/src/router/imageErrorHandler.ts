@@ -2,8 +2,6 @@ import { ImageExistsError, ImageNotFoundError } from "../errors/imageErrors";
 import { LikeExistsError } from "../errors/likeErrors";
 import {  } from "../service/likeService";
 
-//TODO: this can probably be split into several functions.
-
 /**
  * Determines the appropriate HTTP response for a given error.
  * 
@@ -11,7 +9,7 @@ import {  } from "../service/likeService";
  * @returns {Object} An object containing the appropriate status code and message.
  */
 function determineErrorResponse(err: Error): { status: number; message: string } {
-  //TODO: work on this more, there are more error types to handle!
+
   let status = 500; // Default to internal server error
   let message = "Something went wrong"; // Default message
 
@@ -24,7 +22,7 @@ function determineErrorResponse(err: Error): { status: number; message: string }
   } else if (err instanceof LikeExistsError) {
     status = 409;
     message = "This image has already been liked by the user.";
-  }
+  } 
   // Could add more else if blocks for other custom error types
   return { status, message };
 }
