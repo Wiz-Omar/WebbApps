@@ -1,5 +1,6 @@
 import { ImageExistsError, ImageNotFoundError } from "../errors/imageErrors";
-import { LikeExistsError } from "../service/likeService";
+import { LikeExistsError } from "../errors/likeErrors";
+import {  } from "../service/likeService";
 
 //TODO: this can probably be split into several functions.
 

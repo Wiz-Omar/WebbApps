@@ -1,5 +1,5 @@
 import { Image } from "../model/image";
-import { LikeNotFoundError, LikeService } from "./likeService";
+import { LikeService } from "./likeService";
 import { IImageService } from "./imageService.interface";
 import { User } from "../model/user";
 import { MappingService } from "./mappingService";
@@ -16,6 +16,7 @@ import {
 import { UserNotFoundError } from "../errors/userErrors";
 import { UserService } from "./userService";
 import { IUserService } from "./userService.interface";
+import { LikeNotFoundError } from "../errors/likeErrors";
 
 /**
  * Service for handling image operations.

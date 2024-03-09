@@ -4,7 +4,7 @@ import { IImageService } from "./imageService.interface";
 import { LikeService } from "./likeService";
 import { UserService } from "./userService";
 import { IUserService } from "./userService.interface";
-import {Image} from '../model/image';
+import { Image } from '../model/image';
 import { ILikeService } from "./likeService.interface";
 
 jest.mock("../db/conn")

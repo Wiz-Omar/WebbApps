@@ -6,12 +6,7 @@ jest.mock("./likeService");
 jest.mock("./databaseImageService");
 
 import { ImageService } from "./imageService";
-import { MappingService } from "./mappingService";
-import { PathService } from "./pathService";
-import { LikeService } from "./likeService";
-import { DatabaseImageService } from "./databaseImageService";
 import { Image } from "../model/image";
-import { MockMappingService } from "./mappingService.mock";
 import { MockPathService } from "./pathService.mock";
 import { MockLikeService } from "./likeService.mock";
 import { MockDatabaseImageService } from "./databaseImageService.mock";
@@ -20,7 +15,6 @@ import { IImageService } from "./imageService.interface";
 import { IPathService } from "./pathService.interface";
 import { ILikeService } from "./likeService.interface";
 import { IDatabaseImageService } from "./databaseImageService.interface";
-import exp from "constants";
 import { IUserService } from "./userService.interface";
 import { MockUserService, USER } from "./userService.mock";
 
@@ -64,7 +58,8 @@ describe('ImageService', () => {
     expect(imagesDuring.length).toEqual(1);
     
     const imageId = image.id;
-    await expect(imageService.deleteImage(imageId, TEST_USERNAME));
+    const response = await imageService.deleteImage(imageId, TEST_USERNAME);
+    expect(response).toBeTruthy();
   
     const imagesAfter = await imageService.getImages(undefined, undefined, TEST_USERNAME, undefined);
     expect(imagesAfter.length).toEqual(0);

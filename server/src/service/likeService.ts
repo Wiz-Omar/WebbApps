@@ -12,6 +12,7 @@ import { UserNotFoundError } from "../errors/userErrors";
 import { IUserService } from "./userService.interface";
 import { UserService } from "./userService";
 import { Image } from "../model/image";
+import { InvalidIdError, LikeExistsError, LikeNotFoundError } from "../errors/likeErrors";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -32,18 +33,46 @@ export class LikeService implements ILikeService {
     this.databaseImageService = new DatabaseImageService();
   }
 
+  /**
+   * Retrieves the LikedImage model from the database.
+   * @returns {Promise<Model<LikedImage>>} The LikedImage model.
+   */
   private async getLikeImageModel(): Promise<Model<LikedImage>> {
     return await likeImage;
   }
 
+  /**
+   * Retrieves a user by username.
+   * @param {string} username - The username of the user to retrieve.
+   * @returns {Promise<User>} The user object.
+   */
   private async getUser(username: string): Promise<User> {
     return this.userService.getUser(username);
   }
 
+  /**
+   * Retrieves an image by its ID.
+   * @param {string} imageId - The ID of the image to retrieve.
+   * @returns {Promise<Image>} The image object.
+   */
   private async getImage(imageId: string): Promise<Image> {
     return this.databaseImageService.findImageById(imageId);
   }
 
+  /**
+   * Checks if an image is liked by a user. 
+   * 
+   * This method checks if a like exists for the given image and user in the database, by querying the LikedImage collection
+   * and checking if a document exists with the given image ID and user ID.
+   * 
+   * @param {string} imageId - The ID of the image.
+   * @param {string} username - The username of the user.
+   * @returns {Promise<boolean>} True if the image is liked, false otherwise.
+   * 
+   * @throws {UserNotFoundError} When the user is not found.
+   * @throws {InvalidIdError} When the image ID is invalid (not a valid ObjectId).
+   * @throws {ImageNotFoundError} When the image is not found.
+   */
   async isImageLiked(imageId: string, username: string): Promise<boolean> {
     if (!ObjectId.isValid(imageId)) throw new InvalidIdError(imageId);
     try {
@@ -65,6 +94,21 @@ export class LikeService implements ILikeService {
     }
   }
 
+  /**
+   * Likes an image for a user.
+   * 
+   * This method creates a new document in the LikedImage collection to represent the like. 
+   * It first checks if the user and image exist, and then creates a new like document with the user ID and image ID.
+   * 
+   * @param {string} imageId - The ID of the image to like.
+   * @param {string} username - The username of the user liking the image.
+   * @returns {Promise<void>} A Promise that resolves when the image is liked.
+   * 
+   * @throws {InvalidIdError} When the image ID is invalid (not a valid ObjectId).
+   * @throws {LikeExistsError} When the like already exists for the image and user.
+   * @throws {ImageNotFoundError} When the image is not found.
+   * @throws {UserNotFoundError} When the user is not found.
+   */
   async likeImage(imageId: string, username: string): Promise<void> {
     if (!ObjectId.isValid(imageId)) {
       throw new InvalidIdError(imageId);
@@ -99,6 +143,21 @@ export class LikeService implements ILikeService {
     }
   }
 
+   /**
+   * Unlikes an image for a user.
+   * 
+   * This method deletes a document from the LikedImage collection to represent the like being removed.
+   * It first checks if the user and image exist, and then deletes the like document with the user ID and image ID.
+   * 
+   * @param {string} imageId - The ID of the image to unlike.
+   * @param {string} username - The username of the user unliking the image.
+   * @returns {Promise<void>} A Promise that resolves when the image is unliked.
+   * 
+   * @throws {InvalidIdError} When the image ID is invalid (not a valid ObjectId).
+   * @throws {LikeNotFoundError} When the like does not exist for the image and user.
+   * @throws {ImageNotFoundError} When the image is not found.
+   * @throws {UserNotFoundError} When the user is not found.
+   */
   async unlikeImage(imageId: string, username: string): Promise<void> {
     if (!ObjectId.isValid(imageId)) {
       throw new InvalidIdError(imageId);
@@ -138,6 +197,17 @@ export class LikeService implements ILikeService {
     }
   }
 
+  /**
+   * Retrieves a list of image IDs that a user has liked.
+   * 
+   * This method retrieves a list of image IDs from the LikedImage collection that are associated with the user.
+   * It first checks if the user exists, and then retrieves the list of image IDs from the like documents.
+   * 
+   * @param {string} username - The username of the user.
+   * @returns {Promise<string[]>} A Promise that resolves with a list of image IDs that the user has liked.
+   * 
+   * @throws {UserNotFoundError} When the user is not found.
+   */
   async getLikedImages(username: string): Promise<string[]> {
     const lm: Model<LikedImage> = await this.getLikeImageModel();
     const user: User = await this.getUser(username);
@@ -156,26 +226,5 @@ export class LikeService implements ILikeService {
       );
       return likedImageIds; // Returns the IDs of Images that the user has liked
     }
-  }
-}
-
-export class InvalidIdError extends Error {
-  constructor(imageId: string) {
-    super(`Invalid image ID: ${imageId}`);
-    this.name = "InvalidImageID";
-  }
-}
-
-export class LikeExistsError extends Error {
-  constructor(imageId: string) {
-    super(`Like already exists for image with id ${imageId}`);
-    this.name = "LikeExistsError";
-  }
-}
-
-export class LikeNotFoundError extends Error {
-  constructor(imageId: string) {
-    super(`Like not found for image with id ${imageId}`);
-    this.name = "LikeNotFoundError";
   }
 }

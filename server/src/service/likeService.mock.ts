@@ -1,4 +1,4 @@
-import { LikeExistsError, LikeNotFoundError } from "./likeService";
+import { LikeExistsError, LikeNotFoundError } from "../errors/likeErrors";
 import { ILikeService } from "./likeService.interface";
 
 export class MockLikeService implements ILikeService {

@@ -16,3 +16,4 @@ export interface deleteRequest extends Request {
   params: {};
   session: Session & Partial<sessionData>;
 }
+

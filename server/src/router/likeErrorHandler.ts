@@ -4,7 +4,7 @@ import {
   InvalidIdError,
   LikeExistsError,
   LikeNotFoundError,
-} from "../service/likeService";
+} from "../errors/likeErrors";
 
 //TODO: this can probably be split into several functions.
 
