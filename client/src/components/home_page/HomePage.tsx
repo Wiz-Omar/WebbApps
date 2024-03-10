@@ -20,7 +20,7 @@ export interface Image {
 
 /**
  * The HomePage component fetches images from the server and displays them in a grid. Callbacks are used to update the sorting and filtering parameters.
- * The component uses the useImages hook to fetch images from the server. 
+ * The component uses the useImages hook to fetch images from the server.
  */
 function HomePage() {
   const [sortField, setSortField] = useState<string>("uploadDate");
@@ -30,20 +30,46 @@ function HomePage() {
   const location = useLocation();
 
   // Uses the custom hook useImages, passing a trigger state
-  const { images, isLoading } = useImages({ sortField, sortOrder, onlyLiked, pathname: location.pathname, trigger });
+  const { images, isLoading } = useImages({
+    sortField,
+    sortOrder,
+    onlyLiked,
+    pathname: location.pathname,
+    trigger,
+  });
 
   // Method to increment the trigger, causing the hook to re-execute
-  const refreshImages = () => setTrigger(t => t + 1);
+  const refreshImages = () => setTrigger((t) => t + 1);
+
+  // Handle updates from Navbar or Grid
+  const handleUpdate = (
+    newSortField?: string,
+    newSortOrder?: string,
+    newOnlyLiked?: boolean
+  ) => {
+    if (newSortField !== undefined) setSortField(newSortField);
+    if (newSortOrder !== undefined) setSortOrder(newSortOrder);
+    if (newOnlyLiked !== undefined) setOnlyLiked(newOnlyLiked);
+
+    // check if any of the parameters have changed, then refresh images
+    if (
+      newSortField !== sortField ||
+      newSortOrder !== sortOrder ||
+      newOnlyLiked !== onlyLiked
+    ) {
+      refreshImages();
+    }
+  };
 
   return (
     <div>
-      <Navbar callback={refreshImages} />
+      <Navbar callback={handleUpdate} />
       {isLoading ? (
         <div className="loading-container">
           <div className="spinner"></div>
         </div>
       ) : (
-        <Grid images={images} callback={refreshImages} />
+        <Grid images={images} callback={handleUpdate} />
       )}
     </div>
   );

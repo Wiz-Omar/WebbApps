@@ -19,6 +19,10 @@ interface NavbarProps {
   ) => void;
 }
 
+/**
+ * The Navbar component is used to display the navigation bar at the top of the page. It contains the logo, search bar, sort dropdown, liked toggle, and upload button.
+ * The component uses the callback prop to update the sorting and filtering parameters when the user interacts with the sort dropdown, liked toggle, or upload button.
+ */
 function Navbar({ callback }: NavbarProps) {
   return (
     <Container fluid className="navbar-light sticky-top rounded bg-light">

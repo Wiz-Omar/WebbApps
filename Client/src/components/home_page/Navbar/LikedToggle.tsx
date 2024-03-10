@@ -18,6 +18,7 @@ const SHOW_LIKED_LABEL = 'Showing Liked Images';
 function LikedToggle({ onToggle: callback }: LikedToggleProps) {
   const [onlyLiked, setOnlyLiked] = useState(false);
 
+  // Function to handle the toggle button click
   const handleToggle = () => {
     const newOnlyLikedState = !onlyLiked;
     setOnlyLiked(newOnlyLikedState);
