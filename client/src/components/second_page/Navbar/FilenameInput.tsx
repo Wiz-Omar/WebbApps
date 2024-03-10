@@ -1,5 +1,5 @@
 // FilenameInput.tsx
-import React, { useState, useRef, ChangeEvent, KeyboardEvent } from 'react';
+import React, { useState, useRef, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 
 interface FilenameInputProps {
     initialFilename: string;
@@ -10,6 +10,15 @@ interface FilenameInputProps {
 const FilenameInput: React.FC<FilenameInputProps> = ({ initialFilename, fileExtension, onRename }) => {
     const [filename, setFilename] = useState(initialFilename);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        // Only set width if the filename is short enough
+        if (filename.length <= 30) {
+            inputRef.current!.style.width = `${filename.length + 1}ch`;
+        } else {
+            inputRef.current!.style.width = '30ch'; // Set a fixed width for longer filenames
+        }
+    }, [filename]);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const input = event.target.value.replace(/[^a-zA-Z0-9-. ]/g, '');
@@ -24,16 +33,20 @@ const FilenameInput: React.FC<FilenameInputProps> = ({ initialFilename, fileExte
     };
 
     return (
-        <input
-            ref={inputRef}
-            type="text"
-            className="file-name-input"
-            value={filename}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            pattern="[a-zA-Z]+"
-            title="Only letters, numbers, hyphens, dots, and spaces are allowed"
-        />
+        <div className="file-info-container">
+            <h1 className="mb-0">
+                <span className="file-label">Filename:</span>{" "}
+                <input
+                    ref={inputRef}
+                    type="text"
+                    className="file-name-input"
+                    value={filename}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    title="Only letters, numbers, hyphens, dots, and spaces are allowed"
+                />
+            </h1>
+        </div>
     );
 };
 

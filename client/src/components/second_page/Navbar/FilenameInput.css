@@ -1,0 +1,21 @@
+.file-name-input {
+  border: none;
+  background-color: transparent;
+  font-size: 30px;
+  outline: none; /* Remove the default focus outline */
+  transition: border-color 0.3s ease; /* Add smooth transition for border color */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Ensure it doesn't overflow its container */
+  border-bottom: 2px solid transparent; /* Set the default border to transparent */
+}
+
+.file-name-input:focus {
+  border-bottom: 2px solid #007bff; /* Blue border for focus state */
+}
+
+.file-label {
+  font-size: 35px;
+  cursor: default;
+}

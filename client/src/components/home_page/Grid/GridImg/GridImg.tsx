@@ -69,7 +69,7 @@ function GridImg({ image, callback }: GridImgProps) {
 
   const onDelete = async () => {
     try {
-      const response = await handleDelete(image.id);
+      const response = await handleDelete(image.id.toString());
       if (response.status === 200) {
         callback();
       }

@@ -16,7 +16,7 @@ describe('handleDelete', () => {
         mockedAxios.delete.mockResolvedValueOnce({ status: 200 });
 
         // Act
-        const result = await handleDelete(imageId);
+        const result = await handleDelete(imageId.toString());
 
         // Assert
         expect(result.status).toBe(200);
@@ -32,7 +32,7 @@ describe('handleDelete', () => {
         mockedAxios.delete.mockRejectedValueOnce(errorResponse);
 
         // Act & Assert
-        await expect(handleDelete(imageId)).rejects.toEqual(errorResponse);
+        await expect(handleDelete(imageId.toString())).rejects.toEqual(errorResponse);
         expect(mockedAxios.delete).toHaveBeenCalledWith(`http://localhost:8080/image/${imageId}`);
         expect(mockedAxios.defaults.withCredentials).toBe(true);
     });
