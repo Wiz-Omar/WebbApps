@@ -1,7 +1,7 @@
 # Personalised Image Gallery Application (PicPics)
 
 ## Description
-This application provides a personalized gallery for users to upload, download, view, and manage images easily via a web interface. It supports features like image search, filtering, sorting, and more. For a more detailed view of the app, visit our [GitHub repository](https://github.com/Wiz-Omar/WebbApps).
+This application provides a gallery for users to upload, download, view, and manage images easily via a web interface. It supports features like image search, filtering, sorting, and more. For a more detailed view of the app, visit [GitHub repository](https://github.com/Wiz-Omar/WebbApps).
 
 ### Purpose
 This project was part of the course DAT076 - Web applications at Chalmers University of Technology. Spring term 2024.
@@ -14,11 +14,9 @@ Mojtaba Alizade, Harry Denell, Rikard Roos, Omar Younes
 ### Prerequisites
 Before you begin, ensure you have the following installed on your system:
 - Node.js
-- MongoDB
 - npm (Node Package Manager)
 
 ### Installation Guide
-
 Follow these steps to set up the application on your local machine:
 
 #### 1. Clone the Repository
@@ -49,7 +47,7 @@ npm install
 
 For the client
 ```bash
-cd ../Client
+cd Client
 npm install
 ```
 
@@ -67,3 +65,5 @@ In a new terminal, start the client:
 cd Client
 npm start
 ```
+
+You should now see the application running in a new tab in your browser
