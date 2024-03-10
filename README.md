@@ -1,3 +1,5 @@
+![Logo](.github/images/project.png)
+
 # Personalised Image Gallery Application (PicPics)
 
 ## Description
