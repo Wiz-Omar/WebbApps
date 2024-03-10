@@ -161,7 +161,7 @@ function Navbar() {
 
 
   return (
-    <Container fluid className="navbar-light sticky-top rounded bg-light">
+    <Container data-testid="second-navbar" fluid className="navbar-light sticky-top rounded bg-light">
       <Row className="mx-5">
         <Col md={2} className="d-flex justify-content-center mb-2 align-items-center">
           <a className="navbar-brand" href="/">
