@@ -47,7 +47,7 @@ function SearchBar() {
       return; // Don't perform search if the query hasn't changed or if toggling focus
     }
     try {
-      console.log('Performing search:', query);
+      // console.log('Performing search:', query);
       const response = await axios.get<Image[]>(`http://localhost:8080/image/search?search=${query}`);
       setSearchResults(response.data);
       setIsFocused(true); // Ensure results are shown when search is performed

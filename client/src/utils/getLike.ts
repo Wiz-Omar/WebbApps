@@ -15,7 +15,7 @@ export const getLikeStatus = async (imageId: string): Promise<boolean> => {
     );
     return response.data.liked;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     throw error;
   }
 };
