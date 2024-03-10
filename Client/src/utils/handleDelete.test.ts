@@ -49,7 +49,7 @@ describe('handleDelete', () => {
         mockedAxios.delete.mockRejectedValueOnce(errorResponse);
 
         // Act & Assert
-        await expect(handleDelete(imageId)).rejects.toEqual(errorResponse);
+        await expect(handleDelete(imageId.toString())).rejects.toEqual(errorResponse);
         expect(mockedAxios.delete).toHaveBeenCalledWith(`http://localhost:8080/image/${imageId}`);
         expect(mockedAxios.defaults.withCredentials).toBe(true);
     });
