@@ -22,7 +22,8 @@ describe('SecondPage component', () => {
     );
 
     // Check if the Navbar is rendered
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getByTestId('second-navbar')).toBeInTheDocument();
+    // expect(screen.getByRole('navigation')).toBeInTheDocument();
 
     // Check if the image is rendered
     const imageElement = screen.getByAltText('Selected');
