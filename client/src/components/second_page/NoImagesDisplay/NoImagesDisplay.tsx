@@ -1,5 +1,8 @@
 import './NoImagesDisplay.css'; // Assuming your styling is in this CSS file
 
+/**
+ * A component that displays a message when there are no images to display.
+ */
 const NoImagesDisplay = () => {
   return (
     <div className="no-images-container" data-testid="no-images-display"> 
