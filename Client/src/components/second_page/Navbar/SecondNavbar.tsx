@@ -169,7 +169,7 @@ function Navbar() {
             <span className="logo-text">PicPics</span>
           </a>
         </Col>
-        <Col md={8} className="d-flex justify-content-center my-3 align-items-center">
+        <Col md={8} className="d-flex justify-content-center my-3 align-items-center" data-testid="file-name">
           <div className="file-info-container">
             <h1 className="mb-0">
               <span className="file-label">File:</span>{" "}
