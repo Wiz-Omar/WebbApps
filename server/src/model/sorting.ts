@@ -9,8 +9,8 @@ export interface Sorting {
 
 // Default sorting parameters
 export const defaultSorting: Sorting = {
-  sortField: "defaultFieldName", // e.g., 'uploadDate'
-  sortOrder: "desc", // or 'asc' as your default preference
+  sortField: "uploadDate", 
+  sortOrder: "desc",
 };
 
 const validSortFields = ["filename", "uploadDate"];
