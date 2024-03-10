@@ -43,8 +43,10 @@ describe("SearchBar component", () => {
     const searchBar = screen.getByPlaceholderText("Search in Storage");
     act(() => {
       fireEvent.change(searchBar, { target: { value: 'test' } });
-      fireEvent.focus(searchBar);
     });
+    act(() => {
+      fireEvent.focus(searchBar);
+    })
 
     await screen.findByAltText('test.png');
 
@@ -65,6 +67,8 @@ describe("SearchBar component", () => {
     const searchBar = screen.getByPlaceholderText("Search in Storage");
     act(() => {
       fireEvent.change(searchBar, { target: { value: 'test' } });
+    });
+    act(() => {
       fireEvent.focus(searchBar);
     });
 
@@ -72,9 +76,11 @@ describe("SearchBar component", () => {
 
     act(() => {
       fireEvent.change(searchBar, { target: { value: '' } });
+    });
+    act(() => {
       fireEvent.blur(searchBar);
     });
-
+    
     expect(screen.queryByText('test.png')).not.toBeInTheDocument();
   });
 });

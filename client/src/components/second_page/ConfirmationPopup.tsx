@@ -14,7 +14,7 @@ interface ConfirmationPopupProps {
  */
 const ConfirmationPopup: React.FC<ConfirmationPopupProps> = ({ isOpen, message, onConfirm, onCancel }) => {
   return (
-    <Modal show={isOpen} onHide={onCancel} centered>
+    <Modal show={isOpen} onHide={onCancel} centered data-testid="confirm-popup">
       <Modal.Header closeButton>
         <Modal.Title>Confirmation</Modal.Title>
       </Modal.Header>

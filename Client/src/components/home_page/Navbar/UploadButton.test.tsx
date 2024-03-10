@@ -13,9 +13,7 @@ describe("UploadButton", () => {
   });
 
   test("triggers file input click when button is clicked", () => {
-    const { getByText, getByTestId } = render(<UploadButton callback={function (): void {
-      throw new Error("Function not implemented.");
-    } } />);
+    const { getByText, getByTestId } = render(<UploadButton callback={jest.fn()} />);
     const uploadButton = getByText("Upload");
     const fileInput = getByTestId("file-input");
     

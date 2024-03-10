@@ -32,7 +32,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ callback }) => {
       onClick={() => setIsOpen(!isOpen)}
     >
       {isOpen && (
-        <div>
+        <div data-testid="dropdown-menu">
           <Dropdown.Item onClick={() => handleSort('uploadDate', 'desc')}> {SORT_BY_UPLOAD_DATE_DESC} </Dropdown.Item>
           <Dropdown.Item onClick={() => handleSort('uploadDate', 'asc')}> {SORT_BY_UPLOAD_DATE_ASC} </Dropdown.Item>
           <Dropdown.Item onClick={() => handleSort('filename', 'asc')}> {SORT_BY_FILENAME_ASC} </Dropdown.Item>
