@@ -2,15 +2,14 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:8080";
 
-// Interface for your API response, if needed
-interface LikeStatusResponse {
-  liked: boolean;
-}
-
-// Fetch like status for an image
+/**
+ * Fetches images from the server. Makes a GET request to the server and returns the images.
+ * @param imageId The id of the image to check the like status for. Type string.
+ * @returns A promise that resolves to a boolean indicating whether the image is liked.
+ */
 export const getLikeStatus = async (imageId: string): Promise<boolean> => {
   try {
-    const response = await axios.get<LikeStatusResponse>(
+    const response = await axios.get(
       `${BASE_URL}/like/${imageId}`
     );
     return response.data.liked;

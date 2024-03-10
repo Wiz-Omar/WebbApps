@@ -5,17 +5,11 @@ import { Image } from "../../home_page/HomePage";
 import FullSizeImage from "../FullSizeImg/FullSizeImg";
 import Navbar from "../Navbar/SecondNavbar";
 
-// SecondPage props
-interface SecondPageProps {
-  callback: () => void;
-}
-
 function SecondPage(){
   const location = useLocation();
   const { image, id } = location.state as { image: Image; id: number };
 
   const [showFullImage, setShowFullImage] = useState(false);
-
 
   return (
     <div>
