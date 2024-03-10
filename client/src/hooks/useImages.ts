@@ -10,6 +10,10 @@ interface UseImagesParams {
   trigger: number; // Include trigger in the hook parameters
 }
 
+/**
+ * Custom hook to fetch images from the server. Uses the getImages function to fetch images from the server based on the provided parameters.
+ * Uses a trigger state to re-fetch images when the trigger state changes, e.g the client wants to refresh the images.
+ */
 export const useImages = ({
   sortField,
   sortOrder,
