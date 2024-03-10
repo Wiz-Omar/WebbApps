@@ -40,7 +40,11 @@ function Navbar() {
   const handleDeleteClick = () => setShowDeletePopup(true);
 
   const handleConfirmDelete = async () => {
-    await deleteImage(image.id.toString());
+    const response = await deleteImage(image.id.toString());
+    if (!response.success) {
+      setShowDeletePopup(false);
+      alert('Failed to delete image');
+    }
     setShowDeletePopup(false);
     navigate('/');
   };

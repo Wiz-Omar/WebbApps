@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import { handleDelete } from '../utils/handleDelete';
 
-// useDeleteImage.ts
 
 interface DeleteImageResponse {
-    // Define the shape of the response data
-    // based on your API's response
-    // Example: { success: boolean }
+    success: boolean;
+    message: string;
 }
 
 const useDeleteImage = () => {
@@ -17,9 +16,9 @@ const useDeleteImage = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const response: AxiosResponse<DeleteImageResponse> = await axios.delete(`/api/images/${imageId}`);
+            const response = await handleDelete(imageId);
             setIsLoading(false);
-            return response.data;
+            return { success: true, message: response.data.message };
         } catch (err: any) {
             setError(err);
             setIsLoading(false);
