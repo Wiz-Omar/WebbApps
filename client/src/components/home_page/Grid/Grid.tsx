@@ -7,6 +7,15 @@ export interface GridProps {
   callback: () => void;
 }
 
+/**
+ * Grid component. A grid of images.
+ * Composed of three columns of images. Each image is a GridImg component.
+ * Uses the NoImagesDisplay component if there are no images.
+ * 
+ * Props:
+ * - images: Image[] - The images to display in the grid
+ * - callback: () => void - The function to call when an image is clicked
+ */
 function Grid({ images, callback }: GridProps) {
   // Initialize arrays for each column
   const columns: Image[][] = [[], [], []];
