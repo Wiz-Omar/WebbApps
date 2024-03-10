@@ -192,7 +192,7 @@ function Navbar() {
               <IconButton
                 Icon={DeleteIcon}
                 ariaLabel="delete"
-                onClick={handleDeleteClick} // Changed to show confirmation popup
+                onClick={handleDeleteClick}
               />
             </div>
             <div className="mr-3">

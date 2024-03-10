@@ -1,6 +1,7 @@
 import { ImageExistsError, ImageNotFoundError } from "../errors/imageErrors";
 import { LikeExistsError } from "../errors/likeErrors";
 import {  } from "../service/likeService";
+import { ErrorMessages } from "./responseMessages";
 
 /**
  * Determines the appropriate HTTP response for a given error.
@@ -8,23 +9,23 @@ import {  } from "../service/likeService";
  * @param {Error} err - The error thrown during request processing.
  * @returns {Object} An object containing the appropriate status code and message.
  */
-function determineErrorResponse(err: Error): { status: number; message: string } {
+function determineImageErrorResponse(err: Error): { status: number; message: string } {
 
   let status = 500; // Default to internal server error
-  let message = "Something went wrong"; // Default message
+  let message = ErrorMessages.GenericError; // Default message
 
   if (err instanceof ImageNotFoundError) {
     status = 404;
-    message = "The requested image could not be found.";
+    message = ErrorMessages.ImageNotFound;
   } else if (err instanceof ImageExistsError) {
     status = 409;
-    message = "An image with the same identifier already exists.";
+    message = ErrorMessages.ImageAlreadyExists;
   } else if (err instanceof LikeExistsError) {
     status = 409;
-    message = "This image has already been liked by the user.";
+    message = ErrorMessages.LikeAlreadyExists;
   } 
   // Could add more else if blocks for other custom error types
   return { status, message };
 }
 
-export { determineErrorResponse };
+export { determineImageErrorResponse as determineErrorResponse };

@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { IUserService } from "../service/userService.interface";
 import { UserService } from "../service/userService";
-import { determineErrorResponse } from "./userErrorHandler";
+import { determineErrorResponse, determineUserErrorResponse } from "./userErrorHandler";
 import { ensureAuthenticated, validateUserCredentials } from "./validators";
 import { deleteRequest, loginRequest, registerRequest } from "./userRequests";
 import { InvalidCredentialsError } from "../errors/userErrors";
@@ -166,7 +166,7 @@ userRouter.post('/logout', (req, res) => {
 userRouter.use(
   (err: Error, req: Request, res: Response, _next: NextFunction) => {
     // Determine the type of error and set response status and message accordingly
-    const { status, message } = determineErrorResponse(err);
+    const { status, message } = determineUserErrorResponse(err);
     res.status(status).send({ error: message });
   }
 );

@@ -12,12 +12,17 @@ export const ErrorMessages = {
   FileSizeExceeds: "File size exceeds limit of 10MB.",
   InvalidFileData: "Invalid input data for filename.",
   InvalidFileType: "Invalid file type, only JPEG and PNG are allowed!",
-  
   ImageNotFound: "Image not found",
   ImageAlreadyExists: "Image already exists",
 
   LikeNotFound: "Like not found",
   LikeAlreadyExists: "Like already exists",
+
+  UserNotFound: "User not found",
+  UserAlreadyExists: "User already exists",
+  InvalidCredentials: "Invalid credentials",
+
+  GenericError: "Something went wrong",
 };
 
 // Contains response success messages for the server.

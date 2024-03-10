@@ -13,7 +13,7 @@ import { ErrorMessages } from "./responseMessages";
  * @returns {Object} An object containing the appropriate status code and message.
  *
  */
-function determineErrorResponse(err: Error): {
+function determineLikeErrorResponse(err: Error): {
   status: number;
   message: string;
 } {
@@ -38,4 +38,4 @@ function determineErrorResponse(err: Error): {
   return { status, message };
 }
 
-export { determineErrorResponse };
+export { determineLikeErrorResponse as determineErrorResponse };
