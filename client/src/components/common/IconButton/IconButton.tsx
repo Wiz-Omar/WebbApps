@@ -4,7 +4,6 @@ import "./IconButton.css";
 
 export interface IconButtonProps {
   Icon: React.FC<React.SVGProps<SVGSVGElement>>;
-  //TODO: check what aria-label is. Something to do with accessibility!
   ariaLabel?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }

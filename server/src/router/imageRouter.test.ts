@@ -9,8 +9,6 @@ const session = require("supertest-session");
 let authenticatedSession: SuperTest<Test>;
 let unauthenticatedSession: SuperTest<Test>;
 
-//TODO: add code for creating a new user that is then deleted after the tests are run!
-//TODO: could also check the recieved message, as the messages are now stored in responseMessage.ts
 beforeAll(async () => {
   // Create a session for an authenticated user
   authenticatedSession = session(app);

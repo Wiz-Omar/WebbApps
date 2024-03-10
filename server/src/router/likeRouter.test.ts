@@ -12,7 +12,6 @@ let unauthenticatedSession: SuperTest<Test>;
 const INVALID_IMAGE_ID = "invalid_id";
 const VALID_IMAGE_ID = "507f1f77bcf85cd799439111"; // Example MongoDB ObjectId (BSON)
 
-//TODO: add code for creating a new user that is then deleted after the tests are run!
 beforeAll(async () => {
   // Create a session for an authenticated user
   authenticatedSession = session(app);
@@ -77,8 +76,6 @@ describe("Like an image, End-to-End", () => {
     expect(likeResponse.status).toBe(200);
     expect(likedResponse.body.liked).toBe(true);
 
-    // Check that the image has been liked
-    //TODO: make own test for GET /like
     const checkLikedResponse = await authenticatedSession.get(
       "/like/" + images[0].id
     );

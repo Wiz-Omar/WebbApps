@@ -12,7 +12,7 @@ export const app = express();
 //export const globablUserId = "defaultUser"; //Is it better to use this globally instead of writing the string "defaultUser" everywhere?
 
 app.use(session({
-    secret : secret, // TODO Move to separate file. DO NOT UPLOAD TO GITHUB!!!!
+    secret : secret,
     resave : false,
     saveUninitialized : false
 }));

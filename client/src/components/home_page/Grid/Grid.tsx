@@ -30,7 +30,6 @@ function Grid({ images, callback }: GridProps) {
         {columns.map((columnImages, colIndex) => (
           <div key={colIndex} className="col-md-4">
             {columnImages.map((image, imageIndex) => (
-              // TODO: change to image.filename?
               <GridImg key={imageIndex} image={image} callback={callback} />
             ))}
           </div>
