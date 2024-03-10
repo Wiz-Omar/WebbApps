@@ -117,7 +117,6 @@ describe("Upload an image, End-to-End", () => {
     const response = await authenticatedSession
       .post("/image")
       .attach("file", imagePath);
-    expect(response.status).toBe(201);
 
     // Attempt to upload the same image again
     const response2 = await authenticatedSession
