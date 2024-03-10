@@ -64,4 +64,32 @@ describe('registerUser', () => {
     expect(onError).toHaveBeenCalledWith(errorMessage);
   });
 
+  it('should call onRegisterError with appropriate message for 500 error', async () => {
+    // Arrange
+    const errorMessage = "A server error occurred. Please try again later.";
+    mockedAxios.post.mockRejectedValueOnce({
+      response: { status: 500 }
+    });
+
+    // Act
+    await registerUser({ username, password, onRegisterSuccess: onSuccess, onRegisterError: onError });
+
+    // Assert
+    expect(mockedAxios.post).toHaveBeenCalledWith(REGISTER_ENDPOINT, { username, password });
+    expect(onError).toHaveBeenCalledWith(errorMessage);
+  });
+
+  it('should call onRegisterError with aa generic error message for other errors', async () => {
+    // Arrange
+    const errorMessage = "An unexpected error occurred during registration. Please try again later.";
+    mockedAxios.post.mockRejectedValueOnce(new Error());
+
+    // Act
+    await registerUser({ username, password, onRegisterSuccess: onSuccess, onRegisterError: onError });
+
+    // Assert
+    expect(mockedAxios.post).toHaveBeenCalledWith(REGISTER_ENDPOINT, { username, password });
+    expect(onError).toHaveBeenCalledWith(errorMessage);
+  });
+
 });

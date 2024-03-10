@@ -31,25 +31,24 @@ export const registerUser = async ({
     } else {
       onRegisterError("Registration was successful, but an unexpected response was received. Please verify your account status.");
     }
-  } catch (error) {
+  } catch (error : any) {
     let errorMsg = "An unexpected error occurred during registration. Please try again later.";
   
-    if (axios.isAxiosError(error)) {
-      switch (error.response?.status) {
-        case 400:
-          errorMsg = "Invalid request. Please ensure all fields are filled out correctly.";
-          break;
-        case 409:
-          errorMsg = "An account with this username already exists.";
-          break;
-        case 500:
-          errorMsg = "A server error occurred. Please try again later.";
-          break;
-        default:
-          // Leave errorMsg as the default message for unexpected status codes
-          break;
-      }
+    switch (error.response?.status) {
+      case 400:
+        errorMsg = "Invalid request. Please ensure all fields are filled out correctly.";
+        break;
+      case 409:
+        errorMsg = "An account with this username already exists.";
+        break;
+      case 500:
+        errorMsg = "A server error occurred. Please try again later.";
+        break;
+      default:
+        // Leave errorMsg as the default message for unexpected status codes
+        break;
     }
+    
     onRegisterError(errorMsg);
   }
 };

@@ -30,15 +30,13 @@ export const performLogin = async ({
       console.log(response.data.message);
       onLoginSuccess();
     }
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
-        onLoginError("Invalid username or password");
-      } else if (error.response?.status === 400) {
-        onLoginError("Invalid input data for username or password");
-      } else {
-        onLoginError("An error occurred. Please try again later.");
-      }
+  } catch (error : any) {
+    if (error.response?.status === 401) {
+      onLoginError("Invalid username or password");
+    } else if (error.response?.status === 400) {
+      onLoginError("Invalid input data for username or password");
+    } else if (error.response?.status === 500) {
+      onLoginError("Internal server error. Please try again later.");
     } else {
       onLoginError("An unexpected error occurred");
     }
