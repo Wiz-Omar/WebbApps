@@ -57,7 +57,7 @@ it('calls onLoginError with "Internal server error. Please try again later." for
   const onLoginSuccess = jest.fn();
   const onLoginError = jest.fn();
 
-  // Mock axios.post to return a rejected promise with a 401 response
+  // Mock axios.post to return a rejected promise with a 500 response
   (axios.post as jest.Mock).mockRejectedValueOnce({ response: { status: 500 } });
 
   // Call the performLogin function
