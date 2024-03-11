@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../constants/apiEndpoints";
 import axios from "axios";
+import { getSessionStatus } from "../utils/getSessionStatus";
 
-interface SessionResponse {
-  isAuthenticated: boolean;
-  username: string;
-}
-
-interface AuthenticationStatus {
+export interface AuthenticationStatus {
   isLoading: boolean;
   isAuthenticated: boolean;
   username: string | null;
 }
 
+/**
+ * A custom hook that checks if the user is already authenticated. This hook uses the method fetchSessionStatus to
+ * check the current session status of the user. It returns an object containing the current authentication status of the user.
+ * 
+ * @returns An object containing the current authentication status of the user.
+ */
 export const useCheckUserAuthentication = (): AuthenticationStatus => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -21,12 +23,9 @@ export const useCheckUserAuthentication = (): AuthenticationStatus => {
   useEffect(() => {
     const checkUserAuthentication = async () => {
       try {
-        const response = await axios.get<SessionResponse>(
-          `${API_BASE_URL}/user/checkSession`
-        );
-        console.log(response.data);
-        setIsAuthenticated(response.data.isAuthenticated);
-        setUsername(response.data.username);
+        const sessionResponse = await getSessionStatus();
+        setIsAuthenticated(sessionResponse.isAuthenticated);
+        setUsername(sessionResponse.username);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Session check failed", error.message);
@@ -41,7 +40,7 @@ export const useCheckUserAuthentication = (): AuthenticationStatus => {
     };
 
     checkUserAuthentication();
-  }, []); // Empty dependency array means this effect runs once after the initial render
+  }, []); 
 
   return { isLoading, isAuthenticated, username };
 };
