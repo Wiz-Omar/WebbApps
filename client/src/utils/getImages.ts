@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Image } from "../components/home_page/HomePage";
-import { API_BASE_URL, IMAGE_ENDPOINT } from "../constants/apiEndpoints";
+import { IMAGE_ENDPOINT } from "../constants/apiEndpoints";
 
 // Default sorting field
 export const DEFAULT_SORT_FIELD = "uploadDate";

@@ -7,6 +7,7 @@ import { Logo } from "./Logo";
 import { LoginForm } from "./LoginForm";
 import "./LoginPage.css";
 import { API_BASE_URL } from "../../constants/apiEndpoints";
+import { useCheckUserAuthentication } from "../../hooks/useCheckUserAuthentication";
 
 const LOGIN_PROMPT = "Welcome to PicPics! Login to access your images!";
 
@@ -30,26 +31,16 @@ interface CombinedPageProps {
  *    the home page or the registration page.
  */
 const LoginPage: React.FC<CombinedPageProps> = ({ setDisplay }) => {
-  const [isLoading, setIsLoading] = useState(false);
 
+  // Use the custom hook to check if the user is already authenticated
+  const { isLoading, isAuthenticated } = useCheckUserAuthentication();
+
+  // Redirect if already authenticated
   useEffect(() => {
-    const checkSession = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get<{ isAuthenticated: boolean; username: string }>(`${API_BASE_URL}/user/session`);
-        if (response.data.isAuthenticated) {
-          console.log(`User ${response.data.username} is already logged in.`);
-          setDisplay(AppDisplay.HOME_PAGE);
-        }
-      } catch (error) {
-        console.error("Session check failed", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkSession();
-  }, [setDisplay]);
+    if (isAuthenticated) {
+      setDisplay(AppDisplay.HOME_PAGE);
+    }
+  }, [isAuthenticated, setDisplay]);
 
   const handleLoginSuccess = () => {
     setDisplay(AppDisplay.HOME_PAGE);

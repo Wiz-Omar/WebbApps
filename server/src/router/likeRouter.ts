@@ -105,7 +105,6 @@ likeRouter.get(
   }
 );
 
-//TODO: remove? never used?
 /**
  * GET /like
  * Gets all images liked by the user.

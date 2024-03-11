@@ -96,7 +96,6 @@ userRouter.post(
       }
       req.session.username = username;
       res.status(200).send({ message: "User successfully logged in" });
-      //TODO: do we need to save the session here?
       return;
     } catch (e: any) {
       next(e);
