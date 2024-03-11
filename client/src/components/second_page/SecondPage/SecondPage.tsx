@@ -5,6 +5,10 @@ import { Image } from "../../home_page/HomePage";
 import FullSizeImage from "../FullSizeImg/FullSizeImg";
 import Navbar from "../Navbar/SecondNavbar";
 
+/**
+ * SecondPage component. The second page of the application, showing a single image. 
+ * Uses Navbar and FullSizeImage components.
+ */
 function SecondPage(){
   const location = useLocation();
   const { image, id } = location.state as { image: Image; id: number };

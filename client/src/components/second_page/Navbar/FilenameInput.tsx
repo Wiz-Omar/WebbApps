@@ -7,6 +7,15 @@ interface FilenameInputProps {
     onRename: (filename: string, fileExtension: string) => Promise<void>;
 }
 
+/**
+ * FilenameInput component. An input for renaming a file. 
+ * It calls the onRename function when the file is renamed.
+ * 
+ * Props:
+ * - initialFilename: string - The initial filename
+ * - fileExtension: string - The file extension
+ * - onRename: (filename: string, fileExtension: string) => Promise<void> - The function to call when the file is renamed
+ */
 const FilenameInput: React.FC<FilenameInputProps> = ({ initialFilename, fileExtension, onRename }) => {
     const [filename, setFilename] = useState(initialFilename);
     const inputRef = useRef<HTMLInputElement>(null);

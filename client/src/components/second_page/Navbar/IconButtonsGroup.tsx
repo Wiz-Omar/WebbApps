@@ -11,6 +11,14 @@ interface IconButtonsGroupProps {
     onClose: () => void;
 }
 
+/**
+ * IconButtonsGroup component. A group of icon buttons for download, delete and close.
+ * 
+ * Props:
+ * - onDownload: () => void - The function to call when the download button is clicked
+ * - onDelete: () => void - The function to call when the delete button is clicked
+ * - onClose: () => void - The function to call when the close button is clicked
+ */
 const IconButtonsGroup: FC<IconButtonsGroupProps> = ({ onDownload, onDelete, onClose }) => {
     return (
         <div className="icon-buttons-container d-flex align-items-center">

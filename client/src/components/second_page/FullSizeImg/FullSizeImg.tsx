@@ -9,6 +9,13 @@ interface FullSizeImageProps {
   onClose: () => void;
 }
 
+/**
+ * FullSizeImage component. A full-size image that can be closed.
+ * 
+ * Props:
+ * - image: Image - The image to display
+ * - onClose: () => void - The function to call when the full-size image is closed
+ */
 const FullSizeImage = ({ image, onClose }: FullSizeImageProps) => {
   const handleClick = () => {
     onClose(); // Call the onClose callback to close the full-size image
