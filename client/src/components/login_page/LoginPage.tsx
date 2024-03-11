@@ -6,6 +6,7 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { Logo } from "./Logo";
 import { LoginForm } from "./LoginForm";
 import "./LoginPage.css";
+import { API_BASE_URL } from "../../constants/apiEndpoints";
 
 const LOGIN_PROMPT = "Welcome to PicPics! Login to access your images!";
 
@@ -35,7 +36,7 @@ const LoginPage: React.FC<CombinedPageProps> = ({ setDisplay }) => {
     const checkSession = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get<{ isAuthenticated: boolean; username: string }>("http://localhost:8080/user/checkSession");
+        const response = await axios.get<{ isAuthenticated: boolean; username: string }>(`${API_BASE_URL}/user/session`);
         if (response.data.isAuthenticated) {
           console.log(`User ${response.data.username} is already logged in.`);
           setDisplay(AppDisplay.HOME_PAGE);

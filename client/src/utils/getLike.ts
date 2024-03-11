@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const LIKE_ENDPOINT = "http://localhost:8080/like";
+import { LIKE_ENDPOINT } from "../constants/apiEndpoints";
 
 interface LikeStatusResponse {
   liked: boolean;

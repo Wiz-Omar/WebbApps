@@ -1,48 +1,32 @@
-// Custom error classes for specific cases
-export class FileMissingError extends Error {
-    constructor() {
-      super("File missing.");
-      this.name = "FileMissingError";
-    }
+import { MAX_FILENAME_LENGTH, MAX_FILE_SIZE, SUPPORTED_FILE_TYPES } from "../constants/validation";
+import {
+  FileMissingError,
+  FileSizeExceededError,
+  FilenameTooLongError,
+  UnsupportedFiletypeError,
+} from "../errors/fileErrors";
+
+/**
+ * Validates a file to ensure it meets the requirements. Ues custom error classes for specific cases.
+ * @param file The file to validate.
+ */
+export const validateFile = (file: File | null) => {
+  if (!file) {
+    throw new FileMissingError();
   }
-  
-  export class FilenameTooLongError extends Error {
-    constructor() {
-      super("Filename should be less than 256 characters.");
-      this.name = "FilenameTooLongError";
-    }
+  // Check if the filename is less than MAX_FILENAME_LENGTH characters.
+  if (file.name.length > MAX_FILENAME_LENGTH) {
+    throw new FilenameTooLongError();
   }
-  
-  export class UnsupportedFiletypeError extends Error {
-    constructor() {
-      super("Unsupported filetype. Supported filetypes are JPEG, JPG and PNG.");
-      this.name = "UnsupportedFiletypeError";
-    }
+  // Check if the file type is supported
+  const isSupportedFileType = SUPPORTED_FILE_TYPES.some((type) =>
+    file.type.match(type)
+  );
+  if (!isSupportedFileType) {
+    throw new UnsupportedFiletypeError();
   }
-  
-  export class FileSizeExceededError extends Error {
-    constructor() {
-      super("File size should be less than 10MB.");
-      this.name = "FileSizeExceededError";
-    }
+  // Check if the file size is less than MAX_FILE_SIZE
+  if (file.size > MAX_FILE_SIZE) {
+    throw new FileSizeExceededError();
   }
-  
-  // Function for file validation using custom errors
-  export const validateFile = (file: File | null) => {
-    if (!file) {
-      throw new FileMissingError();
-    }
-    // Check if the filename is less than 256 characters.
-    if (file.name.length > 256) {
-      throw new FilenameTooLongError();
-    }
-    // Check if the file type is JPEG, JPG, or PNG
-    if (!file.type.match("image/jpeg") && !file.type.match("image/png") && !file.type.match("image/jpg")) {
-      throw new UnsupportedFiletypeError();
-    }
-    // Check if the file size is greater than 10MB
-    if (file.size > 10 * 1024 * 1024) {
-      throw new FileSizeExceededError();
-    }
-  };
-  
+};

@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const LOGIN_ENDPOINT = "http://localhost:8080/user/login";
+import { LOGIN_ENDPOINT } from "../constants/apiEndpoints";
 
 /**
  * Attempts to log in a user with the provided username and password. 
@@ -9,6 +8,9 @@ const LOGIN_ENDPOINT = "http://localhost:8080/user/login";
  * 
  * @param username - The username to log in with.
  * @param password - The password to log in with.
+ * @param onLoginSuccess - A callback to execute if the login is successful.
+ * @param onLoginError - A callback to execute if the login fails.
+ * @returns A promise that resolves to the response from the server.
  */
 export const performLogin = async ({
     username,

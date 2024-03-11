@@ -1,8 +1,6 @@
 import axios from "axios";
 import { Image } from "../components/home_page/HomePage";
-
-// Base URL for the image API
-export const API_BASE_URL = "http://localhost:8080";
+import { API_BASE_URL, IMAGE_ENDPOINT } from "../constants/apiEndpoints";
 
 // Default sorting field
 export const DEFAULT_SORT_FIELD = "uploadDate";
@@ -26,7 +24,7 @@ export async function getImages(
   onlyLiked: boolean = DEFAULT_ONLY_LIKED
 ): Promise<Image[]> {
   try {
-    const url = `${API_BASE_URL}/image?sortField=${sortField}&sortOrder=${sortOrder}&onlyLiked=${onlyLiked}`;
+    const url = `${IMAGE_ENDPOINT}?sortField=${sortField}&sortOrder=${sortOrder}&onlyLiked=${onlyLiked}`;
     const response = await axios.get<Image[]>(url);
     return response.data;
   } catch (error) {

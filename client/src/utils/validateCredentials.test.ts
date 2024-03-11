@@ -1,4 +1,5 @@
-import { MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH, validatePassword, validateUsername } from "./validateCredentials";
+import { MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH } from "../constants/validation";
+import { validatePassword, validateUsername } from "./validateCredentials";
 
 describe('validateUsername', () => {
   it('should return an error for usernames shorter than the minimum length', () => {

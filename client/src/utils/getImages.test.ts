@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { handleDelete } from './handleDelete';
-import { API_BASE_URL, getImages } from './getImages';
+import { getImages } from './getImages';
+import { API_BASE_URL } from '../constants/apiEndpoints';
 
 jest.mock('axios');
 

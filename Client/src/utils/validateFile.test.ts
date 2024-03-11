@@ -1,4 +1,6 @@
-import { validateFile, FileMissingError, FilenameTooLongError, UnsupportedFiletypeError, FileSizeExceededError } from './validateFile';
+import { FileMissingError, FileSizeExceededError, FilenameTooLongError, UnsupportedFiletypeError } from "../errors/fileErrors";
+import { validateFile } from "./validateFile";
+
 
 describe('validateFile function', () => {
   test('throws FileMissingError when file is null', () => {

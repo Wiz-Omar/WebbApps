@@ -1,6 +1,4 @@
-export const MIN_USERNAME_LENGTH = 8;
-export const MIN_PASSWORD_LENGTH = 8;
-export const USERNAME_PATTERN = /^[a-zA-Z0-9]+$/; // Only alphanumeric characters allowed
+import { MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH, USERNAME_PATTERN } from "../constants/validation";
 
 export const validateUsername = (username: string): string => {
   if (username.trim().length < MIN_USERNAME_LENGTH) {
