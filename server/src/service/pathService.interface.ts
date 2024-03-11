@@ -12,7 +12,7 @@ export interface IPathService {
     saveFile(userId: string, fileName: string, base64Data: string): Promise<string>;
 
     /**
-     * Retrieves a file from the file system.
+     * Deletes a file from the file system.
      * @param userId The ID of the user who owns the file. Type: string
      * @param fileName The name of the file. Type: string
      */
