@@ -45,7 +45,7 @@ describe('Navbar component', () => {
       );
 
     // Check if file name input is rendered with initial filename
-    const filenameInput = screen.getByTestId('file-name');
+    const filenameInput = screen.getByTestId('filename-input');
     expect(filenameInput).toBeInTheDocument();
 
     // Check if download, delete, and close buttons are rendered
