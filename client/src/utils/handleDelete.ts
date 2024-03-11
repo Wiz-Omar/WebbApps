@@ -1,4 +1,3 @@
-// Assuming this is in a file like handleDelete.ts
 import axios, { AxiosResponse } from "axios";
 import { IMAGE_ENDPOINT } from "../constants/apiEndpoints";
 
