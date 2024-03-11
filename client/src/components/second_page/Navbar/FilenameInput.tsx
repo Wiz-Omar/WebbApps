@@ -33,7 +33,7 @@ const FilenameInput: React.FC<FilenameInputProps> = ({ initialFilename, fileExte
     };
 
     return (
-        <div className="file-info-container">
+        <div className="file-info-container" data-testid="filename-input"> 
             <h1 className="mb-0">
                 <span className="file-label">Filename:</span>{" "}
                 <input
