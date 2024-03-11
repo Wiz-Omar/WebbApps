@@ -32,7 +32,7 @@ const upload = multer();
 imageRouter.use(ensureAuthenticated);
 
 /**
- * GET /images
+ * GET /image
  * Retrieves a list of images optionally filtered by like status.
  *
  * Request Query Parameters:
@@ -72,7 +72,7 @@ imageRouter.get(
 );
 
 /**
- * POST /images
+ * POST /image
  * Uploads a new image to the server.
  *
  * Request Body:
@@ -111,7 +111,7 @@ imageRouter.post(
 );
 
 /**
- * DELETE /images/:imageId
+ * DELETE /image/:imageId
  * Deletes an image from the server.
  *
  * Request Parameters:
@@ -139,7 +139,7 @@ imageRouter.delete(
 );
 
 /**
- * GET /images/search
+ * GET /image/search
  * Searches for images by filename.
  *
  * Request Query Parameters:
@@ -170,7 +170,7 @@ imageRouter.get(
 );
 
 /**
- * PATCH /images/:imageId
+ * PATCH /image/:imageId
  * Changes the name of an image.
  *
  * Request Parameters:

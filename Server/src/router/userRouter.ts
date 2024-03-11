@@ -10,7 +10,7 @@ const userService: IUserService = new UserService();
 export const userRouter = express.Router();
 
 /**
- * GET /users/checkSession
+ * GET /user/checkSession
  * Checks if the user is logged in.
  * 
  * Responses:
@@ -27,7 +27,7 @@ userRouter.get("/checkSession", (req, res) => {
 });
 
 /**
- * POST /users
+ * POST /user
  * Registers a new user.
  * 
  * Request Body:
@@ -55,7 +55,7 @@ userRouter.post(
 );
 
 /**
- * POST /users/login
+ * POST /user/login
  * Logs in a user.
  * 
  * Request Body:
@@ -105,7 +105,7 @@ userRouter.post(
 );
 
 /**
- * DELETE /users
+ * DELETE /user
  * Deletes a user.
  * 
  * Responses:
@@ -139,7 +139,7 @@ userRouter.delete(
 
 
 /**
- * PATCH /users
+ * PATCH /user
  * Updates a user.
  * 
  * Responses:
@@ -150,7 +150,7 @@ userRouter.patch('/', (req, res) => {
 });
 
 /**
- * POST /users/logout
+ * POST /user/logout
  * Logs out a user.
  * 
  * Responses:
