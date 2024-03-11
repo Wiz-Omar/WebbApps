@@ -27,16 +27,17 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ callback }) => {
 
   return (
     <DropdownButton
+      data-testid="dropdown-button"
       id="dropdown-basic-button"
       title="Sort by"
       onClick={() => setIsOpen(!isOpen)}
     >
       {isOpen && (
         <div data-testid="dropdown-menu">
-          <Dropdown.Item onClick={() => handleSort('uploadDate', 'desc')}> {SORT_BY_UPLOAD_DATE_DESC} </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleSort('uploadDate', 'asc')}> {SORT_BY_UPLOAD_DATE_ASC} </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleSort('filename', 'asc')}> {SORT_BY_FILENAME_ASC} </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleSort('filename', 'desc')}> {SORT_BY_FILENAME_DESC} </Dropdown.Item>
+          <Dropdown.Item data-testid="sort-upload-desc" onClick={() => handleSort('uploadDate', 'desc')}> {SORT_BY_UPLOAD_DATE_DESC} </Dropdown.Item>
+          <Dropdown.Item data-testid="sort-upload-asc" onClick={() => handleSort('uploadDate', 'asc')}> {SORT_BY_UPLOAD_DATE_ASC} </Dropdown.Item>
+          <Dropdown.Item data-testid="sort-filename-asc" onClick={() => handleSort('filename', 'asc')}> {SORT_BY_FILENAME_ASC} </Dropdown.Item>
+          <Dropdown.Item data-testid="sort-filename-desc" onClick={() => handleSort('filename', 'desc')}> {SORT_BY_FILENAME_DESC} </Dropdown.Item>
         </div>
       )}
     </DropdownButton>
