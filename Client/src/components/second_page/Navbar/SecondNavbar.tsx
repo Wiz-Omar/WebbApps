@@ -60,9 +60,44 @@ function Navbar() {
 
   // Event handler for the rename input
   const handleRename = async (filename: string, fileExtension: string) => {
-    await handleChangeName(image.id, filename, fileExtension);
-    setNewFilename(filename);
+    try {
+      if (filename !== initialFilename) {
+        // New filename is not equal to initial filename
+        await handleChangeName(image.id, filename, fileExtension);
+        setNewFilename(filename);
+      } else {
+        // If filename is same as initial filename, no need to update
+        setNewFilename(filename);
+      }
+    } catch (error: any) {
+      // Axios error response
+      if (error.response) {
+        // Revert to original filename
+        setNewFilename(initialFilename);
+
+        // Alert the user what went wrong
+        switch (error.response.status) {
+          case 401:
+            alert("Unauthorized: User is not logged in.");
+            break;
+          case 404:
+            alert("Image not found.");
+            break;
+          case 409:
+            alert("Image filename not available.");
+            break;
+          case 500:
+            alert("Internal server error: Failed to rename the image.");
+            break;
+          default:
+            alert("Something went wrong.");
+        }
+      } else {
+        alert("Something went wrong.");
+      }
+    }
   };
+
 
   return (
     <Container data-testid="second-navbar" fluid className="navbar-light sticky-top rounded bg-light">
@@ -81,6 +116,7 @@ function Navbar() {
             initialFilename={initialFilename}
             fileExtension={fileExtension}
             onRename={handleRename}
+            // TODO: update name here?
           />
         </Col>
         <Col
