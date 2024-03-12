@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor, getByTestId } from '@testing-library/react';
 import axios from 'axios';
 import Navbar from './SecondNavbar';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 jest.mock('axios');
 
@@ -18,11 +18,7 @@ describe('Navbar component', () => {
     uploadDate: new Date(),
   };
 
-  const mockLocation = {
-    state: { image: mockImage },
-  };
-
-  test('renders navbar', () => {
+  it('renders navbar', () => {
     render(
         <MemoryRouter initialEntries={[{ pathname: '/second', state: { image: mockImage, id: 1 } }]}>
           <Routes>
@@ -35,7 +31,7 @@ describe('Navbar component', () => {
     expect(screen.getByTestId('second-navbar')).toBeInTheDocument();
   })
 
-  test('renders image filename and buttons', () => {        
+  it('renders image filename and buttons', () => {        
     render(
         <MemoryRouter initialEntries={[{ pathname: '/second', state: { image: mockImage, id: 1 } }]}>
           <Routes>
@@ -55,5 +51,26 @@ describe('Navbar component', () => {
     expect(downloadButton).toBeInTheDocument();
     expect(deleteButton).toBeInTheDocument();
     expect(closeButton).toBeInTheDocument();
+  });
+
+  it('displays confirmation popup when delete button is clicked', () => {
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/second', state: { image: mockImage } }]}>
+        <Routes>
+          <Route path="/second" element={<Navbar />} />
+        </Routes>
+      </MemoryRouter>
+    );
+  
+    const deleteButton = screen.getByLabelText('delete');
+  
+    // Ensure that the confirmation popup is not initially present on the screen
+    expect(screen.queryByText('Are you sure you want to delete this image?')).not.toBeInTheDocument();
+  
+    // Click the delete button
+    fireEvent.click(deleteButton);
+  
+    // Assert that the confirmation popup is now displayed on the screen
+    expect(screen.getByText('Are you sure you want to delete this image?')).toBeInTheDocument();
   });
 });
