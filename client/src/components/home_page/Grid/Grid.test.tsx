@@ -21,6 +21,10 @@ const images: Image[] = Array.from({ length: 3 }, (_, i) => ({
 const mockCallback = jest.fn();
 
 describe('Grid component', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  
   it('renders without crashing', () => {
     render(<Grid images={images} callback={mockCallback} />);
   });

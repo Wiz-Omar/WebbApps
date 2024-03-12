@@ -5,10 +5,6 @@ jest.mock('axios');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-/* * - 200: Image deleted successfully.
-* - 401: Unauthorized if the user is not logged in.
-* - 404: Image not found.
-* - 500: Internal server error. ImageId was not found, or deletion failed. */
 describe('handleDelete', () => {
     afterEach(() => {
         jest.clearAllMocks();

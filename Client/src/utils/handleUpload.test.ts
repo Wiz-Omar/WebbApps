@@ -1,6 +1,6 @@
 import { handleUpload } from './handleUpload'; // Import the function to be tested
-import axios, { AxiosResponse } from 'axios';
-//jest.mock(...) is used to automatically mock the axios 
+import axios from 'axios';
+
 jest.mock('axios');
 // Create an object of type of mocked Axios.
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -39,6 +39,4 @@ describe('Handle Upload function', () => {
 
     await expect(handleUpload(file)).rejects.toEqual({ response: { status: 409 } }); // Verify that the function rejects with the mocked error
   });
-
-  //TODO: possibly more tests depending on http status codes
 });

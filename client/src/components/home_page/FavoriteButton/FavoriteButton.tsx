@@ -20,7 +20,7 @@ interface FavoriteButtonProps {
 const FavoriteButton = ({ isLiked, callback }: FavoriteButtonProps) => {
   return (
   <div className="button" onClick={callback} data-testid="favorite-button">
-    <ClickableIcon icon={isLiked ? <HeartFill color="red"/> : <Heart/>} />
+    <ClickableIcon icon={isLiked ? <HeartFill color="red" data-testid="filled-heart"/> : <Heart data-testid="empty-heart"/>} />
   </div>
   );
 };

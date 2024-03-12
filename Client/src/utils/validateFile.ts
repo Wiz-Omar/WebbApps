@@ -29,4 +29,5 @@ export const validateFile = (file: File | null) => {
   if (file.size > MAX_FILE_SIZE) {
     throw new FileSizeExceededError();
   }
+  return file as File;
 };

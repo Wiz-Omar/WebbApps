@@ -95,7 +95,7 @@ function GridImg({ image, callback }: GridImgProps) {
       {isHovered && (
         <>
           <div className="button-column button-column-container">
-            <div className="button-container" style={{ display: "flex" }}>
+            <div className="button-container" style={{ display: "flex" }} data-testid="button-container">
               <DeleteButton callback={onDelete} />
               <FavoriteButton isLiked={isLiked} callback={handleCallback} />
             </div>

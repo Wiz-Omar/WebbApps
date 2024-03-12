@@ -39,41 +39,41 @@ describe('performLogin', () => {
 
     // Call the performLogin function
     await performLogin({
-        username: 'testUsername',
-        password: 'testPassword',
-        onLoginSuccess,
-        onLoginError
-    });
-
-    // Expect onLoginSuccess not to have been called
-    expect(onLoginSuccess).not.toHaveBeenCalled();
-    
-    // Expect onLoginError to have been called with the correct error message
-    expect(onLoginError).toHaveBeenCalledWith("Invalid username or password");
-});
-
-it('calls onLoginError with "Internal server error. Please try again later." for 500 response', async () => {
-  // Define mock functions for onLoginSuccess and onLoginError callbacks
-  const onLoginSuccess = jest.fn();
-  const onLoginError = jest.fn();
-
-  // Mock axios.post to return a rejected promise with a 500 response
-  (axios.post as jest.Mock).mockRejectedValueOnce({ response: { status: 500 } });
-
-  // Call the performLogin function
-  await performLogin({
       username: 'testUsername',
       password: 'testPassword',
       onLoginSuccess,
       onLoginError
+    });
+
+    // Expect onLoginSuccess not to have been called
+    expect(onLoginSuccess).not.toHaveBeenCalled();
+
+    // Expect onLoginError to have been called with the correct error message
+    expect(onLoginError).toHaveBeenCalledWith("Invalid username or password");
   });
 
-  // Expect onLoginSuccess not to have been called
-  expect(onLoginSuccess).not.toHaveBeenCalled();
-  
-  // Expect onLoginError to have been called with the correct error message
-  expect(onLoginError).toHaveBeenCalledWith("Internal server error. Please try again later.");
-});
+  it('calls onLoginError with "Internal server error. Please try again later." for 500 response', async () => {
+    // Define mock functions for onLoginSuccess and onLoginError callbacks
+    const onLoginSuccess = jest.fn();
+    const onLoginError = jest.fn();
+
+    // Mock axios.post to return a rejected promise with a 500 response
+    (axios.post as jest.Mock).mockRejectedValueOnce({ response: { status: 500 } });
+
+    // Call the performLogin function
+    await performLogin({
+      username: 'testUsername',
+      password: 'testPassword',
+      onLoginSuccess,
+      onLoginError
+    });
+
+    // Expect onLoginSuccess not to have been called
+    expect(onLoginSuccess).not.toHaveBeenCalled();
+
+    // Expect onLoginError to have been called with the correct error message
+    expect(onLoginError).toHaveBeenCalledWith("Internal server error. Please try again later.");
+  });
 
   it('calls onLoginError with a generic error message for other errors', async () => {
     const onLoginSuccess = jest.fn();

@@ -1,28 +1,30 @@
-// Custom error classes for File upload
-export class FileMissingError extends Error {
+export class CustomFileError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
+
+export class FileMissingError extends CustomFileError {
   constructor() {
     super("File missing.");
-    this.name = "FileMissingError";
   }
 }
 
-export class FilenameTooLongError extends Error {
+export class FilenameTooLongError extends CustomFileError {
   constructor() {
     super("Filename should be less than 256 characters.");
-    this.name = "FilenameTooLongError";
   }
 }
 
-export class UnsupportedFiletypeError extends Error {
+export class UnsupportedFiletypeError extends CustomFileError {
   constructor() {
-    super("Unsupported filetype. Supported filetypes are JPEG, JPG and PNG.");
-    this.name = "UnsupportedFiletypeError";
+    super("Unsupported filetype. Supported filetypes are JPEG, JPG, and PNG.");
   }
 }
 
-export class FileSizeExceededError extends Error {
+export class FileSizeExceededError extends CustomFileError {
   constructor() {
     super("File size should be less than 10MB.");
-    this.name = "FileSizeExceededError";
   }
 }
