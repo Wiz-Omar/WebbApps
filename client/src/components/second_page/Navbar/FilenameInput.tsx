@@ -3,19 +3,18 @@ import React, { useState, useRef, useEffect, ChangeEvent, KeyboardEvent } from '
 import { handleChangeName } from "../../../utils/handleChangeName";
 import { Image } from "../../home_page/HomePage";
 
-    onRename: (filename: string, fileExtension: string) => Promise<void>;
 interface UploadButtonProps {
     image: Image;
 }
 
 /**
  * FilenameInput component. An input for renaming a file. 
- * It calls the onRename function when the file is renamed.
+ * It calls the handleRename function when the file is renamed.
  * 
  * Props:
  * - initialFilename: string - The initial filename
  * - fileExtension: string - The file extension
- * - onRename: (filename: string, fileExtension: string) => Promise<void> - The function to call when the file is renamed
+ * - handleRename: (filename: string, fileExtension: string) => Promise<void> - The function to call when the file is renamed
  */
 const FilenameInput: React.FC<UploadButtonProps> = ({ image }) => {
     const filenameParts = image.filename.split(".");
