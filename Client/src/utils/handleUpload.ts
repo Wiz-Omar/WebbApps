@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IMAGE_ENDPOINT } from "../constants/apiEndpoints";
+import { validateFile } from "./validateFile";
 axios.defaults.withCredentials = true;
 
 /**
@@ -7,12 +8,15 @@ axios.defaults.withCredentials = true;
  * @param file The file to upload. Type File is a built-in type in TypeScript.
  * @returns A promise that resolves to the response from the server.
  */
-export const handleUpload = async (file: File) => {
+export const handleUpload = async (file: File | null) => {
+  // Vaildates that the file is a correctly formatted file
+  const validatedFile : File = validateFile(file);
+
   // Create an instance of FormData
   const formData = new FormData();
 
   // Append the file to the FormData instance
-  formData.append("file", file);
+  formData.append("file", validatedFile);
 
   // Use axios to send the FormData
   return axios.post(IMAGE_ENDPOINT, formData, {
