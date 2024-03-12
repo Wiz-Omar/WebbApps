@@ -239,7 +239,6 @@ describe("Delete an image, End-to-End", () => {
     const response = await authenticatedSession.delete("/image").redirects(1); // Automatically follow redirects
     expect(response.status).toBe(404); // 404 - because the route is not found
   });
-
 });
 
 describe("Search for an image, End-to-End", () => {
@@ -423,6 +422,32 @@ describe("Rename an image, End-to-End", () => {
       .send({ newFilename: longFilename })
       .redirects(1); // Automatically follow redirects
 
+    expect(response.status).toBe(400);
+  });
+
+  // Failure Scenario #5 - Renaming image with an empty string as the new filename
+  it("should reject renaming an image with an empty newFilename", async () => {
+    // Step 1: Upload an image first
+    const uploadResponse = await authenticatedSession
+      .post("/image")
+      .attach(
+        "file",
+        path.resolve(__dirname, "..", "..", "test", "testImage.png")
+      );
+
+    // Step 2: Get an imageId from the user's images
+    const userImagesResponse = await authenticatedSession
+      .get("/image")
+      .redirects(1); // Automatically follow redirects
+    const imageId = userImagesResponse.body[0].id; // Assuming the first image is the one to be renamed
+
+    // Step 3: Attempt to rename the image with an empty newFilename
+    const response = await authenticatedSession
+      .patch(`/image/${imageId}`)
+      .send({ newFilename: "" }) // Including an empty string for the newFilename
+      .redirects(1); // Automatically follow redirects
+
+    // Assert that the response status is 400 for a bad request due to an invalid newFilename
     expect(response.status).toBe(400);
   });
 });
