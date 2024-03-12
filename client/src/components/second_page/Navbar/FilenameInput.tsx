@@ -26,8 +26,6 @@ const FilenameInput: React.FC<UploadButtonProps> = ({ image }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [handleRenameOnEnter, setHandleRenameOnEnter] = useState(false);
 
-    // let [newFilename, setNewFilename] = useState(initialFilename);
-
     useEffect(() => {
         // Only set width if the filename is short enough
         if (filename.length <= 30) {
@@ -63,6 +61,13 @@ const FilenameInput: React.FC<UploadButtonProps> = ({ image }) => {
 
     // Event handler for the rename input
     const handleRename = async (filename: string, fileExtension: string) => {
+        // Check that filename is not empty
+        if (filename === "") {
+            setFilename(currentFilename);
+            alert("Filename can not be empty.");
+            return;
+        }
+
         try {
             if (filename !== currentFilename) {
                 // New filename is not equal to initial filename

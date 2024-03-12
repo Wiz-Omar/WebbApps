@@ -94,7 +94,7 @@ export const validateNewImageName = (
   next: NextFunction
 ): void => {
   const filename = req.body.newFilename as string;
-  if (!filename || typeof filename !== "string") {
+  if (!filename || typeof filename !== "string" || filename === "") {
     res.status(400).send(ErrorMessages.InvalidFilename);
     return;
   }
