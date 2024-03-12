@@ -183,6 +183,7 @@ imageRouter.get(
  * - 200: Image renamed successfully.
  * - 401: Unauthorized if the user is not logged in.
  * - 404: Image not found.
+ * - 409: Image with the same filename already exists.
  * - 500: Internal server error. Failed to rename the image.
  */
 imageRouter.patch(
@@ -197,17 +198,14 @@ imageRouter.patch(
       const username = req.session.username!;
 
       // Call the image service to change the image name
-      const success = await imageService.changeImageName(
+      await imageService.changeImageName(
         imageId,
         newFilename,
         username
       );
 
-      if (success) {
-        res.status(200).send({ message: SuccessMessages.ImageRenamed });
-      } else {
-        res.status(404).send({ message: ErrorMessages.ImageNotFound });
-      }
+      res.status(200).send({ message: SuccessMessages.ImageRenamed });
+
     } catch (e: any) {
       next(e);
     }

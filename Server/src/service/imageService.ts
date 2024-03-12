@@ -223,11 +223,10 @@ export class ImageService implements IImageService {
         user.id,
         newFilename
       );
-      
+
       // Ensure that the filename does not equal an existing images' filename
       const exists = images.some(image => image.filename === newFilename);
       if (exists) {
-        console.error("Image file exists.");
         throw new ImageExistsError(newFilename);
       }
 
@@ -251,6 +250,8 @@ export class ImageService implements IImageService {
         throw new ImageNotFoundError(imageId);
       } else if (error instanceof FileOperationError) {
         throw new FileOperationError();
+      } else if (error instanceof ImageExistsError) {
+        throw new ImageExistsError(newFilename);
       } else {
         throw error;
       }
