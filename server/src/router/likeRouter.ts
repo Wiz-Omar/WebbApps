@@ -105,29 +105,6 @@ likeRouter.get(
   }
 );
 
-/**
- * GET /like
- * Gets all images liked by the user.
- *
- * Responses:
- * - 200: Returns an array of image IDs liked by the user.
- * - 401: Unauthorized if the user is not logged in.
- * - 500: Internal server error. Failed to retrieve liked images.
- *
- */
-likeRouter.get("/", async (req: AllLikedImagesRequest, res: Response) => {
-  try {
-    if (req.session.username === undefined) {
-      res.status(401).send("Unauthorized action. User not logged in");
-      return;
-    }
-    const likedImages = await likeService.getLikedImages(req.session.username);
-    res.status(200).send(likedImages);
-  } catch (error) {
-    res.status(500).send("Internal server error");
-  }
-});
-
 // Centralized error handling middleware
 // Should be placed after all other middleware and routes
 likeRouter.use(
