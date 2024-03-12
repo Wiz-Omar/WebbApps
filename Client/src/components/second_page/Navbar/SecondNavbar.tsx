@@ -4,7 +4,6 @@ import "./Navbar.css";
 import axios from "axios";
 import ConfirmationPopup from "../ConfirmationPopup";
 import { handleDownload } from "../../../utils/handleDownload";
-import { handleChangeName } from "../../../utils/handleChangeName";
 import { Container, Row, Col } from "react-bootstrap";
 import FilenameInput from "./FilenameInput";
 import IconButtonsGroup from "./IconButtonsGroup";
@@ -22,12 +21,6 @@ function Navbar() {
   const location = useLocation();
   const { image } = location.state as { image: Image };
   const navigate = useNavigate();
-
-  const filenameParts = image.filename.split(".");
-  const initialFilename = filenameParts.slice(0, -1).join("."); // Join all parts except the last one
-  const fileExtension = filenameParts.pop() as string;
-
-  let [newFilename, setNewFilename] = useState(initialFilename);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
 
   // Custom hook to delete an image
@@ -58,11 +51,6 @@ function Navbar() {
   // Event handler for the close button
   const handleClose = () => navigate("/");
 
-  // Event handler for the rename input
-  const handleRename = async (filename: string, fileExtension: string) => {
-    await handleChangeName(image.id, filename, fileExtension);
-    setNewFilename(filename);
-  };
 
   return (
     <Container data-testid="second-navbar" fluid className="navbar-light sticky-top rounded bg-light">
@@ -78,9 +66,7 @@ function Navbar() {
           className="d-flex justify-content-center my-3 align-items-center"
         >
           <FilenameInput
-            initialFilename={initialFilename}
-            fileExtension={fileExtension}
-            onRename={handleRename}
+            image={image}
           />
         </Col>
         <Col
