@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { handleDelete } from './handleDelete';
 import { getImages } from './getImages';
 import { API_BASE_URL } from '../constants/apiEndpoints';
 
@@ -8,9 +7,9 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe("getImages", () => {
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   it("should fetch images successfully from the API", async () => {
     const testData = [

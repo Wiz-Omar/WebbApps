@@ -14,7 +14,7 @@ describe('handleChangeName', () => {
         const imageId = 1;
         const filename = 'test';
         const fileExtension = 'jpg';
-    
+
         const mockResponse = {
             data: {},
             status: 200,
@@ -22,21 +22,21 @@ describe('handleChangeName', () => {
             headers: {},
             config: {}
         };
-    
+
         mockedAxios.patch.mockResolvedValueOnce(mockResponse);
-    
+
         const response = await handleChangeName(imageId, filename, fileExtension);
-    
+
         expect(mockedAxios.patch).toHaveBeenCalledWith(
             `http://localhost:8080/image/${imageId}`,
             {
                 newFilename: `${filename}.${fileExtension}`,
             }
         );
-    
+
         expect(response).toEqual(mockResponse);
     });
-    
+
 
     it('should handle file not found error', async () => {
         const imageId = 1;
