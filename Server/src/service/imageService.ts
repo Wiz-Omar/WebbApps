@@ -214,8 +214,22 @@ export class ImageService implements IImageService {
     newFilename: string,
     username: string
   ): Promise<boolean> {
+
     try {
       const user: User = await this.getUser(username);
+
+      // Search for equal filename
+      const images = await this.databaseImageService.getImageBySearch(
+        user.id,
+        newFilename
+      );
+
+      // Ensure that the filename does not equal an existing images' filename
+      const exists = images.some(image => image.filename === newFilename);
+      if (exists) {
+        throw new ImageExistsError(newFilename);
+      }
+
       const imageDocument = await this.databaseImageService.findImageById(
         imageId
       );
@@ -236,6 +250,8 @@ export class ImageService implements IImageService {
         throw new ImageNotFoundError(imageId);
       } else if (error instanceof FileOperationError) {
         throw new FileOperationError();
+      } else if (error instanceof ImageExistsError) {
+        throw new ImageExistsError(newFilename);
       } else {
         throw error;
       }
