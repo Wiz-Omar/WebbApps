@@ -4,16 +4,16 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import SecondPage from './SecondPage';
 import { Image } from '../../home_page/HomePage';
 
-describe('SecondPage component', () => {
-  test('renders image correctly and toggles full size image on click', () => {
-    const testImage: Image = {
-      id: 1,
-      filename: 'testImage.jpg',
-      path: 'testImagePath.jpg',
-      uploadDate: new Date(), // Provide a valid date object
-    };
+const testImage: Image = {
+  id: 1,
+  filename: 'testImage.jpg',
+  path: 'testImagePath.jpg',
+  uploadDate: new Date(), // Provide a valid date object
+};
 
-    const { container } = render(
+describe('SecondPage component', () => {
+  test('renders Navbar component', () => {
+    render(
       <MemoryRouter initialEntries={[{ pathname: '/second', state: { image: testImage, id: 1 } }]}>
         <Routes>
           <Route path="/second" element={<SecondPage />} />
@@ -21,27 +21,38 @@ describe('SecondPage component', () => {
       </MemoryRouter>
     );
 
-    // Check if the Navbar is rendered
     expect(screen.getByTestId('second-navbar')).toBeInTheDocument();
+  });
 
-    // Check if the image is rendered
+  test('renders image correctly', () => {
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/second', state: { image: testImage, id: 1 } }]}>
+        <Routes>
+          <Route path="/second" element={<SecondPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
     const imageElement = screen.getByAltText('Selected');
     expect(imageElement).toBeInTheDocument();
     expect(imageElement.getAttribute('src')).toBe(testImage.path);
+  });
 
-    // Check if full size image is initially hidden
-    expect(screen.queryByTestId('full-size-image')).not.toBeInTheDocument();
+  test('toggles full size image on click', () => {
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/second', state: { image: testImage, id: 1 } }]}>
+        <Routes>
+          <Route path="/second" element={<SecondPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
 
-    // Click on the image to toggle full size image
+    const imageElement = screen.getByAltText('Selected');
+
     fireEvent.click(imageElement);
-
-    // Check if full size image is displayed
     expect(screen.getByTestId('full-size-image-container')).toBeInTheDocument();
 
-    // Click on the close button of full size image
     fireEvent.click(screen.getByTestId('close-full-size-image'));
-
-    // Check if full size image is hidden again
     expect(screen.queryByTestId('full-size-image-container')).not.toBeInTheDocument();
   });
 });
