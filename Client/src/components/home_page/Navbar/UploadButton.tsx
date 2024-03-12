@@ -37,15 +37,14 @@ function UploadButton({ callback }: UploadButtonProps) {
     const file: File | null = event.target.files ? event.target.files[0] : null;
 
     try {
-      // If validateFile passes, we know that the file is a correctly formatted image
       await handleUpload(file);
       callback();
     } catch (error: any) {
       if (error instanceof CustomFileError) {
         // File did not pass validateFile
-        alert(error);
+        alert(error.message);
       }
-      if (error.response) {
+      else if (error.response) {
         // HTTP error response from the server
         if (error.response.status === 409) {
           // Duplicate filename error
@@ -57,13 +56,10 @@ function UploadButton({ callback }: UploadButtonProps) {
           // Unsupported file type error
           alert("The file type is not supported. Please upload a .jpg, .jpeg, or .png file.");
         }
-      }
-       else {
+      } else {
         // Something else went wrong
         alert("Something went wrong.");
       }
-      return;
-      // TODO: Is this needed?
     }
   };
 
